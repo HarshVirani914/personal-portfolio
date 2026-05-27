@@ -125,15 +125,15 @@ export function ProjectDetailDialog({
       data-lenis-prevent
       data-closing={isClosing ? "" : undefined}
       onClick={handleBackdropClick}
-      className="project-dialog focus-ring:m-0 fixed inset-x-0 bottom-0 z-50 m-0 hidden h-[min(92vh,900px)] max-h-[min(92vh,900px)] w-full max-w-none rounded-t-4xl border border-foreground/8 bg-background p-0 shadow-2xl open:flex open:flex-col md:inset-auto md:top-1/2 md:left-1/2 md:h-auto md:max-h-[min(88vh,820px)] md:w-[min(42rem,calc(100vw-2rem))] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-4xl lg:w-[min(48rem,calc(100vw-3rem))]"
+      className="project-dialog focus-ring:m-0 fixed inset-x-0 bottom-0 top-auto z-50 m-0 hidden h-[min(92dvh,900px)] max-h-[min(92dvh,900px)] w-full max-w-none translate-none flex-col rounded-t-4xl border border-foreground/8 border-b-0 bg-background p-0 shadow-2xl open:flex max-md:left-0 max-md:right-0 max-md:max-w-full md:inset-auto md:top-1/2 md:bottom-auto md:left-1/2 md:h-auto md:max-h-[min(88dvh,820px)] md:w-[min(42rem,calc(100vw-2rem))] md:max-w-[min(42rem,calc(100vw-2rem))] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-4xl md:border-b lg:w-[min(48rem,calc(100vw-3rem))] lg:max-w-[min(48rem,calc(100vw-3rem))]"
     >
       <AnimatePresence mode="wait" onExitComplete={handleExitComplete}>
         {openProject ? (
           <motion.div
             key={openProject.id}
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: "12%" }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 16 }}
+            exit={{ opacity: 0, y: "8%" }}
             transition={{ duration: EXIT_DURATION_S, ease: EASE }}
             className="flex min-h-0 flex-1 flex-col"
           >
@@ -156,7 +156,7 @@ export function ProjectDetailDialog({
                   <span className="text-sm font-medium tracking-tight text-foreground">
                     {openProject.iconLabel}
                   </span>
-                  <span className="text-foreground/50 text-[12px] tracking-tight">
+                  <span className="text-foreground/50 line-clamp-2 text-[12px] leading-snug tracking-tight">
                     {openProject.detail.role}
                   </span>
                 </div>
@@ -272,7 +272,7 @@ export function ProjectDetailDialog({
               </div>
             </div>
 
-            <div className="border-foreground/8 flex shrink-0 flex-wrap items-center justify-between gap-3 border-t px-4 py-3 sm:px-5">
+            <div className="border-foreground/8 flex shrink-0 flex-wrap items-center justify-between gap-3 border-t px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-5 md:pb-3">
               <p className="text-foreground/45 text-[12px] tracking-tight">
                 Esc to close
               </p>
@@ -320,7 +320,7 @@ function DetailStat({
       <dt className="text-[11px] font-medium tracking-tight text-foreground/45 uppercase">
         {label}
       </dt>
-      <dd className="text-[13px] leading-snug font-medium tracking-tight text-foreground/80">
+      <dd className="min-w-0 text-[13px] leading-snug font-medium tracking-tight text-foreground/80">
         {value}
       </dd>
     </div>

@@ -223,6 +223,21 @@ html[data-theme-anim="1"]::view-transition-new(root) {
   display: none !important;
 }
 
+@media (max-width: 767px) {
+  .project-dialog[open] {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    transform: none;
+    translate: none;
+  }
+}
+
 .project-dialog::backdrop {
   background: color-mix(in srgb, var(--foreground) 45%, transparent);
 }
