@@ -4,24 +4,22 @@ type Entry = {
   school: string;
   degree: string;
   period: string;
+  logoSrc?: string;
   slug?: string;
 };
 
 const ENTRIES: Entry[] = [
   {
-    school: "Rhode Island School of Design",
-    degree: "BFA, Graphic Design",
-    period: "2013 – 2017",
+    school: "Hof University of Applied Sciences",
+    degree: "M.Sc. AI & Robotics",
+    period: "Mar 2025 – Present",
+    logoSrc: "/logos/hof-university.png",
   },
   {
-    school: "Stanford University",
-    degree: "HCI Certificate, d.school",
-    period: "2018",
-  },
-  {
-    school: "Bruno Simon's Three.js Journey",
-    degree: "WebGL & Shaders",
-    period: "2022",
+    school: "Veer Narmad South Gujarat University",
+    degree: "B.Sc. Computer Science",
+    period: "Aug 2021 – Mar 2024",
+    logoSrc: "/logos/vnsgu.png",
   },
 ];
 
@@ -68,7 +66,16 @@ function SchoolLogo({ entry }: { entry: Entry }): ReactNode {
       aria-hidden="true"
       style={{ borderRadius: 14 }}
     >
-      {entry.slug ? (
+      {entry.logoSrc ? (
+        <img
+          src={entry.logoSrc}
+          alt=""
+          width={24}
+          height={24}
+          className="h-6 w-6 object-contain"
+          draggable={false}
+        />
+      ) : entry.slug ? (
         <img
           src={`https://cdn.simpleicons.org/${entry.slug}`}
           alt=""

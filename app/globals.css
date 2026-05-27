@@ -39,6 +39,7 @@
 
 html {
   color-scheme: light;
+  scrollbar-gutter: stable;
 }
 
 html.dark {
@@ -216,4 +217,34 @@ html[data-theme-anim="1"]::view-transition-new(root) {
 
 .project-card:hover .project-card__image-inner {
   transform: scale(1.06);
+}
+
+.project-dialog:not([open]) {
+  display: none !important;
+}
+
+.project-dialog::backdrop {
+  background: color-mix(in srgb, var(--foreground) 45%, transparent);
+}
+
+.project-dialog[data-closing] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+.project-dialog[data-closing]::backdrop {
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-dialog[data-closing] {
+    transition: none;
+  }
+
+  .project-dialog[data-closing]::backdrop {
+    transition: none;
+    opacity: 0;
+  }
 }

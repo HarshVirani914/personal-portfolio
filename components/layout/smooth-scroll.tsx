@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Lenis from "lenis";
 import { features } from "@/lib/config";
+import { LenisContext } from "@/lib/lenis-context";
 
 const LENIS_OPTIONS = {
   duration: 1.6,
@@ -19,6 +20,8 @@ export function SmoothScroll({
 }: {
   children: ReactNode;
 }): ReactNode {
+  const [lenis, setLenis] = useState<Lenis | null>(null);
+
   useEffect(() => {
     if (!features.smoothScroll) return;
 
@@ -28,10 +31,11 @@ export function SmoothScroll({
 
     if (prefersReducedMotion) return;
 
-    const lenis = new Lenis(LENIS_OPTIONS);
+    const instance = new Lenis(LENIS_OPTIONS);
+    setLenis(instance);
 
     function raf(time: number): void {
-      lenis.raf(time);
+      instance.raf(time);
       requestAnimationFrame(raf);
     }
 
@@ -49,7 +53,7 @@ export function SmoothScroll({
       if (!element) return;
 
       e.preventDefault();
-      lenis.scrollTo(element as HTMLElement, { offset: -100 });
+      instance.scrollTo(element as HTMLElement, { offset: -100 });
     }
 
     document.addEventListener("click", handleAnchorClick);
@@ -57,9 +61,10 @@ export function SmoothScroll({
     return () => {
       document.removeEventListener("click", handleAnchorClick);
       cancelAnimationFrame(rafId);
-      lenis.destroy();
+      instance.destroy();
+      setLenis(null);
     };
   }, []);
 
-  return <>{children}</>;
+  return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>;
 }

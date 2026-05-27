@@ -1,15 +1,16 @@
 import type { ReactNode } from "react";
 
 const SKILLS = [
-  "UI/UX Design",
-  "Design Systems",
-  "Prototyping & Motion",
-  "Frontend Development",
-  "TypeScript & React",
-  "Interaction Design",
-  "Performance Tuning",
-  "Accessibility",
-  "Visual Identity",
+  "Full-Stack Development",
+  "GenAI & Agentic AI",
+  "RAG & LLM Applications",
+  "Machine Learning & Deep Learning",
+  "Computer Vision",
+  "API Design & FastAPI",
+  "React & Next.js",
+  "TypeScript",
+  "Model Evaluation & MLOps",
+  "Cloud & CI/CD",
 ];
 
 export function Skills(): ReactNode {

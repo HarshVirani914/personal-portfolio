@@ -8,58 +8,17 @@ type Entry = {
   company: string;
   role: string;
   period: string;
+  logoSrc?: string;
   slug?: string;
   brand?: string;
 };
 
 const ENTRIES: Entry[] = [
   {
-    company: "Linear",
-    role: "Senior Design Engineer",
-    period: "Mar 2024 – Present",
-    slug: "linear",
-    brand: "#5E6AD2",
-  },
-  {
-    company: "Vercel",
-    role: "Product Designer",
-    period: "Aug 2022 – Feb 2024",
-    slug: "vercel",
-    brand: "#0a0a0a",
-  },
-  {
-    company: "Stripe",
-    role: "Design Engineer",
-    period: "Jun 2021 – Jul 2022",
-    slug: "stripe",
-    brand: "#635BFF",
-  },
-  {
-    company: "Figma",
-    role: "UI Engineer",
-    period: "Sep 2019 – May 2021",
-    slug: "figma",
-    brand: "#A259FF",
-  },
-  {
-    company: "Notion",
-    role: "Product Designer",
-    period: "Jan 2018 – Aug 2019",
-    slug: "notion",
-    brand: "#111111",
-  },
-  {
-    company: "Airbnb",
-    role: "Design Intern",
-    period: "May 2017 – Dec 2017",
-    slug: "airbnb",
-    brand: "#FF5A5F",
-  },
-  {
-    company: "Freelance",
-    role: "Designer & Developer",
-    period: "2015 – 2017",
-    brand: "#0AE448",
+    company: "TechStaunch Solutions",
+    role: "Software Engineer",
+    period: "Jul 2024 – Mar 2025",
+    logoSrc: "/logos/techstaunch.png",
   },
 ];
 
@@ -118,7 +77,7 @@ export function Experience(): ReactNode {
         </motion.div>
 
         <AnimatePresence>
-          {!open && (
+          {!open && hiddenCount > 0 && (
             <motion.div
               key="fade"
               initial={{ opacity: 0 }}
@@ -174,10 +133,19 @@ function CompanyLogo({ entry }: { entry: Entry }): ReactNode {
       aria-hidden="true"
       style={{
         borderRadius: 14,
-        ...(entry.slug ? {} : { backgroundColor: entry.brand }),
+        ...(entry.logoSrc || entry.slug ? {} : { backgroundColor: entry.brand }),
       }}
     >
-      {entry.slug ? (
+      {entry.logoSrc ? (
+        <img
+          src={entry.logoSrc}
+          alt=""
+          width={24}
+          height={24}
+          className="h-6 w-6 object-contain"
+          draggable={false}
+        />
+      ) : entry.slug ? (
         <img
           src={`https://cdn.simpleicons.org/${entry.slug}`}
           alt=""
