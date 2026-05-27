@@ -6,6 +6,8 @@ const siteUrl = getSiteUrl();
 
 export const siteConfig = {
   name: "Harsh Virani",
+  ogTitle: "Harsh Virani | Full-Stack Engineer & AI Systems Builder",
+  ogSubtitle: "Full-Stack & AI Systems Engineering",
   description:
     "Full-stack engineer and AI systems builder. Projects in agentic AI, RAG, computer vision, and production web platforms.",
   url: siteUrl,
@@ -56,13 +58,13 @@ export const baseMetadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteConfig.url,
-    title: siteConfig.name,
+    title: siteConfig.ogTitle,
     description: siteConfig.description,
     siteName: siteConfig.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: siteConfig.ogTitle,
     description: siteConfig.description,
     creator: siteConfig.creator,
   },
@@ -74,18 +76,29 @@ export const baseMetadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
+export const getOpenGraphTitle = (pageTitle?: string): string => {
+  if (!pageTitle) {
+    return siteConfig.ogTitle;
+  }
+
+  return `${pageTitle} | ${siteConfig.name} — ${siteConfig.ogSubtitle}`;
+};
+
 export function createMetadata({
   title,
   description,
   path = "/",
+  openGraphTitle,
   noIndex = false,
 }: {
   title?: string;
   description?: string;
   path?: string;
+  openGraphTitle?: string;
   noIndex?: boolean;
 }): Metadata {
   const url = `${siteConfig.url}${path}`;
+  const socialTitle = openGraphTitle ?? getOpenGraphTitle(title);
 
   return {
     title,
@@ -94,12 +107,12 @@ export function createMetadata({
       canonical: path,
     },
     openGraph: {
-      title: title ?? siteConfig.name,
+      title: socialTitle,
       description: description ?? siteConfig.description,
       url,
     },
     twitter: {
-      title: title ?? siteConfig.name,
+      title: socialTitle,
       description: description ?? siteConfig.description,
     },
     ...(noIndex && {

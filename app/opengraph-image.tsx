@@ -5,8 +5,8 @@ import { siteConfig } from "@/lib/metadata";
 
 export const alt = `${siteConfig.name} — portfolio homepage`;
 export const size = {
-  width: 1280,
-  height: 720,
+  width: 1200,
+  height: 630,
 };
 export const contentType = "image/png";
 

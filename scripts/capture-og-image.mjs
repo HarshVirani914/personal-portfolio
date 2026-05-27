@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Captures a desktop-width screenshot of the homepage for Open Graph.
- * Requires: dev server running (npm run dev) and Playwright browsers installed.
+ * Scrolls the hero into the vertical center of the 1200x630 viewport.
  *
  * Usage:
  *   node scripts/capture-og-image.mjs
@@ -17,8 +17,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const projectRoot = join(__dirname, "..");
 const outputPath = join(projectRoot, "public/og/homepage-desktop.png");
 
-const VIEWPORT = { width: 1280, height: 720 };
+/** Open Graph recommended aspect ratio (1.91:1) */
+const VIEWPORT = { width: 1200, height: 630 };
 const DEFAULT_URL = "http://127.0.0.1:3000";
+const HERO_SELECTOR = "#hero";
+/** Scroll past geometric center so the hero sits slightly higher in the OG frame */
+const HERO_CAPTURE_LIFT_PX = 72;
 
 const parseUrl = () => {
   const index = process.argv.indexOf("--url");
@@ -34,7 +38,30 @@ const waitForPageReady = async (page) => {
     () => document.fonts?.ready?.then(() => true),
     { timeout: 15_000 }
   ).catch(() => undefined);
+  await page.waitForSelector(HERO_SELECTOR, { state: "visible", timeout: 15_000 });
   await page.waitForTimeout(1500);
+};
+
+const centerHeroInViewport = async (page) => {
+  await page.evaluate(
+    ({ selector, liftPx }) => {
+      const hero = document.querySelector(selector);
+      if (!hero) return;
+
+      const rect = hero.getBoundingClientRect();
+      const heroCenterY = window.scrollY + rect.top + rect.height / 2;
+      const scrollTop = heroCenterY - window.innerHeight / 2 + liftPx;
+
+      window.scrollTo({
+        top: Math.max(0, scrollTop),
+        left: 0,
+        behavior: "instant",
+      });
+    },
+    { selector: HERO_SELECTOR, liftPx: HERO_CAPTURE_LIFT_PX }
+  );
+
+  await page.waitForTimeout(400);
 };
 
 const main = async () => {
@@ -48,9 +75,13 @@ const main = async () => {
   });
 
   try {
-    await page.emulateMedia({ colorScheme: "light" });
+    await page.emulateMedia({
+      colorScheme: "light",
+      reducedMotion: "reduce",
+    });
     await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 60_000 });
     await waitForPageReady(page);
+    await centerHeroInViewport(page);
     await page.screenshot({
       path: outputPath,
       type: "png",

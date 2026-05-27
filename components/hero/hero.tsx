@@ -9,7 +9,7 @@ const PORTRAIT_HOVER_SRC = "/harsh_waving.webp";
 
 export function Hero(): ReactNode {
   return (
-    <section className="relative w-full">
+    <section id="hero" className="relative w-full">
       <div className="mx-auto w-full max-w-275 px-6 pt-44 pb-24 sm:px-10 sm:pt-56 sm:pb-32">
         <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-8">
           <FadeIn className="flex flex-col gap-4">
@@ -25,13 +25,15 @@ export function Hero(): ReactNode {
               <span className="block whitespace-nowrap">
                 Full-Stack Engineer &
               </span>
-              <span className="block whitespace-nowrap">AI Systems Builder</span>
+              <span className="block whitespace-nowrap">
+                AI Systems Builder
+              </span>
             </h1>
 
             <p className="text-foreground/65 max-w-[38ch] text-[22px] leading-[1.4] tracking-tight">
-              I ship production web platforms and build intelligent systems, from
-              RAG pipelines and agentic workflows to full-stack products people
-              use every day.
+              I ship production web platforms and build intelligent systems,
+              from RAG pipelines and agentic workflows to full-stack products
+              people use every day.
             </p>
 
             <HeroCtas />

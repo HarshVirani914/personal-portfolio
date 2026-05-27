@@ -6,9 +6,9 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 export const metadata: Metadata = createMetadata({
-  title: "Home",
   description: `Welcome to ${siteConfig.name}. ${siteConfig.description}`,
   path: "/",
+  openGraphTitle: siteConfig.ogTitle,
 });
 
 export default function HomePage(): ReactNode {
