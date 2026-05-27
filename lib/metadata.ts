@@ -74,6 +74,9 @@ export const baseMetadata: Metadata = {
     apple: "/apple-icon.png",
   },
   manifest: "/site.webmanifest",
+  verification: {
+    google: "mUZxos9-67gMdDIJPBAsb3nOWNdKZg1_CBh7Gdsj-n0",
+  },
 };
 
 export const getOpenGraphTitle = (pageTitle?: string): string => {
