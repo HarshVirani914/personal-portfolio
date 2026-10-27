@@ -79,7 +79,7 @@ export function SiteHeader({ locale, dict, name, coordinates }: Props) {
           <SheetContent
             side="top"
             showCloseButton={false}
-            className="dark border-0 bg-background p-5 text-foreground data-[side=top]:h-dvh"
+            className="border-0 bg-background p-5 text-foreground shadow-none data-[side=top]:h-dvh"
           >
             <div className="flex items-center justify-between">
               <SheetTitle className="font-serif text-2xl font-normal tracking-normal normal-case">
