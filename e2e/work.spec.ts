@@ -69,6 +69,25 @@ test("desktop hover reveals the project card", async ({ page, isMobile }) => {
   await expect(card).toContainText("installable expense tracker");
 });
 
+test("desktop hover card follows the cursor inside the row", async ({ page, isMobile }) => {
+  test.skip(isMobile, "hover card is desktop-only");
+  await page.goto("/");
+  const row = page.getByRole("link", { name: /PocketPulse, open case study/i });
+  await row.scrollIntoViewIfNeeded();
+  const box = (await row.boundingBox())!;
+  const card = row.getByTestId("hover-card");
+  await page.mouse.move(box.x + 120, box.y + box.height / 2);
+  await page.mouse.move(box.x + 160, box.y + box.height / 2, { steps: 4 });
+  await expect(card).toHaveCSS("opacity", "1");
+  await page.waitForTimeout(600);
+  const first = (await card.boundingBox())!;
+  await page.mouse.move(box.x + 700, box.y + box.height / 2, { steps: 10 });
+  await page.waitForTimeout(600);
+  const second = (await card.boundingBox())!;
+  expect(second.x - first.x).toBeGreaterThan(300);
+  expect(second.x + second.width).toBeLessThanOrEqual(box.x + box.width + 1);
+});
+
 test("mobile tap expands the card and Open case navigates", async ({ page, isMobile }) => {
   test.skip(!isMobile, "tap-to-expand is mobile-only");
   await page.goto("/");

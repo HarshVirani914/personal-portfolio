@@ -13,6 +13,65 @@ type Props = { projects: Project[]; locale: Locale; dict: Dictionary["work"] };
 
 const mono = "font-mono text-mono text-muted-ink";
 
+type Follow = { x: number; y: number; tx: number; ty: number; raf: number };
+const follows = new WeakMap<HTMLElement, Follow>();
+
+const cardOf = (row: HTMLElement) => row.querySelector<HTMLElement>("[data-follow]");
+
+function paint(card: HTMLElement, f: Follow) {
+  card.style.translate = `${f.x}px ${f.y}px`;
+}
+
+/** Moves the card's target; `snap` jumps there, otherwise it eases after the cursor. */
+function moveCard(row: HTMLElement, tx: number, ty: number, snap: boolean) {
+  const card = cardOf(row);
+  if (!card) return;
+  const f = follows.get(card) ?? { x: tx, y: ty, tx, ty, raf: 0 };
+  follows.set(card, f);
+  f.tx = tx;
+  f.ty = ty;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (snap || still) {
+    cancelAnimationFrame(f.raf);
+    f.raf = 0;
+    f.x = tx;
+    f.y = ty;
+    paint(card, f);
+    return;
+  }
+  if (f.raf) return;
+  const step = () => {
+    f.x += (f.tx - f.x) * 0.2;
+    f.y += (f.ty - f.y) * 0.2;
+    paint(card, f);
+    f.raf = Math.abs(f.tx - f.x) + Math.abs(f.ty - f.y) > 0.5 ? requestAnimationFrame(step) : 0;
+  };
+  f.raf = requestAnimationFrame(step);
+}
+
+/** Card sits above-right of the cursor, kept inside the row's width and below the viewport top. */
+function followCursor(e: React.PointerEvent<HTMLElement>, snap: boolean) {
+  if (e.pointerType === "touch") return;
+  const row = e.currentTarget;
+  const card = cardOf(row);
+  if (!card) return;
+  const rect = row.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const x = Math.min(Math.max(mx + 20, 0), rect.width - card.offsetWidth);
+  const above = my - card.offsetHeight - 16;
+  const y = rect.top + above >= 8 ? above : my + 24;
+  moveCard(row, x, y, snap);
+}
+
+/** Keyboard focus has no cursor: park the card at the right of the row. */
+function parkCard(e: React.FocusEvent<HTMLElement>) {
+  const row = e.currentTarget;
+  const card = cardOf(row);
+  if (!card || row.matches(":hover")) return;
+  moveCard(row, row.clientWidth - card.offsetWidth - 120, -card.offsetHeight - 12, true);
+}
+
 /**
  * Selected work. From lg up a row is one link: hovering draws a hairline in the
  * project accent, slides the name and shows the dark card. Below lg a row is a
@@ -42,6 +101,9 @@ export function SelectedWork({ projects, locale, dict }: Props) {
               <Link
                 href={href}
                 aria-label={`${project.title}, ${dict.openCaseFor}`}
+                onPointerEnter={(e) => followCursor(e, true)}
+                onPointerMove={(e) => followCursor(e, false)}
+                onFocus={parkCard}
                 className="group relative hidden grid-cols-12 items-baseline gap-x-6 py-7.5 outline-offset-4 focus-visible:outline focus-visible:outline-agent lg:grid"
               >
                 <span className={cn(mono, "col-span-2")}>{project.number}</span>
@@ -71,8 +133,9 @@ export function SelectedWork({ projects, locale, dict }: Props) {
                 />
                 <span
                   data-testid="hover-card"
+                  data-follow=""
                   aria-hidden="true"
-                  className="pointer-events-none absolute -top-37.5 right-[min(220px,15vw)] z-10 flex w-95 translate-y-3 scale-[.96] flex-col rounded-card border border-[#262626] bg-card-ink px-4.5 py-4 text-[#eceae4] opacity-0 blur-[6px] shadow-[0_30px_60px_-20px_rgba(20,20,20,.45),0_2px_6px_rgba(20,20,20,.12)] transition-[opacity,transform,filter] duration-450 ease-out-expo group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-focus-visible:translate-y-0 group-focus-visible:scale-100 group-focus-visible:opacity-100 group-focus-visible:blur-none motion-reduce:transition-none"
+                  className="pointer-events-none absolute left-0 top-0 z-10 flex w-95 translate-y-3 scale-[.96] flex-col rounded-card border border-[#262626] bg-card-ink px-4.5 py-4 text-[#eceae4] opacity-0 blur-[6px] shadow-[0_30px_60px_-20px_rgba(20,20,20,.45),0_2px_6px_rgba(20,20,20,.12)] transition-[opacity,transform,filter] duration-450 ease-out-expo group-hover:translate-y-0 group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-focus-visible:translate-y-0 group-focus-visible:scale-100 group-focus-visible:opacity-100 group-focus-visible:blur-none motion-reduce:transition-none"
                 >
                   <CardBody project={project} dict={dict} />
                 </span>
