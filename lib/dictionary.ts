@@ -11,7 +11,7 @@ const dictionaries = {
     menu: { open: "Menu", close: "Close", title: "Navigation" },
     theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme", light: "Light", dark: "Dark" },
     locale: { label: "Language", en: "EN", de: "DE" },
-    location: "Hof, Germany",
+    terminal: { label: "Terminal", run: "run:" },
   },
   de: {
     skipToContent: "Zum Inhalt springen",
@@ -19,7 +19,7 @@ const dictionaries = {
     menu: { open: "Menü", close: "Schließen", title: "Navigation" },
     theme: { toLight: "Zum hellen Design wechseln", toDark: "Zum dunklen Design wechseln", light: "Hell", dark: "Dunkel" },
     locale: { label: "Sprache", en: "EN", de: "DE" },
-    location: "Hof, Deutschland",
+    terminal: { label: "Terminal", run: "ausführen:" },
   },
 } satisfies Record<Locale, unknown>;
 

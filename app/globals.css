@@ -207,3 +207,40 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: clip;
 }
+
+/* Hero motion. Reduced motion shows everything instantly. */
+@keyframes fade-in {
+  from { opacity: 0; filter: blur(8px); transform: translateY(10px); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+@keyframes draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes caret {
+  50% { opacity: 0; }
+}
+@keyframes out-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@utility animate-fade-in {
+  animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@utility animate-draw {
+  transform-origin: left;
+  animation: draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@utility animate-caret {
+  animation: caret 1s steps(1) infinite;
+}
+@utility animate-out-in {
+  animation: out-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in, .animate-draw, .animate-caret, .animate-out-in {
+    animation: none;
+  }
+}

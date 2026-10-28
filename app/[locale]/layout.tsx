@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/site/site-header";
 import { SmoothScroll } from "@/components/site/smooth-scroll";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, locales } from "@/lib/i18n";
-import { site } from "@/lib/site";
+import { content } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -23,10 +23,16 @@ const geist = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-sans" }
 
 const geistMono = Geist_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono" });
 
-export const metadata: Metadata = {
-  title: `${site.firstName} ${site.lastName}`,
-  description: site.description,
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  if (!isLocale(locale)) return {};
+  const settings = await content.getSiteSettings(locale);
+  return { title: settings.name.full, description: settings.description };
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -49,6 +55,7 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
+  const settings = await content.getSiteSettings(locale);
 
   return (
     <html
@@ -68,8 +75,9 @@ export default async function LocaleLayout({
           <SiteHeader
             locale={locale}
             dict={dict}
-            name={`${site.firstName} ${site.lastName}`}
-            coordinates={site.coordinates}
+            name={settings.name.full}
+            coordinates={settings.coordinates}
+            city={settings.city}
           />
           {children}
         </ThemeProvider>

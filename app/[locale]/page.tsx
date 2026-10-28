@@ -1,12 +1,17 @@
-import { HeroName } from "@/components/site/hero-name";
-import { site } from "@/lib/site";
+import { notFound } from "next/navigation";
+import { Hero } from "@/components/site/hero";
+import { content } from "@/lib/content";
+import { getDictionary } from "@/lib/dictionary";
+import { isLocale } from "@/lib/i18n";
 
-export default function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const [settings, home] = await Promise.all([content.getSiteSettings(locale), content.getHome(locale)]);
+
   return (
     <main id="main" className="px-5 md:px-10 lg:px-16">
-      <section className="flex min-h-dvh flex-col justify-center pt-24 pb-16">
-        <HeroName first={site.firstName} last={site.lastName} />
-      </section>
+      <Hero hero={home.hero} name={settings.name} dict={getDictionary(locale)} />
     </main>
   );
 }
