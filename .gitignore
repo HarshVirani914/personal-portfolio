@@ -46,3 +46,10 @@ next-env.d.ts
 
 .impeccable
 !.env.example
+
+# local agent tooling
+/.agents/
+/.claude/
+/.mcp.json
+/AGENTS.md
+/skills-lock.json
