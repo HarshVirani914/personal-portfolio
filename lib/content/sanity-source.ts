@@ -40,7 +40,27 @@ const queries = {
   projects: `*[_type == "project"]{
     "id": _id, "slug": slug.current,
     "title": title${localized},
+    "kind": kind${localized},
+    year,
     "oneLiner": oneLiner${localized},
+    "summary": summary${localized},
+    "headline": headline${localized},
+    "headlineEmphasis": headlineEmphasis${localized},
+    tags,
+    "status": status${localized},
+    "statusDetail": statusDetail${localized},
+    liveUrl,
+    accentLight,
+    accentDark,
+    "role": role${localized},
+    "client": client${localized},
+    "stack": stack${localized},
+    "problem": problem${localized},
+    "built": built${localized},
+    "stats": stats[]{
+      "id": _key, "value": value${localized}, "label": label${localized}, accent
+    },
+    figure,
     order, hidden
   }`,
 };
@@ -52,6 +72,13 @@ type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
 type HeroDoc = {
   annotations: RawHeroAnnotation[] | null;
   terminalScripts: (Omit<RawHeroTerminalScript, "output"> & { output: Localized[] | null })[] | null;
+};
+
+type ProjectDoc = Omit<RawProject, "tags" | "stats" | "accentLight" | "accentDark"> & {
+  tags: string[] | null;
+  stats: RawProject["stats"] | null;
+  accentLight: string | null;
+  accentDark: string | null;
 };
 
 /** Reads published documents from Sanity, cached per document type and revalidated by webhook. */
@@ -100,11 +127,21 @@ export function createSanitySource(): ContentSource {
     },
 
     async getProjects(): Promise<RawProject[]> {
-      return client.fetch<RawProject[]>(
+      const docs = await client.fetch<ProjectDoc[]>(
         queries.projects,
         {},
         { next: { tags: [contentTags.project] } },
       );
+      // Drafts of a half-filled project must not break the page: skip any without a slug.
+      return docs
+        .filter((doc) => doc.slug)
+        .map((doc) => ({
+          ...doc,
+          tags: doc.tags ?? [],
+          stats: doc.stats ?? [],
+          accentLight: doc.accentLight ?? "#141414",
+          accentDark: doc.accentDark ?? "#eceae4",
+        }));
     },
   };
 }

@@ -11,3 +11,14 @@ export const localizedString = defineType({
   ],
   options: { columns: 2 },
 });
+
+/** Like localizedString, for paragraphs. */
+export const localizedText = defineType({
+  name: "localizedText",
+  title: "Paragraph",
+  type: "object",
+  fields: [
+    defineField({ name: "en", title: "English", type: "text", rows: 5 }),
+    defineField({ name: "de", title: "Deutsch", type: "text", rows: 5 }),
+  ],
+});

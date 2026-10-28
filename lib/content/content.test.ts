@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createContent } from "@/lib/content";
 import { createFixtureSource, fixtureData, type FixtureData } from "@/lib/content/fixture";
+import type { RawProject } from "@/lib/content/types";
 
 const withData = (patch: Partial<FixtureData>) =>
   createContent(createFixtureSource({ ...fixtureData, ...patch }));
@@ -65,30 +66,61 @@ describe("content module", () => {
     expect(evalScript?.output[0]).toBe("50 Fälle laufen ··········· fertig");
   });
 
+  const stub = (id: string, extra: Partial<RawProject> = {}): RawProject => {
+    const t = (en: string) => ({ en });
+    return {
+      id, slug: id, title: t(id.toUpperCase()), kind: t("Agent"), year: "2026", oneLiner: t(""), summary: t(""),
+      headline: t(""), headlineEmphasis: t(""), tags: [], status: t(""), statusDetail: t(""),
+      accentLight: "#111111", accentDark: "#eeeeee", role: t(""), client: t(""), stack: t(""),
+      problem: t(""), built: t(""), stats: [], ...extra,
+    };
+  };
+
   it("orders projects by their order field and drops hidden ones", async () => {
-    const title = (en: string) => ({ en });
     const content = withData({
       projects: [
-        { id: "3", slug: "c", title: title("C"), oneLiner: title(""), order: 3 },
-        { id: "h", slug: "h", title: title("H"), oneLiner: title(""), order: 0, hidden: true },
-        { id: "1", slug: "a", title: title("A"), oneLiner: title(""), order: 1 },
-        { id: "2", slug: "b", title: title("B"), oneLiner: title(""), order: 2 },
+        stub("c", { order: 3 }),
+        stub("h", { order: 0, hidden: true }),
+        stub("a", { order: 1 }),
+        stub("b", { order: 2 }),
       ],
     });
-    expect((await content.getProjects("en")).map((p) => p.slug)).toEqual(["a", "b", "c"]);
+    const projects = await content.getProjects("en");
+    expect(projects.map((p) => p.slug)).toEqual(["a", "b", "c"]);
+    expect(projects.map((p) => p.number)).toEqual(["01", "02", "03"]);
   });
 
   it("resolves a project by slug and returns null for unknown or hidden slugs", async () => {
-    const title = (en: string) => ({ en });
-    const content = withData({
-      projects: [
-        { id: "1", slug: "a", title: title("A"), oneLiner: title("") },
-        { id: "2", slug: "secret", title: title("S"), oneLiner: title(""), hidden: true },
-      ],
-    });
-    expect((await content.getProject("en", "a"))?.title).toBe("A");
+    const content = withData({ projects: [stub("a"), stub("secret", { hidden: true })] });
+    expect((await content.getProject("en", "a"))?.project.title).toBe("A");
     expect(await content.getProject("en", "nope")).toBeNull();
     expect(await content.getProject("en", "secret")).toBeNull();
+  });
+
+  it("links each project to the next and wraps from the last to the first", async () => {
+    const content = withData({ projects: [stub("a", { order: 1 }), stub("b", { order: 2 })] });
+    expect((await content.getProject("en", "a"))?.next.slug).toBe("b");
+    const last = await content.getProject("en", "b");
+    expect(last?.next.slug).toBe("a");
+    expect([last?.index, last?.total]).toEqual([1, 2]);
+  });
+
+  it("falls back to English per project field and keeps accents", async () => {
+    const content = withData({
+      projects: [stub("a", { summary: { en: "Hello", de: "Hallo" }, headline: { en: "Only English" } })],
+    });
+    const de = (await content.getProject("de", "a"))?.project;
+    expect(de?.summary).toBe("Hallo");
+    expect(de?.headline).toBe("Only English");
+    expect(de?.accent).toEqual({ light: "#111111", dark: "#eeeeee" });
+  });
+
+  it("ships four real projects, newest first, with no claim of full automation", async () => {
+    const content = createContent(createFixtureSource());
+    const projects = await content.getProjects("en");
+    expect(projects.map((p) => p.slug)).toEqual(["flag-and-fill", "pocketpulse", "support-agent", "ssri"]);
+    const flag = projects[0];
+    expect(`${flag?.summary} ${flag?.built} ${flag?.headline}`).not.toMatch(/fully automat|production|zero-touch/i);
   });
 
   it("returns statements in CMS order, per locale, without hidden ones", async () => {
