@@ -3,7 +3,7 @@ import { defineArrayMember, defineField, defineType, type StringRule } from "san
 const hex = (rule: StringRule) => rule.required().regex(/^#[0-9a-fA-F]{6}$/, { name: "hex colour like #1f7a6a" });
 
 const block = defineArrayMember({
-  name: "block",
+  name: "researchBlock",
   title: "Block",
   type: "object",
   fields: [
