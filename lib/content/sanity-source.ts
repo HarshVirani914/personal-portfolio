@@ -7,6 +7,7 @@ import type {
   RawHeroTerminalScript,
   RawProject,
   RawSiteSettings,
+  RawStatement,
 } from "@/lib/content/types";
 
 export const sanityApiVersion = "2025-01-01";
@@ -32,6 +33,9 @@ const queries = {
       "output": output[]${localized},
       hidden
     }
+  }`,
+  statements: `*[_type == "statement"]{
+    "id": _id, "text": text${localized}, order, hidden
   }`,
   projects: `*[_type == "project"]{
     "id": _id, "slug": slug.current,
@@ -85,6 +89,14 @@ export function createSanitySource(): ContentSource {
           output: script.output ?? [],
         })),
       };
+    },
+
+    async getStatements(): Promise<RawStatement[]> {
+      return client.fetch<RawStatement[]>(
+        queries.statements,
+        {},
+        { next: { tags: [contentTags.statement] } },
+      );
     },
 
     async getProjects(): Promise<RawProject[]> {

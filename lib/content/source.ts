@@ -1,4 +1,4 @@
-import type { RawHero, RawProject, RawSiteSettings } from "@/lib/content/types";
+import type { RawHero, RawProject, RawSiteSettings, RawStatement } from "@/lib/content/types";
 
 /**
  * Where raw documents come from. Sanity implements it for production and the
@@ -8,6 +8,7 @@ import type { RawHero, RawProject, RawSiteSettings } from "@/lib/content/types";
 export interface ContentSource {
   getSiteSettings(): Promise<RawSiteSettings | null>;
   getHero(): Promise<RawHero | null>;
+  getStatements(): Promise<RawStatement[]>;
   getProjects(): Promise<RawProject[]>;
 }
 
@@ -15,12 +16,14 @@ export interface ContentSource {
 export const contentTags = {
   siteSettings: "content:siteSettings",
   hero: "content:hero",
+  statement: "content:statement",
   project: "content:project",
 } as const;
 
 const tagByDocumentType: Record<string, string> = {
   siteSettings: contentTags.siteSettings,
   hero: contentTags.hero,
+  statement: contentTags.statement,
   project: contentTags.project,
 };
 

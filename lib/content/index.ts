@@ -45,8 +45,12 @@ export function createContent(source: ContentSource) {
     },
 
     async getHome(locale: Locale): Promise<HomeContent> {
-      const raw = await hero();
+      const [raw, statements] = await Promise.all([hero(), source.getStatements()]);
       return {
+        statements: visibleInOrder(statements).map((item) => ({
+          id: item.id,
+          text: resolveText(item.text, locale),
+        })),
         hero: {
           annotations: visibleInOrder(raw.annotations).map((item, index) => ({
             id: item.id,

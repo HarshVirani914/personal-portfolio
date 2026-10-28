@@ -25,6 +25,13 @@ export type RawHero = {
   terminalScripts: RawHeroTerminalScript[];
 };
 
+export type RawStatement = {
+  id: string;
+  text: Localized;
+  order?: number | null;
+  hidden?: boolean | null;
+};
+
 export type RawProject = {
   id: string;
   slug: string;
@@ -57,6 +64,8 @@ export type Hero = {
   terminal: HeroTerminalScript[];
 };
 
-export type HomeContent = { hero: Hero };
+export type Statement = { id: string; text: string };
+
+export type HomeContent = { hero: Hero; statements: Statement[] };
 
 export type Project = { slug: string; title: string; oneLiner: string };
