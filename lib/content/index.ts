@@ -14,6 +14,7 @@ import type {
   ResearchBlock,
   ResearchPage,
   SiteSettings,
+  SkillGroup,
 } from "@/lib/content/types";
 import type { Locale } from "@/lib/i18n";
 
@@ -174,6 +175,24 @@ export function createContent(source: ContentSource) {
     getProjects,
 
     getResearch,
+
+    /** Groups and skills in CMS order. Empty groups and nameless skills are dropped. */
+    async getSkills(locale: Locale): Promise<SkillGroup[]> {
+      return visibleInOrder(await source.getSkillGroups())
+        .map((group) => ({
+          id: group.id,
+          title: resolveText(group.title, locale),
+          skills: visibleInOrder(group.skills)
+            .filter((skill) => skill.name.trim() !== "")
+            .map((skill) => ({
+              id: skill.id,
+              name: skill.name,
+              note: resolveText(skill.note, locale),
+              accent: skill.ref ? { light: skill.ref.accentLight, dark: skill.ref.accentDark } : null,
+            })),
+        }))
+        .filter((group) => group.skills.length > 0);
+    },
 
     /** Returns null for an unknown or hidden slug; callers turn that into a 404. */
     async getResearchItem(locale: Locale, slug: string): Promise<ResearchPage | null> {

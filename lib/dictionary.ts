@@ -72,6 +72,14 @@ const dictionaries = {
       figureLabel: "Placeholder for the interactive figure",
       nextInResearch: "Next in research",
     },
+    skills: {
+      kicker: "Skills",
+      headingBefore: "Tools I reach for,",
+      headingEmphasis: "and where",
+      headingAfter: ".",
+      hintHover: "Hover or focus a skill to see where I used it.",
+      hintTap: "Tap a skill to see where I used it.",
+    },
   },
   de: {
     skipToContent: "Zum Inhalt springen",
@@ -139,6 +147,14 @@ const dictionaries = {
       figure: "Abb.",
       figureLabel: "Platzhalter für die interaktive Grafik",
       nextInResearch: "Weiter in der Forschung",
+    },
+    skills: {
+      kicker: "Fähigkeiten",
+      headingBefore: "Werkzeuge, nach denen ich greife,",
+      headingEmphasis: "und wo",
+      headingAfter: ".",
+      hintHover: "Fähigkeit anzeigen oder fokussieren, um zu sehen, wo ich sie eingesetzt habe.",
+      hintTap: "Fähigkeit antippen, um zu sehen, wo ich sie eingesetzt habe.",
     },
   },
 } satisfies Record<Locale, unknown>;

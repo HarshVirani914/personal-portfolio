@@ -8,6 +8,7 @@ import type {
   RawProject,
   RawResearch,
   RawSiteSettings,
+  RawSkillGroup,
   RawStatement,
 } from "@/lib/content/types";
 
@@ -94,6 +95,15 @@ const queries = {
     accentLight, accentDark,
     order, hidden
   }`,
+  skillGroups: `*[_type == "skillGroup"]{
+    "id": _id,
+    "title": title${localized},
+    "skills": skills[]{
+      "id": _key, name, "note": note${localized}, hidden,
+      "ref": reference->{ accentLight, accentDark }
+    },
+    order, hidden
+  }`,
 };
 
 type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
@@ -118,6 +128,10 @@ type ResearchDoc = Omit<RawResearch, "sections" | "references" | "accentLight" |
   accentLight: string | null;
   accentDark: string | null;
   updated: string | null;
+};
+
+type SkillGroupDoc = Omit<RawSkillGroup, "skills"> & {
+  skills: (Omit<RawSkillGroup["skills"][number], "ref"> & { ref: { accentLight?: string | null; accentDark?: string | null } | null })[] | null;
 };
 
 /** Reads published documents from Sanity, cached per document type and revalidated by webhook. */
@@ -200,6 +214,22 @@ export function createSanitySource(): ContentSource {
           accentLight: doc.accentLight ?? "#141414",
           accentDark: doc.accentDark ?? "#eceae4",
         }));
+    },
+
+    async getSkillGroups(): Promise<RawSkillGroup[]> {
+      // A skill's tint comes from the project or research item it points at, so those edits refresh it too.
+      const docs = await client.fetch<SkillGroupDoc[]>(
+        queries.skillGroups,
+        {},
+        { next: { tags: [contentTags.skillGroup, contentTags.project, contentTags.research] } },
+      );
+      return docs.map((doc) => ({
+        ...doc,
+        skills: (doc.skills ?? []).map(({ ref, ...skill }) => ({
+          ...skill,
+          ref: ref?.accentLight && ref.accentDark ? { accentLight: ref.accentLight, accentDark: ref.accentDark } : null,
+        })),
+      }));
     },
   };
 }

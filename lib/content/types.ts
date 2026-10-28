@@ -110,6 +110,27 @@ export type RawResearch = {
   hidden?: boolean | null;
 };
 
+/** The project or research item a skill points at; only its colours are used. */
+export type RawSkillRef = { accentLight: string; accentDark: string };
+
+export type RawSkill = {
+  id: string;
+  name: string;
+  /** One line: where the skill was used. */
+  note: Localized;
+  /** Tints the note. Without one the note stays muted. */
+  ref?: RawSkillRef | null;
+  hidden?: boolean | null;
+};
+
+export type RawSkillGroup = {
+  id: string;
+  title: Localized;
+  skills: RawSkill[];
+  order?: number | null;
+  hidden?: boolean | null;
+};
+
 /* Resolved data: what pages, metadata and the agent receive. */
 
 export type SiteSettings = {
@@ -204,3 +225,13 @@ export type Research = {
 
 /** A research item with the item after it (wrapping) for the "Next in research" link. */
 export type ResearchPage = { item: Research; index: number; total: number; next: Research };
+
+export type Skill = {
+  id: string;
+  name: string;
+  note: string;
+  /** Null when the skill points at nothing: the note uses the muted colour. */
+  accent: { light: string; dark: string } | null;
+};
+
+export type SkillGroup = { id: string; title: string; skills: Skill[] };
