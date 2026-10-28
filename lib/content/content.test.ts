@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createContent } from "@/lib/content";
 import { createFixtureSource, fixtureData, type FixtureData } from "@/lib/content/fixture";
-import type { RawProject } from "@/lib/content/types";
+import type { RawProject, RawResearch } from "@/lib/content/types";
 
 const withData = (patch: Partial<FixtureData>) =>
   createContent(createFixtureSource({ ...fixtureData, ...patch }));
@@ -140,5 +140,97 @@ describe("content module", () => {
     const content = withData({ siteSettings: null, hero: null });
     expect((await content.getSiteSettings("en")).name.full).toBe("Harsh Virani");
     expect((await content.getHome("en")).hero.terminal.length).toBeGreaterThan(0);
+  });
+
+  describe("research", () => {
+    const t = (en: string, de?: string) => ({ en, de });
+    const research = (id: string, extra: Partial<RawResearch> = {}): RawResearch => ({
+      id, slug: id, type: "paper", status: t("paper"), period: "2025", title: t(id.toUpperCase()), titleEmphasis: t(""),
+      summary: t(""), kicker: t(""), standfirst: t(""), supervisor: t(""), updated: "2025-01-01", abstract: t("one two three"),
+      sections: [], references: [], accentLight: "#111111", accentDark: "#eeeeee", cite: t(""), ...extra,
+    });
+
+    it("ships the thesis first and the two papers after it", async () => {
+      const content = createContent(createFixtureSource());
+      const items = await content.getResearch("en");
+      expect(items.map((r) => [r.slug, r.type])).toEqual([
+        ["agents-in-the-grid", "thesis"],
+        ["evolving-ecosystem-of-llms", "paper"],
+        ["ai-augmented-low-code", "paper"],
+      ]);
+      expect(items[0]?.status).toBe("in preparation");
+      expect(items.map((r) => r.number)).toEqual([null, "P/01", "P/02"]);
+    });
+
+    it("does not claim the thesis is built, tested or finished", async () => {
+      const [thesis] = await createContent(createFixtureSource()).getResearch("en");
+      const text = [
+        thesis?.summary,
+        thesis?.standfirst,
+        thesis?.abstract,
+        ...(thesis?.sections.flatMap((s) => s.blocks.map((b) => ("text" in b ? b.text : ""))) ?? []),
+      ].join(" ");
+      expect(text).not.toMatch(/is being built|we built|i built|results land|completed|published|\d+(\.\d+)?\s?%/i);
+      expect(text).toMatch(/nothing is implemented/i);
+    });
+
+    it("serves the paper PDFs from the content, not from code", async () => {
+      const papers = (await createContent(createFixtureSource()).getResearch("en")).filter((r) => r.type === "paper");
+      expect(papers.every((paper) => paper.pdfUrl?.endsWith(".pdf"))).toBe(true);
+    });
+
+    it("orders, hides and falls back to English like every other document", async () => {
+      const content = withData({
+        research: [
+          research("c", { order: 3 }),
+          research("h", { order: 0, hidden: true }),
+          research("a", { order: 1, standfirst: t("Hello", "Hallo") }),
+          research("b", { order: 2, standfirst: t("Only English") }),
+        ],
+      });
+      expect((await content.getResearch("en")).map((r) => r.slug)).toEqual(["a", "b", "c"]);
+      const de = await content.getResearch("de");
+      expect(de.map((r) => r.standfirst).slice(0, 2)).toEqual(["Hallo", "Only English"]);
+    });
+
+    it("links each item to the next and wraps, and returns null for unknown or hidden slugs", async () => {
+      const content = withData({ research: [research("a", { order: 1 }), research("b", { order: 2 }), research("x", { hidden: true })] });
+      expect((await content.getResearchItem("en", "a"))?.next.slug).toBe("b");
+      const last = await content.getResearchItem("en", "b");
+      expect(last?.next.slug).toBe("a");
+      expect([last?.index, last?.total]).toEqual([1, 2]);
+      expect(await content.getResearchItem("en", "x")).toBeNull();
+      expect(await content.getResearchItem("en", "nope")).toBeNull();
+    });
+
+    it("numbers sections, figures and side notes in reading order and estimates reading time", async () => {
+      const filler = Array.from({ length: 400 }, () => "word").join(" ");
+      const content = withData({
+        research: [
+          research("a", {
+            abstract: t(filler),
+            sections: [
+              {
+                id: "s1",
+                heading: t("First", "Erstens"),
+                blocks: [
+                  { id: "p1", kind: "paragraph", text: t("Text [1]"), note: t("A note") },
+                  { id: "p2", kind: "paragraph", text: t("No note") },
+                  { id: "f1", kind: "figure", caption: t("One") },
+                  { id: "p3", kind: "paragraph", text: t("More"), note: t("Another") },
+                ],
+              },
+              { id: "s2", heading: t("Second"), blocks: [{ id: "f2", kind: "figure", caption: t("Two"), figure: "k" }] },
+            ],
+          }),
+        ],
+      });
+      const [item] = await content.getResearch("de");
+      expect(item?.sections.map((s) => [s.number, s.heading])).toEqual([["01", "Erstens"], ["02", "Second"]]);
+      const blocks = item?.sections.flatMap((s) => s.blocks) ?? [];
+      expect(blocks.flatMap((b) => (b.kind === "paragraph" ? [b.noteNumber] : []))).toEqual([1, null, 2]);
+      expect(blocks.flatMap((b) => (b.kind === "figure" ? [[b.number, b.figure]] : []))).toEqual([[1, null], [2, "k"]]);
+      expect(item?.readingMinutes).toBe(2);
+    });
   });
 });

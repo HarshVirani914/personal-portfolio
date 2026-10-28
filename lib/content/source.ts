@@ -1,4 +1,4 @@
-import type { RawHero, RawProject, RawSiteSettings, RawStatement } from "@/lib/content/types";
+import type { RawHero, RawProject, RawResearch, RawSiteSettings, RawStatement } from "@/lib/content/types";
 
 /**
  * Where raw documents come from. Sanity implements it for production and the
@@ -10,6 +10,7 @@ export interface ContentSource {
   getHero(): Promise<RawHero | null>;
   getStatements(): Promise<RawStatement[]>;
   getProjects(): Promise<RawProject[]>;
+  getResearch(): Promise<RawResearch[]>;
 }
 
 /** Cache tags, one per document type. Webhook revalidation targets these. */
@@ -18,6 +19,7 @@ export const contentTags = {
   hero: "content:hero",
   statement: "content:statement",
   project: "content:project",
+  research: "content:research",
 } as const;
 
 const tagByDocumentType: Record<string, string> = {
@@ -25,6 +27,7 @@ const tagByDocumentType: Record<string, string> = {
   hero: contentTags.hero,
   statement: contentTags.statement,
   project: contentTags.project,
+  research: contentTags.research,
 };
 
 /** The cache tag a published document of this type invalidates, if the site reads it. */

@@ -8,7 +8,11 @@ import type {
   ProjectPage,
   RawHero,
   RawProject,
+  RawResearch,
   RawSiteSettings,
+  Research,
+  ResearchBlock,
+  ResearchPage,
   SiteSettings,
 } from "@/lib/content/types";
 import type { Locale } from "@/lib/i18n";
@@ -58,6 +62,77 @@ export function createContent(source: ContentSource) {
   const getProjects = async (locale: Locale): Promise<Project[]> =>
     visibleInOrder(await source.getProjects()).map((raw, index) => resolveProject(raw, index, locale));
 
+  const resolveResearch = (raw: RawResearch, paperNumber: number | null, locale: Locale): Research => {
+    let noteCount = 0;
+    let figureCount = 0;
+    const sections = raw.sections.map((section, index) => ({
+      id: section.id,
+      number: String(index + 1).padStart(2, "0"),
+      heading: resolveText(section.heading, locale),
+      blocks: section.blocks.map((block): ResearchBlock => {
+        switch (block.kind) {
+          case "code":
+            return { id: block.id, kind: "code", code: block.code ?? "", caption: resolveText(block.caption, locale) };
+          case "figure":
+            figureCount += 1;
+            return {
+              id: block.id,
+              kind: "figure",
+              figure: block.figure || null,
+              caption: resolveText(block.caption, locale),
+              number: figureCount,
+            };
+          case "quote":
+            return { id: block.id, kind: "quote", text: resolveText(block.text, locale) };
+          default: {
+            const note = resolveText(block.note, locale);
+            if (note) noteCount += 1;
+            return {
+              id: block.id,
+              kind: "paragraph",
+              text: resolveText(block.text, locale),
+              note: note || null,
+              noteNumber: note ? noteCount : null,
+            };
+          }
+        }
+      }),
+    }));
+    const abstract = resolveText(raw.abstract, locale);
+    const words = [abstract, ...sections.flatMap((s) => s.blocks.map((b) => ("text" in b ? b.text : "")))]
+      .join(" ")
+      .split(/\s+/)
+      .filter(Boolean).length;
+    return {
+      slug: raw.slug,
+      type: raw.type,
+      number: paperNumber === null ? null : `P/${String(paperNumber).padStart(2, "0")}`,
+      status: resolveText(raw.status, locale),
+      period: raw.period,
+      title: resolveText(raw.title, locale),
+      titleEmphasis: resolveText(raw.titleEmphasis, locale),
+      summary: resolveText(raw.summary, locale),
+      kicker: resolveText(raw.kicker, locale),
+      standfirst: resolveText(raw.standfirst, locale),
+      supervisor: resolveText(raw.supervisor, locale),
+      updated: raw.updated,
+      readingMinutes: Math.max(1, Math.round(words / 200)),
+      abstract,
+      sections,
+      references: raw.references.map((ref) => resolveText(ref, locale)).filter(Boolean),
+      pdfUrl: raw.pdfUrl || null,
+      cite: resolveText(raw.cite, locale),
+      accent: { light: raw.accentLight, dark: raw.accentDark },
+    };
+  };
+
+  const getResearch = async (locale: Locale): Promise<Research[]> => {
+    let papers = 0;
+    return visibleInOrder(await source.getResearch()).map((raw) =>
+      resolveResearch(raw, raw.type === "paper" ? ++papers : null, locale),
+    );
+  };
+
   return {
     async getSiteSettings(locale: Locale): Promise<SiteSettings> {
       const raw = await settings();
@@ -97,6 +172,17 @@ export function createContent(source: ContentSource) {
     },
 
     getProjects,
+
+    getResearch,
+
+    /** Returns null for an unknown or hidden slug; callers turn that into a 404. */
+    async getResearchItem(locale: Locale, slug: string): Promise<ResearchPage | null> {
+      const items = await getResearch(locale);
+      const index = items.findIndex((item) => item.slug === slug);
+      const item = items[index];
+      if (!item) return null;
+      return { item, index, total: items.length, next: items[(index + 1) % items.length] ?? item };
+    },
 
     /** Returns null for an unknown or hidden slug; callers turn that into a 404. */
     async getProject(locale: Locale, slug: string): Promise<ProjectPage | null> {
