@@ -1,9 +1,10 @@
 import type { ContentSource } from "@/lib/content/source";
-import type { RawHero, RawProject, RawSiteSettings } from "@/lib/content/types";
+import type { RawHero, RawProject, RawSiteSettings, RawStatement } from "@/lib/content/types";
 
 export type FixtureData = {
   siteSettings: RawSiteSettings | null;
   hero: RawHero | null;
+  statements: RawStatement[];
   projects: RawProject[];
 };
 
@@ -78,6 +79,40 @@ export const fixtureData: FixtureData = {
       },
     ],
   },
+  statements: [
+    {
+      id: "agents",
+      order: 1,
+      text: line(
+        "I build agents that hold up outside the demo.",
+        "Ich baue Agenten, die auch außerhalb der Demo bestehen.",
+      ),
+    },
+    {
+      id: "thesis",
+      order: 2,
+      text: line(
+        "My thesis puts research agents to work inside spreadsheets.",
+        "Meine Abschlussarbeit setzt Forschungsagenten in Tabellenkalkulationen ein.",
+      ),
+    },
+    {
+      id: "ship",
+      order: 3,
+      text: line(
+        "And I ship. Products with real users and real payments.",
+        "Und ich liefere aus. Produkte mit echten Nutzern und echten Zahlungen.",
+      ),
+    },
+    {
+      id: "now",
+      order: 4,
+      text: line(
+        "Now: open to AI engineering roles in Germany.",
+        "Jetzt: offen für KI-Engineering-Stellen in Deutschland.",
+      ),
+    },
+  ],
   projects: [
     {
       id: "flag-and-fill",
@@ -94,6 +129,7 @@ export function createFixtureSource(data: FixtureData = fixtureData): ContentSou
   return {
     getSiteSettings: async () => data.siteSettings,
     getHero: async () => data.hero,
+    getStatements: async () => data.statements,
     getProjects: async () => data.projects,
   };
 }

@@ -91,6 +91,19 @@ describe("content module", () => {
     expect(await content.getProject("en", "secret")).toBeNull();
   });
 
+  it("returns statements in CMS order, per locale, without hidden ones", async () => {
+    const content = withData({
+      statements: [
+        { id: "c", text: { en: "third" }, order: 3 },
+        { id: "h", text: { en: "hidden" }, order: 0, hidden: true },
+        { id: "a", text: { en: "first", de: "erste" }, order: 1 },
+        { id: "b", text: { en: "second" }, order: 2 },
+      ],
+    });
+    expect((await content.getHome("en")).statements.map((s) => s.text)).toEqual(["first", "second", "third"]);
+    expect((await content.getHome("de")).statements.map((s) => s.text)).toEqual(["erste", "second", "third"]);
+  });
+
   it("uses the fixture defaults while a singleton is not yet published", async () => {
     const content = withData({ siteSettings: null, hero: null });
     expect((await content.getSiteSettings("en")).name.full).toBe("Harsh Virani");
