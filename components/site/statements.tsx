@@ -43,8 +43,8 @@ export function Statements({ statements, label }: Props) {
         </ol>
       </div>
 
-      <div ref={track} className="motion-reduce:hidden" style={{ height: `${total * 100}vh` }}>
-        <div className="sticky top-0 flex h-dvh items-center px-5 md:px-10 lg:px-16">
+      <div ref={track} className="motion-reduce:hidden" style={{ height: `${total * 100}svh` }}>
+        <div className="sticky top-0 flex h-svh items-center px-5 md:px-10 lg:px-16">
           <div aria-hidden="true" className="absolute inset-x-0 top-24 h-px bg-hairline lg:inset-x-auto lg:top-40 lg:bottom-40 lg:left-0 lg:h-auto lg:w-px">
             <div
               data-testid="statements-progress"
