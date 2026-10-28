@@ -64,7 +64,7 @@ export default async function LocaleLayout({
       suppressHydrationWarning
       className={cn(geist.variable, geistMono.variable, instrumentSerif.variable)}
     >
-      <body className="min-h-dvh">
+      <body className="min-h-svh">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <a
             href="#main"
