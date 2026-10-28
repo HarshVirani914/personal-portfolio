@@ -1,11 +1,13 @@
 import type { ContentSource } from "@/lib/content/source";
-import type { RawHero, RawProject, RawSiteSettings, RawStatement } from "@/lib/content/types";
+import { fixtureResearch } from "@/lib/content/fixture-research";
+import type { RawHero, RawProject, RawResearch, RawSiteSettings, RawStatement } from "@/lib/content/types";
 
 export type FixtureData = {
   siteSettings: RawSiteSettings | null;
   hero: RawHero | null;
   statements: RawStatement[];
   projects: RawProject[];
+  research: RawResearch[];
 };
 
 const line = (en: string, de?: string) => ({ en, de });
@@ -357,6 +359,7 @@ export const fixtureData: FixtureData = {
       ],
     },
   ],
+  research: fixtureResearch,
 };
 
 /** A content source backed by plain data. Pass your own data in tests. */
@@ -366,5 +369,6 @@ export function createFixtureSource(data: FixtureData = fixtureData): ContentSou
     getHero: async () => data.hero,
     getStatements: async () => data.statements,
     getProjects: async () => data.projects,
+    getResearch: async () => data.research,
   };
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sheet,
   SheetClose,
@@ -31,6 +31,14 @@ export function SiteHeader({ locale, dict, name, coordinates, city }: Props) {
   const reduce = useReducedMotion();
   const [showCity, setShowCity] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 8);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
 
   const links = [
     { href: localizedPath("/#work", locale), label: dict.nav.work },
@@ -44,7 +52,8 @@ export function SiteHeader({ locale, dict, name, coordinates, city }: Props) {
       initial={reduce ? false : { opacity: 0, y: 10, filter: "blur(8px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: ENTER_DELAY }}
-      className="fixed inset-x-0 top-0 z-40 px-5 pt-5 md:px-10 md:pt-8 lg:px-16 lg:pt-10"
+      data-scrolled={scrolled}
+      className="fixed inset-x-0 top-0 z-40 border-b border-transparent px-5 pt-5 pb-3 transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled=true]:border-hairline data-[scrolled=true]:bg-background/85 data-[scrolled=true]:backdrop-blur-md md:px-10 md:pt-8 lg:px-16 lg:pt-10 lg:pb-4"
     >
       <div className="flex items-center justify-between gap-6 lg:grid lg:grid-cols-12 lg:gap-6">
         <button

@@ -22,7 +22,7 @@ test.describe("site shell", () => {
   test("language switch keeps the page", async ({ page, isMobile }) => {
     await page.goto("/");
     if (isMobile) await page.getByRole("button", { name: "Menu" }).click();
-    await page.getByRole("link", { name: "DE" }).click();
+    await page.getByRole("link", { name: "DE", exact: true }).click();
     await expect(page).toHaveURL(/\/de$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
   });

@@ -6,6 +6,7 @@ import type {
   RawHeroAnnotation,
   RawHeroTerminalScript,
   RawProject,
+  RawResearch,
   RawSiteSettings,
   RawStatement,
 } from "@/lib/content/types";
@@ -63,6 +64,36 @@ const queries = {
     figure,
     order, hidden
   }`,
+  research: `*[_type == "research"]{
+    "id": _id, "slug": slug.current,
+    type,
+    "status": status${localized},
+    period,
+    "title": title${localized},
+    "titleEmphasis": titleEmphasis${localized},
+    "summary": summary${localized},
+    "kicker": kicker${localized},
+    "standfirst": standfirst${localized},
+    "supervisor": supervisor${localized},
+    updated,
+    "abstract": abstract${localized},
+    "sections": sections[]{
+      "id": _key,
+      "heading": heading${localized},
+      "blocks": blocks[]{
+        "id": _key, kind,
+        "text": text${localized},
+        "note": note${localized},
+        code, figure,
+        "caption": caption${localized}
+      }
+    },
+    "references": references[]${localized},
+    "pdfUrl": pdf.asset->url,
+    "cite": cite${localized},
+    accentLight, accentDark,
+    order, hidden
+  }`,
 };
 
 type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
@@ -79,6 +110,14 @@ type ProjectDoc = Omit<RawProject, "tags" | "stats" | "accentLight" | "accentDar
   stats: RawProject["stats"] | null;
   accentLight: string | null;
   accentDark: string | null;
+};
+
+type ResearchDoc = Omit<RawResearch, "sections" | "references" | "accentLight" | "accentDark" | "updated"> & {
+  sections: { id: string; heading: Localized; blocks: RawResearch["sections"][number]["blocks"] | null }[] | null;
+  references: Localized[] | null;
+  accentLight: string | null;
+  accentDark: string | null;
+  updated: string | null;
 };
 
 /** Reads published documents from Sanity, cached per document type and revalidated by webhook. */
@@ -139,6 +178,25 @@ export function createSanitySource(): ContentSource {
           ...doc,
           tags: doc.tags ?? [],
           stats: doc.stats ?? [],
+          accentLight: doc.accentLight ?? "#141414",
+          accentDark: doc.accentDark ?? "#eceae4",
+        }));
+    },
+
+    async getResearch(): Promise<RawResearch[]> {
+      const docs = await client.fetch<ResearchDoc[]>(
+        queries.research,
+        {},
+        { next: { tags: [contentTags.research] } },
+      );
+      // A half-filled draft must not break the page: skip any without a slug.
+      return docs
+        .filter((doc) => doc.slug)
+        .map((doc) => ({
+          ...doc,
+          updated: doc.updated ?? "",
+          sections: (doc.sections ?? []).map((section) => ({ ...section, blocks: section.blocks ?? [] })),
+          references: doc.references ?? [],
           accentLight: doc.accentLight ?? "#141414",
           accentDark: doc.accentDark ?? "#eceae4",
         }));

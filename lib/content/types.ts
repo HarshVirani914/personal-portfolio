@@ -64,6 +64,52 @@ export type RawProject = {
   hidden?: boolean | null;
 };
 
+export type RawResearchBlock = {
+  id: string;
+  kind: "paragraph" | "code" | "figure" | "quote";
+  /** Paragraph or quote text. A paragraph may cite references as [1]. */
+  text?: Localized | null;
+  /** Side note on a paragraph: in the margin on desktop, tap-to-open on mobile. */
+  note?: Localized | null;
+  code?: string | null;
+  /** Key of an anatomy figure, once one exists. Null shows the placeholder. */
+  figure?: string | null;
+  caption?: Localized | null;
+};
+
+export type RawResearchSection = { id: string; heading: Localized; blocks: RawResearchBlock[] };
+
+export type RawResearch = {
+  id: string;
+  slug: string;
+  type: "thesis" | "paper";
+  /** Shown beside the type: "ongoing", "published". */
+  status: Localized;
+  /** "2026 — 27" for a thesis, "2025" for a paper. */
+  period: string;
+  title: Localized;
+  /** The italic tail of the title, empty for most papers. */
+  titleEmphasis: Localized;
+  /** The short line on the home list. */
+  summary: Localized;
+  /** The line above the title on the research page. */
+  kicker: Localized;
+  standfirst: Localized;
+  supervisor: Localized;
+  /** ISO date, e.g. 2026-10-01. */
+  updated: string;
+  abstract: Localized;
+  sections: RawResearchSection[];
+  references: Localized[];
+  /** URL of the uploaded PDF, if the item has one. */
+  pdfUrl?: string | null;
+  cite: Localized;
+  accentLight: string;
+  accentDark: string;
+  order?: number | null;
+  hidden?: boolean | null;
+};
+
 /* Resolved data: what pages, metadata and the agent receive. */
 
 export type SiteSettings = {
@@ -118,3 +164,43 @@ export type Project = {
 
 /** A project with its position in the list and the project after it (wrapping). */
 export type ProjectPage = { project: Project; index: number; total: number; next: Project };
+
+export type ResearchBlock =
+  | { id: string; kind: "paragraph"; text: string; note: string | null; noteNumber: number | null }
+  | { id: string; kind: "code"; code: string; caption: string }
+  | { id: string; kind: "figure"; figure: string | null; caption: string; number: number }
+  | { id: string; kind: "quote"; text: string };
+
+export type ResearchSection = {
+  id: string;
+  /** Two-digit position: "01". The abstract is "00" and has no section. */
+  number: string;
+  heading: string;
+  blocks: ResearchBlock[];
+};
+
+export type Research = {
+  slug: string;
+  type: "thesis" | "paper";
+  /** "P/01" for papers, null for the thesis. */
+  number: string | null;
+  status: string;
+  period: string;
+  title: string;
+  titleEmphasis: string;
+  summary: string;
+  kicker: string;
+  standfirst: string;
+  supervisor: string;
+  updated: string;
+  readingMinutes: number;
+  abstract: string;
+  sections: ResearchSection[];
+  references: string[];
+  pdfUrl: string | null;
+  cite: string;
+  accent: { light: string; dark: string };
+};
+
+/** A research item with the item after it (wrapping) for the "Next in research" link. */
+export type ResearchPage = { item: Research; index: number; total: number; next: Research };

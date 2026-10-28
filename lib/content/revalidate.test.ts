@@ -44,6 +44,14 @@ describe("revalidation route", () => {
     expect(await response.json()).toEqual({ revalidated: [contentTags.hero] });
   });
 
+  it("revalidates research when a research document is published", async () => {
+    const revalidate = vi.fn();
+    const body = '{"_type":"research"}';
+    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    expect(response.status).toBe(200);
+    expect(revalidate).toHaveBeenCalledExactlyOnceWith(contentTags.research);
+  });
+
   it("revalidates nothing for a document type the site does not read", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"sanity.imageAsset"}';
