@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { ScrollRestoration } from "@/components/site/scroll-restoration";
 import { SiteHeader } from "@/components/site/site-header";
 import { SmoothScroll } from "@/components/site/smooth-scroll";
 import { getDictionary } from "@/lib/dictionary";
@@ -72,6 +73,7 @@ export default async function LocaleLayout({
             {dict.skipToContent}
           </a>
           <SmoothScroll />
+          <ScrollRestoration />
           <SiteHeader
             locale={locale}
             dict={dict}
