@@ -261,3 +261,29 @@ html.lenis body {
     opacity: 1;
   }
 }
+
+/*
+ * Project accents. A project sets --pa-l and --pa-d inline; inside the
+ * .project-accent scope --project-accent resolves for the active theme. The
+ * colour exists nowhere else on the page.
+ */
+.project-accent {
+  --project-accent: var(--pa-l);
+}
+.dark .project-accent {
+  --project-accent: var(--pa-d);
+}
+
+/* The shared-element morph between a project row and its page. */
+::view-transition-group(.project-morph) {
+  animation-duration: 500ms;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

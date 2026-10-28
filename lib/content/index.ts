@@ -5,7 +5,9 @@ import type { ContentSource } from "@/lib/content/source";
 import type {
   HomeContent,
   Project,
+  ProjectPage,
   RawHero,
+  RawProject,
   RawSiteSettings,
   SiteSettings,
 } from "@/lib/content/types";
@@ -22,12 +24,39 @@ export function createContent(source: ContentSource) {
   const hero = async (): Promise<RawHero> =>
     (await source.getHero()) ?? (fixtureData.hero as RawHero);
 
+  const resolveProject = (raw: RawProject, index: number, locale: Locale): Project => ({
+    slug: raw.slug,
+    number: String(index + 1).padStart(2, "0"),
+    title: resolveText(raw.title, locale),
+    kind: resolveText(raw.kind, locale),
+    year: raw.year,
+    oneLiner: resolveText(raw.oneLiner, locale),
+    summary: resolveText(raw.summary, locale),
+    headline: resolveText(raw.headline, locale),
+    headlineEmphasis: resolveText(raw.headlineEmphasis, locale),
+    tags: raw.tags,
+    status: resolveText(raw.status, locale),
+    statusDetail: resolveText(raw.statusDetail, locale),
+    liveUrl: raw.liveUrl || null,
+    accent: { light: raw.accentLight, dark: raw.accentDark },
+    meta: {
+      role: resolveText(raw.role, locale),
+      client: resolveText(raw.client, locale),
+      stack: resolveText(raw.stack, locale),
+    },
+    problem: resolveText(raw.problem, locale),
+    built: resolveText(raw.built, locale),
+    stats: raw.stats.map((stat) => ({
+      id: stat.id,
+      value: resolveText(stat.value, locale),
+      label: resolveText(stat.label, locale),
+      accent: Boolean(stat.accent),
+    })),
+    figure: raw.figure || null,
+  });
+
   const getProjects = async (locale: Locale): Promise<Project[]> =>
-    visibleInOrder(await source.getProjects()).map((raw) => ({
-      slug: raw.slug,
-      title: resolveText(raw.title, locale),
-      oneLiner: resolveText(raw.oneLiner, locale),
-    }));
+    visibleInOrder(await source.getProjects()).map((raw, index) => resolveProject(raw, index, locale));
 
   return {
     async getSiteSettings(locale: Locale): Promise<SiteSettings> {
@@ -70,9 +99,12 @@ export function createContent(source: ContentSource) {
     getProjects,
 
     /** Returns null for an unknown or hidden slug; callers turn that into a 404. */
-    async getProject(locale: Locale, slug: string): Promise<Project | null> {
+    async getProject(locale: Locale, slug: string): Promise<ProjectPage | null> {
       const projects = await getProjects(locale);
-      return projects.find((project) => project.slug === slug) ?? null;
+      const index = projects.findIndex((project) => project.slug === slug);
+      const project = projects[index];
+      if (!project) return null;
+      return { project, index, total: projects.length, next: projects[(index + 1) % projects.length] ?? project };
     },
   };
 }
