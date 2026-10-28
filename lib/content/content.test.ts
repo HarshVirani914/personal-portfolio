@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createContent } from "@/lib/content";
 import { createFixtureSource, fixtureData, type FixtureData } from "@/lib/content/fixture";
-import type { RawProject, RawResearch } from "@/lib/content/types";
+import type { RawProject, RawResearch, RawSkillGroup } from "@/lib/content/types";
 
 const withData = (patch: Partial<FixtureData>) =>
   createContent(createFixtureSource({ ...fixtureData, ...patch }));
@@ -231,6 +231,52 @@ describe("content module", () => {
       expect(blocks.flatMap((b) => (b.kind === "paragraph" ? [b.noteNumber] : []))).toEqual([1, null, 2]);
       expect(blocks.flatMap((b) => (b.kind === "figure" ? [[b.number, b.figure]] : []))).toEqual([[1, null], [2, "k"]]);
       expect(item?.readingMinutes).toBe(2);
+    });
+  });
+
+  describe("skills", () => {
+    const t = (en: string, de?: string) => ({ en, de });
+    const group = (id: string, extra: Partial<RawSkillGroup> = {}): RawSkillGroup => ({
+      id, title: t(id), skills: [{ id: `${id}-s`, name: "Skill", note: t("note") }], ...extra,
+    });
+
+    it("ships four groups whose notes take the colour of the item they point at", async () => {
+      const content = createContent(createFixtureSource());
+      const groups = await content.getSkills("en");
+      expect(groups.map((g) => g.title)).toEqual(["Agents & LLMs", "Retrieval & evaluation", "Machine learning", "Product engineering"]);
+      const langgraph = groups[0]?.skills.find((s) => s.name === "LangGraph");
+      expect(langgraph?.accent).toEqual({ light: "#a33a6b", dark: "#e07aa8" });
+      const langchain = groups[0]?.skills.find((s) => s.name === "LangChain");
+      expect(langchain?.accent).toBeNull();
+    });
+
+    it("never claims the thesis evaluation has been run", async () => {
+      const groups = await createContent(createFixtureSource()).getSkills("en");
+      const thesis = groups.flatMap((g) => g.skills).find((s) => s.name === "Agent evals");
+      expect(thesis?.note).toMatch(/planned/i);
+    });
+
+    it("orders and hides groups and skills, drops empty groups, and falls back to English", async () => {
+      const content = withData({
+        skillGroups: [
+          group("c", { order: 2, title: t("Third", "Dritte") }),
+          group("h", { order: 0, hidden: true }),
+          group("a", {
+            order: 1,
+            skills: [
+              { id: "x", name: "X", note: t("only english") },
+              { id: "y", name: "Y", note: t("hidden"), hidden: true },
+              { id: "z", name: "Z", note: t("note", "Notiz"), ref: { accentLight: "#111111", accentDark: "#eeeeee" } },
+            ],
+          }),
+          group("e", { order: 3, skills: [] }),
+        ],
+      });
+      const de = await content.getSkills("de");
+      expect(de.map((g) => g.id)).toEqual(["a", "c"]);
+      expect(de[0]?.skills.map((s) => [s.name, s.note])).toEqual([["X", "only english"], ["Z", "Notiz"]]);
+      expect(de[0]?.skills[1]?.accent).toEqual({ light: "#111111", dark: "#eeeeee" });
+      expect(de[1]?.title).toBe("Dritte");
     });
   });
 });

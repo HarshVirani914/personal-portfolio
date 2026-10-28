@@ -1,6 +1,7 @@
 import type { ContentSource } from "@/lib/content/source";
 import { fixtureResearch } from "@/lib/content/fixture-research";
-import type { RawHero, RawProject, RawResearch, RawSiteSettings, RawStatement } from "@/lib/content/types";
+import { buildSkillGroups } from "@/lib/content/fixture-skills";
+import type { RawHero, RawProject, RawResearch, RawSiteSettings, RawSkillGroup, RawStatement } from "@/lib/content/types";
 
 export type FixtureData = {
   siteSettings: RawSiteSettings | null;
@@ -8,11 +9,12 @@ export type FixtureData = {
   statements: RawStatement[];
   projects: RawProject[];
   research: RawResearch[];
+  skillGroups: RawSkillGroup[];
 };
 
 const line = (en: string, de?: string) => ({ en, de });
 
-export const fixtureData: FixtureData = {
+const base: Omit<FixtureData, "skillGroups"> = {
   siteSettings: {
     firstName: "Harsh",
     lastName: "Virani",
@@ -362,6 +364,14 @@ export const fixtureData: FixtureData = {
   research: fixtureResearch,
 };
 
+/** A skill takes the colours of the project or research item it points at. */
+const refOf = (slug: string) => {
+  const item = [...base.projects, ...base.research].find((entry) => entry.slug === slug);
+  return item ? { accentLight: item.accentLight, accentDark: item.accentDark } : null;
+};
+
+export const fixtureData: FixtureData = { ...base, skillGroups: buildSkillGroups(refOf) };
+
 /** A content source backed by plain data. Pass your own data in tests. */
 export function createFixtureSource(data: FixtureData = fixtureData): ContentSource {
   return {
@@ -370,5 +380,6 @@ export function createFixtureSource(data: FixtureData = fixtureData): ContentSou
     getStatements: async () => data.statements,
     getProjects: async () => data.projects,
     getResearch: async () => data.research,
+    getSkillGroups: async () => data.skillGroups,
   };
 }
