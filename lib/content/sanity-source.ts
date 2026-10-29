@@ -2,6 +2,9 @@ import { createClient } from "next-sanity";
 import { contentTags, type ContentSource } from "@/lib/content/source";
 import type { Localized } from "@/lib/content/localized";
 import type {
+  RawCertification,
+  RawEducation,
+  RawExperience,
   RawHero,
   RawHeroAnnotation,
   RawHeroTerminalScript,
@@ -104,6 +107,21 @@ const queries = {
     },
     order, hidden
   }`,
+  experience: `*[_type == "experience"]{
+    "id": _id, "years": years${localized}, company, "role": role${localized},
+    "bullets": bullets[]${localized},
+    order, hidden
+  }`,
+  education: `*[_type == "education"]{
+    "id": _id, "years": years${localized},
+    "degree": degree${localized},
+    "institution": institution${localized},
+    "tags": tags[]{ "id": _key, "label": label${localized}, url },
+    order, hidden
+  }`,
+  certifications: `*[_type == "certification"]{
+    "id": _id, name, issuer, credentialUrl, order, hidden
+  }`,
 };
 
 type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
@@ -132,6 +150,14 @@ type ResearchDoc = Omit<RawResearch, "sections" | "references" | "accentLight" |
 
 type SkillGroupDoc = Omit<RawSkillGroup, "skills"> & {
   skills: (Omit<RawSkillGroup["skills"][number], "ref"> & { ref: { accentLight?: string | null; accentDark?: string | null } | null })[] | null;
+};
+
+type ExperienceDoc = Omit<RawExperience, "bullets" | "company"> & { bullets: Localized[] | null; company: string | null };
+type EducationDoc = Omit<RawEducation, "tags"> & { tags: RawEducation["tags"] | null };
+type CertificationDoc = Omit<RawCertification, "name" | "issuer" | "credentialUrl"> & {
+  name: string | null;
+  issuer: string | null;
+  credentialUrl: string | null;
 };
 
 /** Reads published documents from Sanity, cached per document type and revalidated by webhook. */
@@ -229,6 +255,30 @@ export function createSanitySource(): ContentSource {
           ...skill,
           ref: ref?.accentLight && ref.accentDark ? { accentLight: ref.accentLight, accentDark: ref.accentDark } : null,
         })),
+      }));
+    },
+
+    async getExperience(): Promise<RawExperience[]> {
+      const docs = await client.fetch<ExperienceDoc[]>(queries.experience, {}, { next: { tags: [contentTags.experience] } });
+      return docs.map((doc) => ({ ...doc, company: doc.company ?? "", bullets: doc.bullets ?? [] }));
+    },
+
+    async getEducation(): Promise<RawEducation[]> {
+      const docs = await client.fetch<EducationDoc[]>(queries.education, {}, { next: { tags: [contentTags.education] } });
+      return docs.map((doc) => ({ ...doc, tags: doc.tags ?? [] }));
+    },
+
+    async getCertifications(): Promise<RawCertification[]> {
+      const docs = await client.fetch<CertificationDoc[]>(
+        queries.certifications,
+        {},
+        { next: { tags: [contentTags.certification] } },
+      );
+      return docs.map((doc) => ({
+        ...doc,
+        name: doc.name ?? "",
+        issuer: doc.issuer ?? "",
+        credentialUrl: doc.credentialUrl ?? "",
       }));
     },
   };

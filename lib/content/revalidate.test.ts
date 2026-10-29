@@ -60,6 +60,18 @@ describe("revalidation route", () => {
     expect(revalidate).toHaveBeenCalledExactlyOnceWith(contentTags.skillGroup);
   });
 
+  it.each([
+    ["experience", contentTags.experience],
+    ["education", contentTags.education],
+    ["certification", contentTags.certification],
+  ])("revalidates %s when it is published", async (type, tag) => {
+    const revalidate = vi.fn();
+    const body = JSON.stringify({ _type: type });
+    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    expect(response.status).toBe(200);
+    expect(revalidate).toHaveBeenCalledExactlyOnceWith(tag);
+  });
+
   it("revalidates nothing for a document type the site does not read", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"sanity.imageAsset"}';

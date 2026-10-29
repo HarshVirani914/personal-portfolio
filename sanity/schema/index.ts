@@ -1,3 +1,6 @@
+import { certification } from "./certification";
+import { education } from "./education";
+import { experience } from "./experience";
 import { hero } from "./hero";
 import { localizedString, localizedText } from "./localized";
 import { project } from "./project";
@@ -6,4 +9,4 @@ import { skillGroup } from "./skill-group";
 import { statement } from "./statement";
 import { siteSettings } from "./site-settings";
 
-export const schemaTypes = [localizedString, localizedText, siteSettings, hero, statement, project, research, skillGroup];
+export const schemaTypes = [localizedString, localizedText, siteSettings, hero, statement, project, research, skillGroup, experience, education, certification];
