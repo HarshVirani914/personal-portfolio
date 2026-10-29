@@ -87,3 +87,10 @@ test.describe("contact", () => {
     expect(fits).toBe(true);
   });
 });
+
+test("the German site links the German CV", async ({ page }) => {
+  await page.goto("/de");
+  await expect(
+    page.locator("#contact").getByRole("link", { name: /Lebenslauf/ })
+  ).toHaveAttribute("href", /harsh-virani-ai-ml-cv-de\.pdf$/);
+});

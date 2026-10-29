@@ -29,7 +29,10 @@ describe("content module", () => {
     const { contact } = await full.getSiteSettings("de");
     expect(contact.email).toBe("harshvirani.91@gmail.com");
     expect(contact.availability).toContain("Offen");
-    expect(contact.cvUrl).toMatch(/\.pdf$/);
+    expect(contact.cvUrl).toBe("/harsh-virani-ai-ml-cv-de.pdf");
+    expect((await full.getSiteSettings("en")).contact.cvUrl).toBe(
+      "/harsh-virani-ai-ml-cv.pdf"
+    );
 
     const base = fixtureData.siteSettings!;
     const sparse = withData({
@@ -44,6 +47,11 @@ describe("content module", () => {
     expect(blank.email).toBeNull();
     expect(blank.availability).toBe("");
     expect(blank.cvUrl).toBeNull();
+
+    const noGerman = withData({ siteSettings: { ...base, cvDeUrl: null } });
+    expect((await noGerman.getSiteSettings("de")).contact.cvUrl).toBe(
+      "/harsh-virani-ai-ml-cv.pdf"
+    );
   });
 
   it("falls back to English when German is missing or blank", async () => {
