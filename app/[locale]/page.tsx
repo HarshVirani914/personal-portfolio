@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { EducationAchievements } from "@/components/site/education";
+import { ExperienceList } from "@/components/site/experience";
 import { Hero } from "@/components/site/hero";
 import { ResearchList } from "@/components/site/research-list";
 import { SelectedWork } from "@/components/site/selected-work";
@@ -11,12 +13,14 @@ import { isLocale } from "@/lib/i18n";
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const [settings, home, projects, research, skills] = await Promise.all([
+  const [settings, home, projects, research, skills, experience, education] = await Promise.all([
     content.getSiteSettings(locale),
     content.getHome(locale),
     content.getProjects(locale),
     content.getResearch(locale),
     content.getSkills(locale),
+    content.getExperience(locale),
+    content.getEducation(locale),
   ]);
   const dict = getDictionary(locale);
 
@@ -27,6 +31,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <SelectedWork projects={projects} locale={locale} dict={dict.work} />
       <ResearchList items={research} locale={locale} dict={dict.research} />
       <Skills groups={skills} dict={dict.skills} />
+      <ExperienceList items={experience} dict={dict.experience} />
+      <EducationAchievements data={education} dict={dict.education} />
     </main>
   );
 }

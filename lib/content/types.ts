@@ -131,6 +131,36 @@ export type RawSkillGroup = {
   hidden?: boolean | null;
 };
 
+export type RawExperience = {
+  id: string;
+  years: Localized;
+  company: string;
+  role: Localized;
+  bullets: Localized[];
+  order?: number | null;
+  hidden?: boolean | null;
+};
+
+export type RawEducation = {
+  id: string;
+  years: Localized;
+  degree: Localized;
+  institution: Localized;
+  /** Short badges such as "Dean's List 2025". */
+  tags: Localized[];
+  order?: number | null;
+  hidden?: boolean | null;
+};
+
+export type RawCertification = {
+  id: string;
+  name: string;
+  issuer: string;
+  credentialUrl: string;
+  order?: number | null;
+  hidden?: boolean | null;
+};
+
 /* Resolved data: what pages, metadata and the agent receive. */
 
 export type SiteSettings = {
@@ -235,3 +265,11 @@ export type Skill = {
 };
 
 export type SkillGroup = { id: string; title: string; skills: Skill[] };
+
+export type Experience = { id: string; years: string; company: string; role: string; bullets: string[] };
+
+export type Education = { id: string; years: string; degree: string; institution: string; tags: string[] };
+
+export type Certification = { id: string; name: string; issuer: string; url: string };
+
+export type EducationContent = { education: Education[]; certifications: Certification[] };

@@ -279,4 +279,46 @@ describe("content module", () => {
       expect(de[1]?.title).toBe("Dritte");
     });
   });
+  describe("career", () => {
+    const t = (en: string, de?: string) => ({ en, de });
+
+    it("ships newest-first roles and both degrees with their tags", async () => {
+      const content = createContent(createFixtureSource());
+      const experience = await content.getExperience("en");
+      expect(experience.map((row) => row.company)).toEqual(["Silver Spring", "TechStaunch Solutions"]);
+      expect(experience[1]?.years).toBe("2024 — 2025");
+      const { education, certifications } = await content.getEducation("en");
+      expect(education.map((row) => [row.degree, row.tags])).toEqual([
+        ["M.Sc. AI & Robotics", ["Dean's List 2025"]],
+        ["B.Sc. Computer Science", ["MYSY Scholarship"]],
+      ]);
+      expect(certifications.map((cert) => cert.issuer)).toEqual(["Oracle", "Anthropic"]);
+      expect(certifications.every((cert) => cert.url.startsWith("https://"))).toBe(true);
+    });
+
+    it("never rounds the TechStaunch role up to a year", async () => {
+      const row = (await createContent(createFixtureSource()).getExperience("en")).find((r) => r.company.startsWith("TechStaunch"));
+      expect(row?.bullets.join(" ")).not.toMatch(/one year|35%/i);
+    });
+
+    it("orders and hides rows, skips blank bullets and falls back to English", async () => {
+      const content = withData({
+        experience: [
+          { id: "b", years: t("2"), company: "B", role: t("Role B", "Rolle B"), bullets: [t("x", "y"), t("")], order: 2 },
+          { id: "h", years: t("0"), company: "H", role: t("Hidden"), bullets: [], hidden: true },
+          { id: "a", years: t("1"), company: "A", role: t("Role A"), bullets: [], order: 1 },
+          { id: "n", years: t("3"), company: "", role: t("Nameless"), bullets: [], order: 3 },
+        ],
+        certifications: [
+          { id: "ok", name: "Ok", issuer: "I", credentialUrl: "https://example.com/c", order: 1 },
+          { id: "nolink", name: "No link", issuer: "I", credentialUrl: "", order: 2 },
+        ],
+      });
+      const de = await content.getExperience("de");
+      expect(de.map((row) => row.id)).toEqual(["a", "b"]);
+      expect(de[0]?.role).toBe("Role A");
+      expect(de[1]).toMatchObject({ role: "Rolle B", bullets: ["y"] });
+      expect((await content.getEducation("de")).certifications.map((cert) => cert.id)).toEqual(["ok"]);
+    });
+  });
 });

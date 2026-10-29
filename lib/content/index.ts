@@ -3,6 +3,9 @@ import { resolveText, visibleInOrder } from "@/lib/content/localized";
 import { createSanitySource, isSanityConfigured } from "@/lib/content/sanity-source";
 import type { ContentSource } from "@/lib/content/source";
 import type {
+  Education,
+  EducationContent,
+  Experience,
   HomeContent,
   Project,
   ProjectPage,
@@ -192,6 +195,40 @@ export function createContent(source: ContentSource) {
             })),
         }))
         .filter((group) => group.skills.length > 0);
+    },
+
+    /** Roles in CMS order. Rows without a company or role are dropped; blank bullets are skipped. */
+    async getExperience(locale: Locale): Promise<Experience[]> {
+      return visibleInOrder(await source.getExperience())
+        .map((row) => ({
+          id: row.id,
+          years: resolveText(row.years, locale),
+          company: row.company,
+          role: resolveText(row.role, locale),
+          bullets: row.bullets.map((bullet) => resolveText(bullet, locale)).filter(Boolean),
+        }))
+        .filter((row) => row.company.trim() !== "" && row.role !== "");
+    },
+
+    /** Degrees and certifications in CMS order. Certifications without a link are dropped: they could not be verified. */
+    async getEducation(locale: Locale): Promise<EducationContent> {
+      const [education, certifications] = await Promise.all([source.getEducation(), source.getCertifications()]);
+      return {
+        education: visibleInOrder(education)
+          .map(
+            (row): Education => ({
+              id: row.id,
+              years: resolveText(row.years, locale),
+              degree: resolveText(row.degree, locale),
+              institution: resolveText(row.institution, locale),
+              tags: row.tags.map((tag) => resolveText(tag, locale)).filter(Boolean),
+            }),
+          )
+          .filter((row) => row.degree !== ""),
+        certifications: visibleInOrder(certifications)
+          .filter((cert) => cert.name.trim() !== "" && cert.credentialUrl.trim() !== "")
+          .map((cert) => ({ id: cert.id, name: cert.name, issuer: cert.issuer, url: cert.credentialUrl })),
+      };
     },
 
     /** Returns null for an unknown or hidden slug; callers turn that into a 404. */

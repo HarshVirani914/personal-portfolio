@@ -1,7 +1,18 @@
 import type { ContentSource } from "@/lib/content/source";
 import { fixtureResearch } from "@/lib/content/fixture-research";
+import { fixtureCertifications, fixtureEducation, fixtureExperience } from "@/lib/content/fixture-career";
 import { buildSkillGroups } from "@/lib/content/fixture-skills";
-import type { RawHero, RawProject, RawResearch, RawSiteSettings, RawSkillGroup, RawStatement } from "@/lib/content/types";
+import type {
+  RawCertification,
+  RawEducation,
+  RawExperience,
+  RawHero,
+  RawProject,
+  RawResearch,
+  RawSiteSettings,
+  RawSkillGroup,
+  RawStatement,
+} from "@/lib/content/types";
 
 export type FixtureData = {
   siteSettings: RawSiteSettings | null;
@@ -10,11 +21,14 @@ export type FixtureData = {
   projects: RawProject[];
   research: RawResearch[];
   skillGroups: RawSkillGroup[];
+  experience: RawExperience[];
+  education: RawEducation[];
+  certifications: RawCertification[];
 };
 
 const line = (en: string, de?: string) => ({ en, de });
 
-const base: Omit<FixtureData, "skillGroups"> = {
+const base: Omit<FixtureData, "skillGroups" | "experience" | "education" | "certifications"> = {
   siteSettings: {
     firstName: "Harsh",
     lastName: "Virani",
@@ -370,7 +384,13 @@ const refOf = (slug: string) => {
   return item ? { accentLight: item.accentLight, accentDark: item.accentDark } : null;
 };
 
-export const fixtureData: FixtureData = { ...base, skillGroups: buildSkillGroups(refOf) };
+export const fixtureData: FixtureData = {
+  ...base,
+  skillGroups: buildSkillGroups(refOf),
+  experience: fixtureExperience,
+  education: fixtureEducation,
+  certifications: fixtureCertifications,
+};
 
 /** A content source backed by plain data. Pass your own data in tests. */
 export function createFixtureSource(data: FixtureData = fixtureData): ContentSource {
@@ -381,5 +401,8 @@ export function createFixtureSource(data: FixtureData = fixtureData): ContentSou
     getProjects: async () => data.projects,
     getResearch: async () => data.research,
     getSkillGroups: async () => data.skillGroups,
+    getExperience: async () => data.experience,
+    getEducation: async () => data.education,
+    getCertifications: async () => data.certifications,
   };
 }
