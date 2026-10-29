@@ -38,6 +38,14 @@ const base: Omit<FixtureData, "skillGroups" | "experience" | "education" | "cert
       en: "AI engineer who builds agents that actually work, and ships them as products.",
       de: "KI-Ingenieur, der Agenten baut, die wirklich funktionieren, und sie als Produkte ausliefert.",
     },
+    email: "harshvirani.91@gmail.com",
+    availability: line(
+      "Open to working-student and full-time AI roles",
+      "Offen für Werkstudenten- und Vollzeitstellen im Bereich KI",
+    ),
+    linkedinUrl: "https://www.linkedin.com/in/harshvirani914/",
+    githubUrl: "https://github.com/HarshVirani914",
+    cvUrl: "/harsh-virani-ai-ml-cv.pdf",
   },
   hero: {
     annotations: [

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Contact } from "@/components/site/contact";
 import { EducationAchievements } from "@/components/site/education";
 import { ExperienceList } from "@/components/site/experience";
 import { Hero } from "@/components/site/hero";
@@ -33,6 +34,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <Skills groups={skills} dict={dict.skills} />
       <ExperienceList items={experience} dict={dict.experience} />
       <EducationAchievements data={education} dict={dict.education} />
+      <Contact contact={settings.contact} dict={dict.contact} />
     </main>
   );
 }

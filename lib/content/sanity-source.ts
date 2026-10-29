@@ -27,7 +27,10 @@ const queries = {
   siteSettings: `*[_type == "siteSettings"][0]{
     firstName, lastName, coordinates,
     "city": city${localized},
-    "description": description${localized}
+    "description": description${localized},
+    email, linkedinUrl, githubUrl,
+    "availability": availability${localized},
+    "cvUrl": cv.asset->url
   }`,
   hero: `*[_type == "hero"][0]{
     "annotations": annotations[]{ "id": _key, "text": text${localized}, hidden },
@@ -127,8 +130,7 @@ const queries = {
 type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
   city: Localized | null;
   description: Localized | null;
-};
-type HeroDoc = {
+};type HeroDoc = {
   annotations: RawHeroAnnotation[] | null;
   terminalScripts: (Omit<RawHeroTerminalScript, "output"> & { output: Localized[] | null })[] | null;
 };

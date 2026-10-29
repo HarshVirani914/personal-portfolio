@@ -14,6 +14,21 @@ describe("content module", () => {
     expect((await content.getSiteSettings("en")).name.full).toBe("Harsh Virani");
   });
 
+  it("resolves contact details and nulls out blank ones", async () => {
+    const full = createContent(createFixtureSource());
+    const { contact } = await full.getSiteSettings("de");
+    expect(contact.email).toBe("harshvirani.91@gmail.com");
+    expect(contact.availability).toContain("Offen");
+    expect(contact.cvUrl).toMatch(/\.pdf$/);
+
+    const base = fixtureData.siteSettings!;
+    const sparse = withData({ siteSettings: { ...base, email: "  ", availability: { en: "" }, cvUrl: null } });
+    const blank = (await sparse.getSiteSettings("en")).contact;
+    expect(blank.email).toBeNull();
+    expect(blank.availability).toBe("");
+    expect(blank.cvUrl).toBeNull();
+  });
+
   it("falls back to English when German is missing or blank", async () => {
     const content = withData({
       hero: {

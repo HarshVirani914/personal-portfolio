@@ -149,6 +149,13 @@ export function createContent(source: ContentSource) {
         coordinates: raw.coordinates,
         city: resolveText(raw.city, locale),
         description: resolveText(raw.description, locale),
+        contact: {
+          email: raw.email?.trim() || null,
+          availability: resolveText(raw.availability, locale),
+          linkedinUrl: raw.linkedinUrl?.trim() || null,
+          githubUrl: raw.githubUrl?.trim() || null,
+          cvUrl: raw.cvUrl?.trim() || null,
+        },
       };
     },
 

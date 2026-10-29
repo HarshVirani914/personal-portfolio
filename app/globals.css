@@ -266,8 +266,25 @@ html.lenis body {
 @utility animate-out-in {
   animation: out-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+@keyframes swap {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@utility animate-swap {
+  animation: swap 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@utility animate-pulse-dot {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
 
 @media (prefers-reduced-motion: reduce) {
+  .animate-swap, .animate-pulse-dot {
+    animation: none;
+  }
   .animate-fade-in, .animate-draw, .animate-caret, .animate-out-in, .animate-ink, .animate-num-rise {
     animation: none;
     opacity: 1;

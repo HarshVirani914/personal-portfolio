@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import { ScrollRestoration } from "@/components/site/scroll-restoration";
+import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { SmoothScroll } from "@/components/site/smooth-scroll";
 import { getDictionary } from "@/lib/dictionary";
@@ -82,6 +83,7 @@ export default async function LocaleLayout({
             city={settings.city}
           />
           {children}
+          <SiteFooter name={settings.name} coordinates={settings.coordinates} dict={dict.footer} />
         </ThemeProvider>
         <Analytics />
       </body>

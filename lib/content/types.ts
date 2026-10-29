@@ -8,6 +8,12 @@ export type RawSiteSettings = {
   coordinates: string;
   city: Localized;
   description: Localized;
+  email?: string | null;
+  availability?: Localized | null;
+  linkedinUrl?: string | null;
+  githubUrl?: string | null;
+  /** URL of the uploaded CV file. */
+  cvUrl?: string | null;
 };
 
 export type RawHeroAnnotation = { id: string; text: Localized; hidden?: boolean | null };
@@ -175,6 +181,16 @@ export type SiteSettings = {
   coordinates: string;
   city: string;
   description: string;
+  contact: ContactDetails;
+};
+
+/** Empty strings and nulls mean "not set": the contact section hides what it does not have. */
+export type ContactDetails = {
+  email: string | null;
+  availability: string;
+  linkedinUrl: string | null;
+  githubUrl: string | null;
+  cvUrl: string | null;
 };
 
 export type HeroAnnotation = { id: string; marker: string; text: string };
