@@ -319,10 +319,22 @@ html.lenis body {
 @utility animate-pulse-dot {
   animation: pulse-dot 2.4s ease-in-out infinite;
 }
+@keyframes wipe {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@utility animate-wipe {
+  animation: wipe 1.2s var(--ease-wipe) 0.2s both;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .animate-swap,
-  .animate-pulse-dot {
+  .animate-pulse-dot,
+  .animate-wipe {
     animation: none;
   }
   .animate-fade-in,
