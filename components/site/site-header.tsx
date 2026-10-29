@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useState } from "react";
 import {
   Sheet,
@@ -15,10 +14,6 @@ import { ThemeToggle } from "@/components/site/theme-toggle";
 import { localizedPath, type Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionary";
 
-const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
-/** The header waits for the hero name to land before it appears. */
-const ENTER_DELAY = 0.9;
-
 type Props = {
   locale: Locale;
   dict: Dictionary;
@@ -28,7 +23,6 @@ type Props = {
 };
 
 export function SiteHeader({ locale, dict, name, coordinates, city }: Props) {
-  const reduce = useReducedMotion();
   const [showCity, setShowCity] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -48,12 +42,10 @@ export function SiteHeader({ locale, dict, name, coordinates, city }: Props) {
   ];
 
   return (
-    <motion.header
-      initial={reduce ? false : { opacity: 0, y: 10, filter: "blur(8px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: ENTER_DELAY }}
+    // The header waits for the hero name to land before it appears.
+    <header
       data-scrolled={scrolled}
-      className="data-[scrolled=true]:border-hairline data-[scrolled=true]:bg-background/85 fixed inset-x-0 top-0 z-40 border-b border-transparent px-5 pt-5 pb-3 transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled=true]:backdrop-blur-md md:px-10 md:pt-8 lg:px-16 lg:pt-10 lg:pb-4"
+      className="animate-fade-in data-[scrolled=true]:border-hairline data-[scrolled=true]:bg-background/85 fixed inset-x-0 top-0 z-40 border-b border-transparent px-5 pt-5 pb-3 transition-[background-color,border-color,backdrop-filter] duration-300 [animation-delay:0.9s] data-[scrolled=true]:backdrop-blur-md md:px-10 md:pt-8 lg:px-16 lg:pt-10 lg:pb-4"
     >
       <div className="flex items-center justify-between gap-6 lg:grid lg:grid-cols-12 lg:gap-6">
         <button
@@ -148,6 +140,6 @@ export function SiteHeader({ locale, dict, name, coordinates, city }: Props) {
           </SheetContent>
         </Sheet>
       </div>
-    </motion.header>
+    </header>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { useMotionValueEvent, useScroll } from "motion/react";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import type { Statement } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
@@ -19,13 +18,30 @@ export function Statements({ statements, label }: Props) {
   const [active, setActive] = useState(0);
   const total = statements.length;
 
-  const { scrollYProgress } = useScroll({
-    target: track,
-    offset: ["start start", "end end"],
-  });
-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    setActive(Math.min(total - 1, Math.max(0, Math.floor(progress * total))));
-  });
+  // Progress runs from the track's top meeting the viewport top (0) to its bottom meeting the viewport bottom (1).
+  useEffect(() => {
+    const el = track.current;
+    if (!el || total === 0) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const box = el.getBoundingClientRect();
+      const span = box.height - window.innerHeight;
+      const progress = span > 0 ? -box.top / span : 0;
+      setActive(Math.min(total - 1, Math.max(0, Math.floor(progress * total))));
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [total]);
 
   if (total === 0) return null;
   const fill = `${((active + 1) / total) * 100}%`;

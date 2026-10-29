@@ -260,6 +260,14 @@ html.lenis body {
     opacity: 1;
   }
 }
+@keyframes mask-rise {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
 @keyframes caret {
   50% {
     opacity: 0;
@@ -289,6 +297,9 @@ html.lenis body {
 }
 @utility animate-num-rise {
   animation: num-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@utility animate-mask-rise {
+  animation: mask-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 @utility animate-caret {
   animation: caret 1s steps(1) infinite;
@@ -326,6 +337,7 @@ html.lenis body {
     animation: none;
   }
   .animate-fade-in,
+  .animate-mask-rise,
   .animate-draw,
   .animate-caret,
   .animate-out-in,
