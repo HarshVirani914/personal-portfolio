@@ -47,14 +47,19 @@ export function ScrollRestoration() {
       events.forEach((name) => window.removeEventListener(name, stop));
     };
     const step = () => {
-      const tall = document.documentElement.scrollHeight - window.innerHeight >= target - 1;
+      const tall =
+        document.documentElement.scrollHeight - window.innerHeight >=
+        target - 1;
       if (tall) {
         window.scrollTo({ top: target, behavior: "instant" });
         settled = Math.abs(window.scrollY - target) < 2 ? settled + 1 : 0;
       }
-      if (settled < 3 && performance.now() - started < GIVE_UP_MS) frame = requestAnimationFrame(step);
+      if (settled < 3 && performance.now() - started < GIVE_UP_MS)
+        frame = requestAnimationFrame(step);
     };
-    events.forEach((name) => window.addEventListener(name, stop, { passive: true, once: true }));
+    events.forEach((name) =>
+      window.addEventListener(name, stop, { passive: true, once: true })
+    );
     cancel.current = stop;
     step();
   });
@@ -81,11 +86,13 @@ export function ScrollRestoration() {
       popped.current = true;
       // Same path (a hash entry): no route change will follow, so restore here.
       requestAnimationFrame(() => {
-        if (!popped.current || currentPath.current !== location.pathname) return;
+        if (!popped.current || currentPath.current !== location.pathname)
+          return;
         popped.current = false;
         const saved = read()[entryKey()];
         if (saved !== undefined) run(saved);
-        else if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+        else if (location.hash)
+          document.getElementById(location.hash.slice(1))?.scrollIntoView();
       });
     };
 

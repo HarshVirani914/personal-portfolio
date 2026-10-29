@@ -3,7 +3,11 @@ import { HeroTerminal } from "@/components/site/hero-terminal";
 import type { Dictionary } from "@/lib/dictionary";
 import type { Hero as HeroContent, SiteSettings } from "@/lib/content/types";
 
-type Props = { hero: HeroContent; name: SiteSettings["name"]; dict: Dictionary };
+type Props = {
+  hero: HeroContent;
+  name: SiteSettings["name"];
+  dict: Dictionary;
+};
 
 export function Hero({ hero, name, dict }: Props) {
   return (
@@ -12,16 +16,20 @@ export function Hero({ hero, name, dict }: Props) {
         <div className="lg:col-span-9">
           <HeroName first={name.first} last={name.last} />
         </div>
-        <ul className="animate-fade-in flex list-none flex-wrap gap-x-3.5 gap-y-1.5 font-mono text-[11px] text-muted-ink [animation-delay:0.9s] lg:col-span-3 lg:flex-col lg:justify-end lg:gap-y-2.5 lg:pb-7 lg:text-mono">
+        <ul className="animate-fade-in text-muted-ink lg:text-mono flex list-none flex-wrap gap-x-3.5 gap-y-1.5 font-mono text-[11px] [animation-delay:0.9s] lg:col-span-3 lg:flex-col lg:justify-end lg:gap-y-2.5 lg:pb-7">
           {hero.annotations.map((item) => (
             <li key={item.id}>
               {item.marker} {item.text}
             </li>
           ))}
         </ul>
-        <div className="animate-draw h-px w-3/5 bg-ink [animation-delay:0.4s] lg:col-span-5 lg:w-auto" />
+        <div className="animate-draw bg-ink h-px w-3/5 [animation-delay:0.4s] lg:col-span-5 lg:w-auto" />
         <div className="lg:col-span-9 lg:col-start-1">
-          <HeroTerminal scripts={hero.terminal} label={dict.terminal.label} runLabel={dict.terminal.run} />
+          <HeroTerminal
+            scripts={hero.terminal}
+            label={dict.terminal.label}
+            runLabel={dict.terminal.run}
+          />
         </div>
       </div>
     </section>

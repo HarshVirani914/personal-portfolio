@@ -15,9 +15,19 @@ export const hero = defineType({
           name: "annotation",
           fields: [
             defineField({ name: "text", type: "localizedString" }),
-            defineField({ name: "hidden", type: "boolean", initialValue: false }),
+            defineField({
+              name: "hidden",
+              type: "boolean",
+              initialValue: false,
+            }),
           ],
-          preview: { select: { title: "text.en", hidden: "hidden" }, prepare: ({ title, hidden }) => ({ title, subtitle: hidden ? "Hidden" : "" }) },
+          preview: {
+            select: { title: "text.en", hidden: "hidden" },
+            prepare: ({ title, hidden }) => ({
+              title,
+              subtitle: hidden ? "Hidden" : "",
+            }),
+          },
         }),
       ],
     }),
@@ -30,12 +40,39 @@ export const hero = defineType({
           type: "object",
           name: "terminalScript",
           fields: [
-            defineField({ name: "label", type: "localizedString", description: "Button text" }),
-            defineField({ name: "command", type: "localizedString", description: "Typed after the prompt" }),
-            defineField({ name: "output", type: "array", of: [defineArrayMember({ type: "localizedString" })], description: "Printed lines" }),
-            defineField({ name: "hidden", type: "boolean", initialValue: false }),
+            defineField({
+              name: "label",
+              type: "localizedString",
+              description: "Button text",
+            }),
+            defineField({
+              name: "command",
+              type: "localizedString",
+              description: "Typed after the prompt",
+            }),
+            defineField({
+              name: "output",
+              type: "array",
+              of: [defineArrayMember({ type: "localizedString" })],
+              description: "Printed lines",
+            }),
+            defineField({
+              name: "hidden",
+              type: "boolean",
+              initialValue: false,
+            }),
           ],
-          preview: { select: { title: "label.en", subtitle: "command.en", hidden: "hidden" }, prepare: ({ title, subtitle, hidden }) => ({ title, subtitle: hidden ? `${subtitle} (hidden)` : subtitle ?? "" }) },
+          preview: {
+            select: {
+              title: "label.en",
+              subtitle: "command.en",
+              hidden: "hidden",
+            },
+            prepare: ({ title, subtitle, hidden }) => ({
+              title,
+              subtitle: hidden ? `${subtitle} (hidden)` : (subtitle ?? ""),
+            }),
+          },
         }),
       ],
     }),

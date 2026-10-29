@@ -8,9 +8,19 @@ export type RawSiteSettings = {
   coordinates: string;
   city: Localized;
   description: Localized;
+  email?: string | null;
+  availability?: Localized | null;
+  linkedinUrl?: string | null;
+  githubUrl?: string | null;
+  /** URL of the uploaded CV file. */
+  cvUrl?: string | null;
 };
 
-export type RawHeroAnnotation = { id: string; text: Localized; hidden?: boolean | null };
+export type RawHeroAnnotation = {
+  id: string;
+  text: Localized;
+  hidden?: boolean | null;
+};
 
 export type RawHeroTerminalScript = {
   id: string;
@@ -32,7 +42,12 @@ export type RawStatement = {
   hidden?: boolean | null;
 };
 
-export type RawProjectStat = { id: string; value: Localized; label: Localized; accent?: boolean | null };
+export type RawProjectStat = {
+  id: string;
+  value: Localized;
+  label: Localized;
+  accent?: boolean | null;
+};
 
 export type RawProject = {
   id: string;
@@ -77,7 +92,11 @@ export type RawResearchBlock = {
   caption?: Localized | null;
 };
 
-export type RawResearchSection = { id: string; heading: Localized; blocks: RawResearchBlock[] };
+export type RawResearchSection = {
+  id: string;
+  heading: Localized;
+  blocks: RawResearchBlock[];
+};
 
 export type RawResearch = {
   id: string;
@@ -175,6 +194,16 @@ export type SiteSettings = {
   coordinates: string;
   city: string;
   description: string;
+  contact: ContactDetails;
+};
+
+/** Empty strings and nulls mean "not set": the contact section hides what it does not have. */
+export type ContactDetails = {
+  email: string | null;
+  availability: string;
+  linkedinUrl: string | null;
+  githubUrl: string | null;
+  cvUrl: string | null;
 };
 
 export type HeroAnnotation = { id: string; marker: string; text: string };
@@ -195,7 +224,12 @@ export type Statement = { id: string; text: string };
 
 export type HomeContent = { hero: Hero; statements: Statement[] };
 
-export type ProjectStat = { id: string; value: string; label: string; accent: boolean };
+export type ProjectStat = {
+  id: string;
+  value: string;
+  label: string;
+  accent: boolean;
+};
 
 export type Project = {
   slug: string;
@@ -221,12 +255,29 @@ export type Project = {
 };
 
 /** A project with its position in the list and the project after it (wrapping). */
-export type ProjectPage = { project: Project; index: number; total: number; next: Project };
+export type ProjectPage = {
+  project: Project;
+  index: number;
+  total: number;
+  next: Project;
+};
 
 export type ResearchBlock =
-  | { id: string; kind: "paragraph"; text: string; note: string | null; noteNumber: number | null }
+  | {
+      id: string;
+      kind: "paragraph";
+      text: string;
+      note: string | null;
+      noteNumber: number | null;
+    }
   | { id: string; kind: "code"; code: string; caption: string }
-  | { id: string; kind: "figure"; figure: string | null; caption: string; number: number }
+  | {
+      id: string;
+      kind: "figure";
+      figure: string | null;
+      caption: string;
+      number: number;
+    }
   | { id: string; kind: "quote"; text: string };
 
 export type ResearchSection = {
@@ -261,7 +312,12 @@ export type Research = {
 };
 
 /** A research item with the item after it (wrapping) for the "Next in research" link. */
-export type ResearchPage = { item: Research; index: number; total: number; next: Research };
+export type ResearchPage = {
+  item: Research;
+  index: number;
+  total: number;
+  next: Research;
+};
 
 export type Skill = {
   id: string;
@@ -273,12 +329,32 @@ export type Skill = {
 
 export type SkillGroup = { id: string; title: string; skills: Skill[] };
 
-export type Experience = { id: string; years: string; company: string; role: string; bullets: string[] };
+export type Experience = {
+  id: string;
+  years: string;
+  company: string;
+  role: string;
+  bullets: string[];
+};
 
 export type EducationTag = { id: string; label: string; url: string | null };
 
-export type Education = { id: string; years: string; degree: string; institution: string; tags: EducationTag[] };
+export type Education = {
+  id: string;
+  years: string;
+  degree: string;
+  institution: string;
+  tags: EducationTag[];
+};
 
-export type Certification = { id: string; name: string; issuer: string; url: string };
+export type Certification = {
+  id: string;
+  name: string;
+  issuer: string;
+  url: string;
+};
 
-export type EducationContent = { education: Education[]; certifications: Certification[] };
+export type EducationContent = {
+  education: Education[];
+  certifications: Certification[];
+};

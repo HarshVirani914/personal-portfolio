@@ -53,7 +53,7 @@ export function SiteHeader({ locale, dict, name, coordinates, city }: Props) {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: ENTER_DELAY }}
       data-scrolled={scrolled}
-      className="fixed inset-x-0 top-0 z-40 border-b border-transparent px-5 pt-5 pb-3 transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled=true]:border-hairline data-[scrolled=true]:bg-background/85 data-[scrolled=true]:backdrop-blur-md md:px-10 md:pt-8 lg:px-16 lg:pt-10 lg:pb-4"
+      className="data-[scrolled=true]:border-hairline data-[scrolled=true]:bg-background/85 fixed inset-x-0 top-0 z-40 border-b border-transparent px-5 pt-5 pb-3 transition-[background-color,border-color,backdrop-filter] duration-300 data-[scrolled=true]:backdrop-blur-md md:px-10 md:pt-8 lg:px-16 lg:pt-10 lg:pb-4"
     >
       <div className="flex items-center justify-between gap-6 lg:grid lg:grid-cols-12 lg:gap-6">
         <button

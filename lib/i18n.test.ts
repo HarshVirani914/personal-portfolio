@@ -16,7 +16,10 @@ describe("parseLocalePath", () => {
   });
 
   it("does not mistake a path starting with a locale-like word", () => {
-    expect(parseLocalePath("/design")).toEqual({ locale: "en", path: "/design" });
+    expect(parseLocalePath("/design")).toEqual({
+      locale: "en",
+      path: "/design",
+    });
   });
 });
 

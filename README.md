@@ -16,7 +16,6 @@ Personal portfolio site for **Harsh Virani**, full-stack engineer and AI systems
 
 ## Tech stack
 
-
 | Area       | Tools                                            |
 | ---------- | ------------------------------------------------ |
 | Framework  | Next.js 16 (App Router), React 19, TypeScript    |
@@ -25,7 +24,6 @@ Personal portfolio site for **Harsh Virani**, full-stack engineer and AI systems
 | Graphics   | OGL (WebGL flow shader), Matter.js (about stack) |
 | Deploy     | Vercel                                           |
 | OG capture | Playwright (`scripts/capture-og-image.mjs`)      |
-
 
 ## Getting started
 
@@ -55,7 +53,6 @@ Used for `metadataBase`, canonical URLs, sitemap, and social preview links.
 
 ## Scripts
 
-
 | Command             | Description                                                |
 | ------------------- | ---------------------------------------------------------- |
 | `pnpm dev`          | Development server                                         |
@@ -67,7 +64,6 @@ Used for `metadataBase`, canonical URLs, sitemap, and social preview links.
 | `pnpm format`       | Prettier write                                             |
 | `pnpm format:check` | Prettier check                                             |
 | `pnpm og:capture`   | Capture homepage OG image (1200×630) — requires dev server |
-
 
 ### Regenerate the Open Graph image
 
@@ -126,7 +122,6 @@ pnpm og:capture -- --url https://harsh-virani.vercel.app
 
 ## Updating content
 
-
 | What to change                               | Where                                                                                            |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | Site name, description, OG title             | `lib/metadata.ts`                                                                                |
@@ -137,7 +132,6 @@ pnpm og:capture -- --url https://harsh-virani.vercel.app
 | About sections                               | `components/about/*.tsx` + `lib/site-content.ts` (research / academic)                           |
 | CV PDF                                       | Compile from `Resumes/applications/Portfolio_AI_ML/`, copy to `public/harsh-virani-ai-ml-cv.pdf` |
 | Production URL                               | `NEXT_PUBLIC_SITE_URL` in `.env.local` / Vercel env                                              |
-
 
 ## Deployment (Vercel)
 

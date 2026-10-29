@@ -41,7 +41,13 @@ function useActiveSection(ids: string[]) {
 }
 
 /** A line along the top of the screen, in the research's colour, that fills as the article is read. */
-export function ReadingProgress({ targetId, label }: { targetId: string; label: string }) {
+export function ReadingProgress({
+  targetId,
+  label,
+}: {
+  targetId: string;
+  label: string;
+}) {
   const bar = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -52,7 +58,10 @@ export function ReadingProgress({ targetId, label }: { targetId: string; label: 
       if (!el || !bar.current) return;
       const rect = el.getBoundingClientRect();
       const total = rect.height - window.innerHeight * 0.5;
-      const done = Math.min(1, Math.max(0, (window.innerHeight * 0.5 - rect.top) / total));
+      const done = Math.min(
+        1,
+        Math.max(0, (window.innerHeight * 0.5 - rect.top) / total)
+      );
       bar.current.style.transform = `scaleX(${done})`;
       bar.current.setAttribute("aria-valuenow", String(Math.round(done * 100)));
     };
@@ -84,14 +93,20 @@ export function ReadingProgress({ targetId, label }: { targetId: string; label: 
 }
 
 /** The sticky contents rail from lg up. The current section is marked in the research's colour. */
-export function ContentsRail({ items, label }: { items: ContentsItem[]; label: string }) {
+export function ContentsRail({
+  items,
+  label,
+}: {
+  items: ContentsItem[];
+  label: string;
+}) {
   const active = useActiveSection(items.map((item) => item.id));
   return (
     <nav
       aria-label={label}
-      className="hidden font-mono text-mono lg:sticky lg:top-28 lg:col-span-2 lg:flex lg:flex-col lg:self-start lg:border-l lg:border-hairline lg:pl-3.5"
+      className="text-mono lg:border-hairline hidden font-mono lg:sticky lg:top-28 lg:col-span-2 lg:flex lg:flex-col lg:self-start lg:border-l lg:pl-3.5"
     >
-      <span className="mb-2.5 text-muted-ink">{label}</span>
+      <span className="text-muted-ink mb-2.5">{label}</span>
       {items.map((item) => {
         const current = item.id === active;
         return (
@@ -103,7 +118,7 @@ export function ContentsRail({ items, label }: { items: ContentsItem[]; label: s
               "-ml-[15px] flex gap-2.5 border-l py-1.5 pl-3.5 transition-colors duration-200",
               current
                 ? "border-(--project-accent) text-(--project-accent)"
-                : "border-transparent text-muted-ink hover:text-ink",
+                : "text-muted-ink hover:text-ink border-transparent"
             )}
           >
             <span>{item.number}</span>
@@ -132,9 +147,9 @@ export function ContentsBar({
   const current = items.find((item) => item.id === active) ?? items[0];
 
   return (
-    <div className="sticky top-19 z-30 md:top-22 -mx-5 border-b border-hairline bg-background px-5 md:-mx-10 md:px-10 lg:hidden">
-      <div className="flex items-center justify-between font-mono text-mono">
-        <Link href={back.href} className="flex min-h-12 items-center text-ink">
+    <div className="border-hairline bg-background sticky top-19 z-30 -mx-5 border-b px-5 md:top-22 md:-mx-10 md:px-10 lg:hidden">
+      <div className="text-mono flex items-center justify-between font-mono">
+        <Link href={back.href} className="text-ink flex min-h-12 items-center">
           ← {back.label}
         </Link>
         <button
@@ -150,13 +165,23 @@ export function ContentsBar({
               {current.number} {current.label}
             </span>
           )}
-          <span aria-hidden="true" className={cn("transition-transform duration-300", open && "rotate-180")}>
+          <span
+            aria-hidden="true"
+            className={cn(
+              "transition-transform duration-300",
+              open && "rotate-180"
+            )}
+          >
             ▾
           </span>
         </button>
       </div>
       {open && (
-        <nav id="contents-menu" aria-label={label} className="animate-out-in flex flex-col pb-4 font-mono text-mono">
+        <nav
+          id="contents-menu"
+          aria-label={label}
+          className="animate-out-in text-mono flex flex-col pb-4 font-mono"
+        >
           {items.map((item) => (
             <a
               key={item.id}
@@ -165,7 +190,9 @@ export function ContentsBar({
               aria-current={item.id === active ? "location" : undefined}
               className={cn(
                 "flex min-h-10 items-center gap-2.5",
-                item.id === active ? "text-(--project-accent)" : "text-muted-ink",
+                item.id === active
+                  ? "text-(--project-accent)"
+                  : "text-muted-ink"
               )}
             >
               <span>{item.number}</span>
@@ -186,8 +213,15 @@ function Inline({ text, refLabel }: { text: string; refLabel: string }) {
         const match = /^\[(\d+)\]$/.exec(part);
         if (!match) return <Fragment key={i}>{part}</Fragment>;
         return (
-          <sup key={i} className="font-mono text-[11px] text-(--project-accent)">
-            <a href={`#ref-${match[1]}`} aria-label={`${refLabel} ${match[1]}`} className="px-0.5 hover:underline">
+          <sup
+            key={i}
+            className="font-mono text-[11px] text-(--project-accent)"
+          >
+            <a
+              href={`#ref-${match[1]}`}
+              aria-label={`${refLabel} ${match[1]}`}
+              className="px-0.5 hover:underline"
+            >
               {match[1]}
             </a>
           </sup>
@@ -229,7 +263,10 @@ export function Paragraph({ text, note, noteNumber, labels }: ParagraphProps) {
               >
                 {noteNumber}
               </button>
-              <sup aria-hidden="true" className="hidden font-mono text-[11px] text-(--project-accent) lg:inline">
+              <sup
+                aria-hidden="true"
+                className="hidden font-mono text-[11px] text-(--project-accent) lg:inline"
+              >
                 {noteNumber}
               </sup>
             </>
@@ -238,7 +275,7 @@ export function Paragraph({ text, note, noteNumber, labels }: ParagraphProps) {
         {note && open && (
           <p
             id={noteId}
-            className="animate-out-in mt-4 border-l border-(--project-accent) pl-3 font-mono text-[12px] leading-relaxed text-muted-ink lg:hidden"
+            className="animate-out-in text-muted-ink mt-4 border-l border-(--project-accent) pl-3 font-mono text-[12px] leading-relaxed lg:hidden"
           >
             {note}
           </p>
@@ -247,7 +284,7 @@ export function Paragraph({ text, note, noteNumber, labels }: ParagraphProps) {
       {note && (
         <aside
           aria-label={`${labels.note} ${noteNumber}`}
-          className="hidden border-t border-(--project-accent) pt-2.5 font-mono text-mono text-muted-ink lg:col-span-3 lg:col-start-7 lg:block lg:self-start"
+          className="text-mono text-muted-ink hidden border-t border-(--project-accent) pt-2.5 font-mono lg:col-span-3 lg:col-start-7 lg:block lg:self-start"
         >
           <span className="text-(--project-accent)">{noteNumber}</span> {note}
         </aside>
@@ -257,7 +294,15 @@ export function Paragraph({ text, note, noteNumber, labels }: ParagraphProps) {
 }
 
 /** Copies the citation text and says so for a moment. */
-export function CiteButton({ text, label, doneLabel }: { text: string; label: string; doneLabel: string }) {
+export function CiteButton({
+  text,
+  label,
+  doneLabel,
+}: {
+  text: string;
+  label: string;
+  doneLabel: string;
+}) {
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -278,7 +323,7 @@ export function CiteButton({ text, label, doneLabel }: { text: string; label: st
     <button
       type="button"
       onClick={copy}
-      className="flex min-h-11 cursor-pointer items-center gap-1.5 hover:text-ink lg:min-h-0"
+      className="hover:text-ink flex min-h-11 cursor-pointer items-center gap-1.5 lg:min-h-0"
     >
       <span aria-live="polite">{copied ? doneLabel : label}</span>
       <span aria-hidden="true">↗</span>
@@ -291,8 +336,12 @@ export function AskButton({ label, topic }: { label: string; topic: string }) {
   return (
     <button
       type="button"
-      onClick={() => window.dispatchEvent(new CustomEvent("agent:ask", { detail: { topic } }))}
-      className="flex min-h-11 cursor-pointer items-center gap-1.5 text-agent lg:min-h-0"
+      onClick={() =>
+        window.dispatchEvent(
+          new CustomEvent("agent:ask", { detail: { topic } })
+        )
+      }
+      className="text-agent flex min-h-11 cursor-pointer items-center gap-1.5 lg:min-h-0"
     >
       {label} <kbd className="font-mono">⌘K</kbd>
     </button>

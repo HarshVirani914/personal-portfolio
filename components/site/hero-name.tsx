@@ -13,14 +13,21 @@ export function HeroName({ first, last }: Props) {
   const reduce = useReducedMotion();
 
   const word = (text: string, startDelay: number, italic: boolean) => (
-    <span className="inline-block overflow-hidden pb-[0.08em] align-bottom" aria-hidden="true">
+    <span
+      className="inline-block overflow-hidden pb-[0.08em] align-bottom"
+      aria-hidden="true"
+    >
       {Array.from(text).map((char, i) => (
         <motion.span
           key={`${char}-${i}`}
           className={italic ? "inline-block italic" : "inline-block"}
           initial={reduce ? false : { y: "105%" }}
           animate={{ y: 0 }}
-          transition={{ duration: 0.9, ease: EASE_OUT_EXPO, delay: startDelay + i * LETTER_STAGGER }}
+          transition={{
+            duration: 0.9,
+            ease: EASE_OUT_EXPO,
+            delay: startDelay + i * LETTER_STAGGER,
+          }}
         >
           {char}
         </motion.span>
@@ -29,7 +36,7 @@ export function HeroName({ first, last }: Props) {
   );
 
   return (
-    <h1 className="font-serif text-display-xl font-normal tracking-[-0.02em]">
+    <h1 className="text-display-xl font-serif font-normal tracking-[-0.02em]">
       <span className="sr-only">{`${first} ${last}`}</span>
       <span className="flex flex-wrap gap-x-[0.22em]">
         {word(first, 0, false)}

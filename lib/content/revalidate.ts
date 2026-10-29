@@ -14,7 +14,10 @@ const json = (body: unknown, status: number) => Response.json(body, { status });
  * document type, for example `{ _type }`. A valid signature revalidates the
  * tag for that type; anything else is rejected without touching the cache.
  */
-export async function handleRevalidate(request: Request, { secret, revalidate }: Options) {
+export async function handleRevalidate(
+  request: Request,
+  { secret, revalidate }: Options
+) {
   if (!secret) return json({ message: "Revalidation is not configured" }, 500);
 
   const signature = request.headers.get(SIGNATURE_HEADER_NAME);

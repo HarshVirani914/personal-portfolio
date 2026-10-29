@@ -27,7 +27,10 @@ const queries = {
   siteSettings: `*[_type == "siteSettings"][0]{
     firstName, lastName, coordinates,
     "city": city${localized},
-    "description": description${localized}
+    "description": description${localized},
+    email, linkedinUrl, githubUrl,
+    "availability": availability${localized},
+    "cvUrl": cv.asset->url
   }`,
   hero: `*[_type == "hero"][0]{
     "annotations": annotations[]{ "id": _key, "text": text${localized}, hidden },
@@ -130,18 +133,32 @@ type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
 };
 type HeroDoc = {
   annotations: RawHeroAnnotation[] | null;
-  terminalScripts: (Omit<RawHeroTerminalScript, "output"> & { output: Localized[] | null })[] | null;
+  terminalScripts:
+    | (Omit<RawHeroTerminalScript, "output"> & { output: Localized[] | null })[]
+    | null;
 };
 
-type ProjectDoc = Omit<RawProject, "tags" | "stats" | "accentLight" | "accentDark"> & {
+type ProjectDoc = Omit<
+  RawProject,
+  "tags" | "stats" | "accentLight" | "accentDark"
+> & {
   tags: string[] | null;
   stats: RawProject["stats"] | null;
   accentLight: string | null;
   accentDark: string | null;
 };
 
-type ResearchDoc = Omit<RawResearch, "sections" | "references" | "accentLight" | "accentDark" | "updated"> & {
-  sections: { id: string; heading: Localized; blocks: RawResearch["sections"][number]["blocks"] | null }[] | null;
+type ResearchDoc = Omit<
+  RawResearch,
+  "sections" | "references" | "accentLight" | "accentDark" | "updated"
+> & {
+  sections:
+    | {
+        id: string;
+        heading: Localized;
+        blocks: RawResearch["sections"][number]["blocks"] | null;
+      }[]
+    | null;
   references: Localized[] | null;
   accentLight: string | null;
   accentDark: string | null;
@@ -149,12 +166,24 @@ type ResearchDoc = Omit<RawResearch, "sections" | "references" | "accentLight" |
 };
 
 type SkillGroupDoc = Omit<RawSkillGroup, "skills"> & {
-  skills: (Omit<RawSkillGroup["skills"][number], "ref"> & { ref: { accentLight?: string | null; accentDark?: string | null } | null })[] | null;
+  skills:
+    | (Omit<RawSkillGroup["skills"][number], "ref"> & {
+        ref: { accentLight?: string | null; accentDark?: string | null } | null;
+      })[]
+    | null;
 };
 
-type ExperienceDoc = Omit<RawExperience, "bullets" | "company"> & { bullets: Localized[] | null; company: string | null };
-type EducationDoc = Omit<RawEducation, "tags"> & { tags: RawEducation["tags"] | null };
-type CertificationDoc = Omit<RawCertification, "name" | "issuer" | "credentialUrl"> & {
+type ExperienceDoc = Omit<RawExperience, "bullets" | "company"> & {
+  bullets: Localized[] | null;
+  company: string | null;
+};
+type EducationDoc = Omit<RawEducation, "tags"> & {
+  tags: RawEducation["tags"] | null;
+};
+type CertificationDoc = Omit<
+  RawCertification,
+  "name" | "issuer" | "credentialUrl"
+> & {
   name: string | null;
   issuer: string | null;
   credentialUrl: string | null;
@@ -167,7 +196,9 @@ export function createSanitySource(): ContentSource {
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
     apiVersion: sanityApiVersion,
     useCdn: false,
-    ...(process.env.SANITY_API_READ_TOKEN ? { token: process.env.SANITY_API_READ_TOKEN } : {}),
+    ...(process.env.SANITY_API_READ_TOKEN
+      ? { token: process.env.SANITY_API_READ_TOKEN }
+      : {}),
   });
 
   return {
@@ -175,17 +206,21 @@ export function createSanitySource(): ContentSource {
       const doc = await client.fetch<SettingsDoc | null>(
         queries.siteSettings,
         {},
-        { next: { tags: [contentTags.siteSettings] } },
+        { next: { tags: [contentTags.siteSettings] } }
       );
       if (!doc) return null;
-      return { ...doc, city: doc.city ?? {}, description: doc.description ?? {} };
+      return {
+        ...doc,
+        city: doc.city ?? {},
+        description: doc.description ?? {},
+      };
     },
 
     async getHero(): Promise<RawHero | null> {
       const doc = await client.fetch<HeroDoc | null>(
         queries.hero,
         {},
-        { next: { tags: [contentTags.hero] } },
+        { next: { tags: [contentTags.hero] } }
       );
       if (!doc) return null;
       return {
@@ -201,7 +236,7 @@ export function createSanitySource(): ContentSource {
       return client.fetch<RawStatement[]>(
         queries.statements,
         {},
-        { next: { tags: [contentTags.statement] } },
+        { next: { tags: [contentTags.statement] } }
       );
     },
 
@@ -209,7 +244,7 @@ export function createSanitySource(): ContentSource {
       const docs = await client.fetch<ProjectDoc[]>(
         queries.projects,
         {},
-        { next: { tags: [contentTags.project] } },
+        { next: { tags: [contentTags.project] } }
       );
       // Drafts of a half-filled project must not break the page: skip any without a slug.
       return docs
@@ -227,7 +262,7 @@ export function createSanitySource(): ContentSource {
       const docs = await client.fetch<ResearchDoc[]>(
         queries.research,
         {},
-        { next: { tags: [contentTags.research] } },
+        { next: { tags: [contentTags.research] } }
       );
       // A half-filled draft must not break the page: skip any without a slug.
       return docs
@@ -235,7 +270,10 @@ export function createSanitySource(): ContentSource {
         .map((doc) => ({
           ...doc,
           updated: doc.updated ?? "",
-          sections: (doc.sections ?? []).map((section) => ({ ...section, blocks: section.blocks ?? [] })),
+          sections: (doc.sections ?? []).map((section) => ({
+            ...section,
+            blocks: section.blocks ?? [],
+          })),
           references: doc.references ?? [],
           accentLight: doc.accentLight ?? "#141414",
           accentDark: doc.accentDark ?? "#eceae4",
@@ -247,24 +285,47 @@ export function createSanitySource(): ContentSource {
       const docs = await client.fetch<SkillGroupDoc[]>(
         queries.skillGroups,
         {},
-        { next: { tags: [contentTags.skillGroup, contentTags.project, contentTags.research] } },
+        {
+          next: {
+            tags: [
+              contentTags.skillGroup,
+              contentTags.project,
+              contentTags.research,
+            ],
+          },
+        }
       );
       return docs.map((doc) => ({
         ...doc,
         skills: (doc.skills ?? []).map(({ ref, ...skill }) => ({
           ...skill,
-          ref: ref?.accentLight && ref.accentDark ? { accentLight: ref.accentLight, accentDark: ref.accentDark } : null,
+          ref:
+            ref?.accentLight && ref.accentDark
+              ? { accentLight: ref.accentLight, accentDark: ref.accentDark }
+              : null,
         })),
       }));
     },
 
     async getExperience(): Promise<RawExperience[]> {
-      const docs = await client.fetch<ExperienceDoc[]>(queries.experience, {}, { next: { tags: [contentTags.experience] } });
-      return docs.map((doc) => ({ ...doc, company: doc.company ?? "", bullets: doc.bullets ?? [] }));
+      const docs = await client.fetch<ExperienceDoc[]>(
+        queries.experience,
+        {},
+        { next: { tags: [contentTags.experience] } }
+      );
+      return docs.map((doc) => ({
+        ...doc,
+        company: doc.company ?? "",
+        bullets: doc.bullets ?? [],
+      }));
     },
 
     async getEducation(): Promise<RawEducation[]> {
-      const docs = await client.fetch<EducationDoc[]>(queries.education, {}, { next: { tags: [contentTags.education] } });
+      const docs = await client.fetch<EducationDoc[]>(
+        queries.education,
+        {},
+        { next: { tags: [contentTags.education] } }
+      );
       return docs.map((doc) => ({ ...doc, tags: doc.tags ?? [] }));
     },
 
@@ -272,7 +333,7 @@ export function createSanitySource(): ContentSource {
       const docs = await client.fetch<CertificationDoc[]>(
         queries.certifications,
         {},
-        { next: { tags: [contentTags.certification] } },
+        { next: { tags: [contentTags.certification] } }
       );
       return docs.map((doc) => ({
         ...doc,
