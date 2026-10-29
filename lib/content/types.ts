@@ -141,13 +141,20 @@ export type RawExperience = {
   hidden?: boolean | null;
 };
 
+export type RawEducationTag = {
+  id: string;
+  label: Localized;
+  /** Optional proof, such as a certificate. The tag becomes a link. */
+  url?: string | null;
+};
+
 export type RawEducation = {
   id: string;
   years: Localized;
   degree: Localized;
   institution: Localized;
   /** Short badges such as "Dean's List 2025". */
-  tags: Localized[];
+  tags: RawEducationTag[];
   order?: number | null;
   hidden?: boolean | null;
 };
@@ -268,7 +275,9 @@ export type SkillGroup = { id: string; title: string; skills: Skill[] };
 
 export type Experience = { id: string; years: string; company: string; role: string; bullets: string[] };
 
-export type Education = { id: string; years: string; degree: string; institution: string; tags: string[] };
+export type EducationTag = { id: string; label: string; url: string | null };
+
+export type Education = { id: string; years: string; degree: string; institution: string; tags: EducationTag[] };
 
 export type Certification = { id: string; name: string; issuer: string; url: string };
 

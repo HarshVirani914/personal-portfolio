@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 type Props = { data: EducationContent; dict: Dictionary["education"] };
 
 const mono = "font-mono text-mono text-muted-ink";
+const tagClass = "rounded-full border border-hairline px-3.5 py-1.5 font-mono text-mono text-ink";
 
 /** Both degrees with their tags, then the certifications as links to verify them. */
 export function EducationAchievements({ data, dict }: Props) {
@@ -36,8 +37,20 @@ export function EducationAchievements({ data, dict }: Props) {
               {row.tags.length > 0 && (
                 <ul className="m-0 mt-2 flex list-none flex-wrap gap-2 p-0 lg:col-span-5 lg:mt-0">
                   {row.tags.map((tag) => (
-                    <li key={tag} className="rounded-full border border-hairline px-3.5 py-1.5 font-mono text-mono text-ink">
-                      {tag}
+                    <li key={tag.id}>
+                      {tag.url ? (
+                        <a
+                          href={tag.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${tag.label}. ${dict.verify}`}
+                          className={cn(tagClass, "flex min-h-11 items-center gap-1.5 outline-offset-3 transition-colors duration-200 hover:border-ink focus-visible:outline focus-visible:outline-agent lg:min-h-0")}
+                        >
+                          {tag.label} <span aria-hidden="true">↗</span>
+                        </a>
+                      ) : (
+                        <span className={cn(tagClass, "inline-block")}>{tag.label}</span>
+                      )}
                     </li>
                   ))}
                 </ul>

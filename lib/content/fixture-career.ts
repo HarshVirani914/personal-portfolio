@@ -52,14 +52,20 @@ export const fixtureEducation: RawEducation[] = [
     years: line("2025 — now", "2025 — heute"),
     degree: line("M.Sc. AI & Robotics", "M.Sc. AI and Robotics"),
     institution: line("Hof University of Applied Sciences", "Hochschule Hof"),
-    tags: [line("Dean's List 2025", "Dean's List 2025")],
+    tags: [
+      {
+        id: "deans-list",
+        label: line("Dean's List 2025", "Dean's List 2025"),
+        url: "https://drive.google.com/file/d/1IST7-8lDUR1zJXyUKwtRsTLbvdWArs2r/view?usp=sharing",
+      },
+    ],
   },
   {
     id: "bsc",
     years: line("2021 — 2024", "2021 — 2024"),
     degree: line("B.Sc. Computer Science", "B.Sc. Informatik"),
     institution: line("Veer Narmad South Gujarat University", "Veer Narmad South Gujarat University"),
-    tags: [line("MYSY Scholarship", "MYSY-Stipendium")],
+    tags: [{ id: "mysy", label: line("MYSY Scholarship", "MYSY-Stipendium") }],
   },
 ];
 

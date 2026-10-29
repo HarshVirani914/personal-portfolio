@@ -221,7 +221,9 @@ export function createContent(source: ContentSource) {
               years: resolveText(row.years, locale),
               degree: resolveText(row.degree, locale),
               institution: resolveText(row.institution, locale),
-              tags: row.tags.map((tag) => resolveText(tag, locale)).filter(Boolean),
+              tags: row.tags
+                .map((tag) => ({ id: tag.id, label: resolveText(tag.label, locale), url: tag.url?.trim() || null }))
+                .filter((tag) => tag.label !== ""),
             }),
           )
           .filter((row) => row.degree !== ""),

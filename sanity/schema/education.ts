@@ -11,8 +11,24 @@ export const education = defineType({
     defineField({
       name: "tags",
       type: "array",
-      description: "Short badges such as Dean's List 2025 or MYSY Scholarship.",
-      of: [defineArrayMember({ type: "localizedString" })],
+      description: "Short badges such as Dean's List 2025 or MYSY Scholarship. Add a proof link to make a badge clickable.",
+      of: [
+        defineArrayMember({
+          name: "tag",
+          type: "object",
+          fields: [
+            defineField({ name: "label", type: "localizedString" }),
+            defineField({
+              name: "url",
+              title: "Proof link",
+              type: "url",
+              description: "Optional. Links the badge to a certificate or announcement.",
+              validation: (rule) => rule.uri({ scheme: ["https"] }),
+            }),
+          ],
+          preview: { select: { title: "label.en", subtitle: "url" } },
+        }),
+      ],
     }),
     defineField({ name: "order", type: "number", description: "1 is shown first" }),
     defineField({ name: "hidden", type: "boolean", initialValue: false }),

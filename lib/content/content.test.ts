@@ -288,10 +288,14 @@ describe("content module", () => {
       expect(experience.map((row) => row.company)).toEqual(["Silver Spring", "TechStaunch Solutions"]);
       expect(experience[1]?.years).toBe("2024 — 2025");
       const { education, certifications } = await content.getEducation("en");
-      expect(education.map((row) => [row.degree, row.tags])).toEqual([
+      expect(education.map((row) => [row.degree, row.tags.map((tag) => tag.label)])).toEqual([
         ["M.Sc. AI & Robotics", ["Dean's List 2025"]],
         ["B.Sc. Computer Science", ["MYSY Scholarship"]],
       ]);
+      expect(education[0]?.tags[0]?.url).toBe(
+        "https://drive.google.com/file/d/1IST7-8lDUR1zJXyUKwtRsTLbvdWArs2r/view?usp=sharing",
+      );
+      expect(education[1]?.tags[0]?.url).toBeNull();
       expect(certifications.map((cert) => cert.issuer)).toEqual(["Oracle", "Anthropic"]);
       expect(certifications.every((cert) => cert.url.startsWith("https://"))).toBe(true);
     });

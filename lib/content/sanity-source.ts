@@ -116,7 +116,7 @@ const queries = {
     "id": _id, "years": years${localized},
     "degree": degree${localized},
     "institution": institution${localized},
-    "tags": tags[]${localized},
+    "tags": tags[]{ "id": _key, "label": label${localized}, url },
     order, hidden
   }`,
   certifications: `*[_type == "certification"]{
@@ -153,7 +153,7 @@ type SkillGroupDoc = Omit<RawSkillGroup, "skills"> & {
 };
 
 type ExperienceDoc = Omit<RawExperience, "bullets" | "company"> & { bullets: Localized[] | null; company: string | null };
-type EducationDoc = Omit<RawEducation, "tags"> & { tags: Localized[] | null };
+type EducationDoc = Omit<RawEducation, "tags"> & { tags: RawEducation["tags"] | null };
 type CertificationDoc = Omit<RawCertification, "name" | "issuer" | "credentialUrl"> & {
   name: string | null;
   issuer: string | null;

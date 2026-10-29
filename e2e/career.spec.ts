@@ -18,11 +18,14 @@ for (const locale of locales) {
     await expect(education.getByRole("heading", { level: 2 })).toContainText(locale.education);
     await expect(education).toContainText(locale.dean);
     await expect(education).toContainText(locale.mysy);
-    const links = education.getByRole("link");
-    await expect(links).toHaveCount(2);
-    await expect(links.first()).toHaveAttribute("href", /oracle\.com/);
-    await expect(links.first()).toHaveAttribute("target", "_blank");
-    await expect(links.nth(1)).toHaveAttribute("href", /skilljar\.com/);
+    const certs = education.getByRole("link", { name: /Verify|Prüfen/ }).filter({ hasNotText: "List" });
+    await expect(education.getByRole("link")).toHaveCount(3);
+    const dean = education.getByRole("link", { name: new RegExp(locale.dean) });
+    await expect(dean).toHaveAttribute("href", /drive\.google\.com\/file\/d\/1IST7/);
+    await expect(dean).toHaveAttribute("target", "_blank");
+    await expect(certs.first()).toHaveAttribute("href", /oracle\.com/);
+    await expect(certs.nth(1)).toHaveAttribute("href", /skilljar\.com/);
+    await expect(education.getByText(locale.mysy)).not.toHaveAttribute("href");
   });
 }
 
