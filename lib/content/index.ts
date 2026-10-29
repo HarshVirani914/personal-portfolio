@@ -187,7 +187,10 @@ export function createContent(source: ContentSource) {
           availability: resolveText(raw.availability, locale),
           linkedinUrl: raw.linkedinUrl?.trim() || null,
           githubUrl: raw.githubUrl?.trim() || null,
-          cvUrl: raw.cvUrl?.trim() || null,
+          cvUrl:
+            (locale === "de" && raw.cvDeUrl?.trim()) ||
+            raw.cvUrl?.trim() ||
+            null,
         },
       };
     },

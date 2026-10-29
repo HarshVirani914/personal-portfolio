@@ -53,6 +53,7 @@ const base: Omit<
     linkedinUrl: "https://www.linkedin.com/in/harshvirani914/",
     githubUrl: "https://github.com/HarshVirani914",
     cvUrl: "/harsh-virani-ai-ml-cv.pdf",
+    cvDeUrl: "/harsh-virani-ai-ml-cv-de.pdf",
   },
   hero: {
     annotations: [

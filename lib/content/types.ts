@@ -12,8 +12,10 @@ export type RawSiteSettings = {
   availability?: Localized | null;
   linkedinUrl?: string | null;
   githubUrl?: string | null;
-  /** URL of the uploaded CV file. */
+  /** URL of the uploaded English CV file. */
   cvUrl?: string | null;
+  /** URL of the uploaded German CV file. */
+  cvDeUrl?: string | null;
 };
 
 export type RawHeroAnnotation = {

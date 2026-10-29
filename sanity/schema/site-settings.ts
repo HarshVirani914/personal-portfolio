@@ -57,7 +57,15 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: "cv",
-      title: "CV (PDF)",
+      title: "CV (PDF), English",
+      type: "file",
+      options: { accept: "application/pdf" },
+    }),
+    defineField({
+      name: "cvDe",
+      title: "CV (PDF), German",
+      description:
+        "Shown on the German site. Falls back to the English CV when empty.",
       type: "file",
       options: { accept: "application/pdf" },
     }),

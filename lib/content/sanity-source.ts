@@ -30,7 +30,8 @@ const queries = {
     "description": description${localized},
     email, linkedinUrl, githubUrl,
     "availability": availability${localized},
-    "cvUrl": cv.asset->url
+    "cvUrl": cv.asset->url,
+    "cvDeUrl": cvDe.asset->url
   }`,
   hero: `*[_type == "hero"][0]{
     "annotations": annotations[]{ "id": _key, "text": text${localized}, hidden },
