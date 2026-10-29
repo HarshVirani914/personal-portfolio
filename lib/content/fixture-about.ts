@@ -8,7 +8,7 @@ export const fixtureAbout: RawAbout = {
     "Neugierig darauf, wie Maschinen denken. *Präzise* darin, sie zum Laufen zu bringen."
   ),
   portrait: {
-    url: "/harsh_normal.webp",
+    url: "/harsh-portrait.jpg",
     alt: line("Portrait of Harsh Virani", "Porträt von Harsh Virani"),
     caption: line("Hof, Germany · 2026", "Hof, Deutschland · 2026"),
   },
