@@ -1,6 +1,9 @@
 import { fixtureData, createFixtureSource } from "@/lib/content/fixture";
 import { resolveText, visibleInOrder } from "@/lib/content/localized";
-import { createSanitySource, isSanityConfigured } from "@/lib/content/sanity-source";
+import {
+  createSanitySource,
+  isSanityConfigured,
+} from "@/lib/content/sanity-source";
 import type { ContentSource } from "@/lib/content/source";
 import type {
   Education,
@@ -28,11 +31,16 @@ import type { Locale } from "@/lib/i18n";
  */
 export function createContent(source: ContentSource) {
   const settings = async (): Promise<RawSiteSettings> =>
-    (await source.getSiteSettings()) ?? (fixtureData.siteSettings as RawSiteSettings);
+    (await source.getSiteSettings()) ??
+    (fixtureData.siteSettings as RawSiteSettings);
   const hero = async (): Promise<RawHero> =>
     (await source.getHero()) ?? (fixtureData.hero as RawHero);
 
-  const resolveProject = (raw: RawProject, index: number, locale: Locale): Project => ({
+  const resolveProject = (
+    raw: RawProject,
+    index: number,
+    locale: Locale
+  ): Project => ({
     slug: raw.slug,
     number: String(index + 1).padStart(2, "0"),
     title: resolveText(raw.title, locale),
@@ -64,9 +72,15 @@ export function createContent(source: ContentSource) {
   });
 
   const getProjects = async (locale: Locale): Promise<Project[]> =>
-    visibleInOrder(await source.getProjects()).map((raw, index) => resolveProject(raw, index, locale));
+    visibleInOrder(await source.getProjects()).map((raw, index) =>
+      resolveProject(raw, index, locale)
+    );
 
-  const resolveResearch = (raw: RawResearch, paperNumber: number | null, locale: Locale): Research => {
+  const resolveResearch = (
+    raw: RawResearch,
+    paperNumber: number | null,
+    locale: Locale
+  ): Research => {
     let noteCount = 0;
     let figureCount = 0;
     const sections = raw.sections.map((section, index) => ({
@@ -76,7 +90,12 @@ export function createContent(source: ContentSource) {
       blocks: section.blocks.map((block): ResearchBlock => {
         switch (block.kind) {
           case "code":
-            return { id: block.id, kind: "code", code: block.code ?? "", caption: resolveText(block.caption, locale) };
+            return {
+              id: block.id,
+              kind: "code",
+              code: block.code ?? "",
+              caption: resolveText(block.caption, locale),
+            };
           case "figure":
             figureCount += 1;
             return {
@@ -87,7 +106,11 @@ export function createContent(source: ContentSource) {
               number: figureCount,
             };
           case "quote":
-            return { id: block.id, kind: "quote", text: resolveText(block.text, locale) };
+            return {
+              id: block.id,
+              kind: "quote",
+              text: resolveText(block.text, locale),
+            };
           default: {
             const note = resolveText(block.note, locale);
             if (note) noteCount += 1;
@@ -103,14 +126,22 @@ export function createContent(source: ContentSource) {
       }),
     }));
     const abstract = resolveText(raw.abstract, locale);
-    const words = [abstract, ...sections.flatMap((s) => s.blocks.map((b) => ("text" in b ? b.text : "")))]
+    const words = [
+      abstract,
+      ...sections.flatMap((s) =>
+        s.blocks.map((b) => ("text" in b ? b.text : ""))
+      ),
+    ]
       .join(" ")
       .split(/\s+/)
       .filter(Boolean).length;
     return {
       slug: raw.slug,
       type: raw.type,
-      number: paperNumber === null ? null : `P/${String(paperNumber).padStart(2, "0")}`,
+      number:
+        paperNumber === null
+          ? null
+          : `P/${String(paperNumber).padStart(2, "0")}`,
       status: resolveText(raw.status, locale),
       period: raw.period,
       title: resolveText(raw.title, locale),
@@ -123,7 +154,9 @@ export function createContent(source: ContentSource) {
       readingMinutes: Math.max(1, Math.round(words / 200)),
       abstract,
       sections,
-      references: raw.references.map((ref) => resolveText(ref, locale)).filter(Boolean),
+      references: raw.references
+        .map((ref) => resolveText(ref, locale))
+        .filter(Boolean),
       pdfUrl: raw.pdfUrl || null,
       cite: resolveText(raw.cite, locale),
       accent: { light: raw.accentLight, dark: raw.accentDark },
@@ -133,7 +166,7 @@ export function createContent(source: ContentSource) {
   const getResearch = async (locale: Locale): Promise<Research[]> => {
     let papers = 0;
     return visibleInOrder(await source.getResearch()).map((raw) =>
-      resolveResearch(raw, raw.type === "paper" ? ++papers : null, locale),
+      resolveResearch(raw, raw.type === "paper" ? ++papers : null, locale)
     );
   };
 
@@ -160,7 +193,10 @@ export function createContent(source: ContentSource) {
     },
 
     async getHome(locale: Locale): Promise<HomeContent> {
-      const [raw, statements] = await Promise.all([hero(), source.getStatements()]);
+      const [raw, statements] = await Promise.all([
+        hero(),
+        source.getStatements(),
+      ]);
       return {
         statements: visibleInOrder(statements).map((item) => ({
           id: item.id,
@@ -198,7 +234,9 @@ export function createContent(source: ContentSource) {
               id: skill.id,
               name: skill.name,
               note: resolveText(skill.note, locale),
-              accent: skill.ref ? { light: skill.ref.accentLight, dark: skill.ref.accentDark } : null,
+              accent: skill.ref
+                ? { light: skill.ref.accentLight, dark: skill.ref.accentDark }
+                : null,
             })),
         }))
         .filter((group) => group.skills.length > 0);
@@ -212,50 +250,81 @@ export function createContent(source: ContentSource) {
           years: resolveText(row.years, locale),
           company: row.company,
           role: resolveText(row.role, locale),
-          bullets: row.bullets.map((bullet) => resolveText(bullet, locale)).filter(Boolean),
+          bullets: row.bullets
+            .map((bullet) => resolveText(bullet, locale))
+            .filter(Boolean),
         }))
         .filter((row) => row.company.trim() !== "" && row.role !== "");
     },
 
     /** Degrees and certifications in CMS order. Certifications without a link are dropped: they could not be verified. */
     async getEducation(locale: Locale): Promise<EducationContent> {
-      const [education, certifications] = await Promise.all([source.getEducation(), source.getCertifications()]);
+      const [education, certifications] = await Promise.all([
+        source.getEducation(),
+        source.getCertifications(),
+      ]);
       return {
         education: visibleInOrder(education)
-          .map(
-            (row): Education => ({
-              id: row.id,
-              years: resolveText(row.years, locale),
-              degree: resolveText(row.degree, locale),
-              institution: resolveText(row.institution, locale),
-              tags: row.tags
-                .map((tag) => ({ id: tag.id, label: resolveText(tag.label, locale), url: tag.url?.trim() || null }))
-                .filter((tag) => tag.label !== ""),
-            }),
-          )
+          .map((row): Education => ({
+            id: row.id,
+            years: resolveText(row.years, locale),
+            degree: resolveText(row.degree, locale),
+            institution: resolveText(row.institution, locale),
+            tags: row.tags
+              .map((tag) => ({
+                id: tag.id,
+                label: resolveText(tag.label, locale),
+                url: tag.url?.trim() || null,
+              }))
+              .filter((tag) => tag.label !== ""),
+          }))
           .filter((row) => row.degree !== ""),
         certifications: visibleInOrder(certifications)
-          .filter((cert) => cert.name.trim() !== "" && cert.credentialUrl.trim() !== "")
-          .map((cert) => ({ id: cert.id, name: cert.name, issuer: cert.issuer, url: cert.credentialUrl })),
+          .filter(
+            (cert) =>
+              cert.name.trim() !== "" && cert.credentialUrl.trim() !== ""
+          )
+          .map((cert) => ({
+            id: cert.id,
+            name: cert.name,
+            issuer: cert.issuer,
+            url: cert.credentialUrl,
+          })),
       };
     },
 
     /** Returns null for an unknown or hidden slug; callers turn that into a 404. */
-    async getResearchItem(locale: Locale, slug: string): Promise<ResearchPage | null> {
+    async getResearchItem(
+      locale: Locale,
+      slug: string
+    ): Promise<ResearchPage | null> {
       const items = await getResearch(locale);
       const index = items.findIndex((item) => item.slug === slug);
       const item = items[index];
       if (!item) return null;
-      return { item, index, total: items.length, next: items[(index + 1) % items.length] ?? item };
+      return {
+        item,
+        index,
+        total: items.length,
+        next: items[(index + 1) % items.length] ?? item,
+      };
     },
 
     /** Returns null for an unknown or hidden slug; callers turn that into a 404. */
-    async getProject(locale: Locale, slug: string): Promise<ProjectPage | null> {
+    async getProject(
+      locale: Locale,
+      slug: string
+    ): Promise<ProjectPage | null> {
       const projects = await getProjects(locale);
       const index = projects.findIndex((project) => project.slug === slug);
       const project = projects[index];
       if (!project) return null;
-      return { project, index, total: projects.length, next: projects[(index + 1) % projects.length] ?? project };
+      return {
+        project,
+        index,
+        total: projects.length,
+        next: projects[(index + 1) % projects.length] ?? project,
+      };
     },
   };
 }

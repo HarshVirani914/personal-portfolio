@@ -8,7 +8,9 @@ const secret = "test-secret";
 /** Signs a body the way Sanity does: t=<timestamp>,v1=<base64url hmac of "<t>.<body>">. */
 function sign(body: string) {
   const timestamp = Date.now();
-  const digest = createHmac("sha256", secret).update(`${timestamp}.${body}`).digest("base64url");
+  const digest = createHmac("sha256", secret)
+    .update(`${timestamp}.${body}`)
+    .digest("base64url");
   return `t=${timestamp},v1=${digest}`;
 }
 
@@ -22,7 +24,10 @@ const post = (body: string, signature?: string) =>
 describe("revalidation route", () => {
   it("rejects a missing signature", async () => {
     const revalidate = vi.fn();
-    const response = await handleRevalidate(post('{"_type":"hero"}'), { secret, revalidate });
+    const response = await handleRevalidate(post('{"_type":"hero"}'), {
+      secret,
+      revalidate,
+    });
     expect(response.status).toBe(401);
     expect(revalidate).not.toHaveBeenCalled();
   });
@@ -30,7 +35,10 @@ describe("revalidation route", () => {
   it("rejects an invalid signature", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"hero"}';
-    const response = await handleRevalidate(post(body, sign('{"_type":"project"}')), { secret, revalidate });
+    const response = await handleRevalidate(
+      post(body, sign('{"_type":"project"}')),
+      { secret, revalidate }
+    );
     expect(response.status).toBe(401);
     expect(revalidate).not.toHaveBeenCalled();
   });
@@ -38,7 +46,10 @@ describe("revalidation route", () => {
   it("revalidates the tag for the published document type", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"hero"}';
-    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    const response = await handleRevalidate(post(body, sign(body)), {
+      secret,
+      revalidate,
+    });
     expect(response.status).toBe(200);
     expect(revalidate).toHaveBeenCalledExactlyOnceWith(contentTags.hero);
     expect(await response.json()).toEqual({ revalidated: [contentTags.hero] });
@@ -47,7 +58,10 @@ describe("revalidation route", () => {
   it("revalidates research when a research document is published", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"research"}';
-    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    const response = await handleRevalidate(post(body, sign(body)), {
+      secret,
+      revalidate,
+    });
     expect(response.status).toBe(200);
     expect(revalidate).toHaveBeenCalledExactlyOnceWith(contentTags.research);
   });
@@ -55,7 +69,10 @@ describe("revalidation route", () => {
   it("revalidates skills when a skill group is published", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"skillGroup"}';
-    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    const response = await handleRevalidate(post(body, sign(body)), {
+      secret,
+      revalidate,
+    });
     expect(response.status).toBe(200);
     expect(revalidate).toHaveBeenCalledExactlyOnceWith(contentTags.skillGroup);
   });
@@ -67,7 +84,10 @@ describe("revalidation route", () => {
   ])("revalidates %s when it is published", async (type, tag) => {
     const revalidate = vi.fn();
     const body = JSON.stringify({ _type: type });
-    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    const response = await handleRevalidate(post(body, sign(body)), {
+      secret,
+      revalidate,
+    });
     expect(response.status).toBe(200);
     expect(revalidate).toHaveBeenCalledExactlyOnceWith(tag);
   });
@@ -75,14 +95,20 @@ describe("revalidation route", () => {
   it("revalidates nothing for a document type the site does not read", async () => {
     const revalidate = vi.fn();
     const body = '{"_type":"sanity.imageAsset"}';
-    const response = await handleRevalidate(post(body, sign(body)), { secret, revalidate });
+    const response = await handleRevalidate(post(body, sign(body)), {
+      secret,
+      revalidate,
+    });
     expect(response.status).toBe(200);
     expect(revalidate).not.toHaveBeenCalled();
   });
 
   it("refuses to run when no secret is configured", async () => {
     const body = '{"_type":"hero"}';
-    const response = await handleRevalidate(post(body, sign(body)), { secret: undefined, revalidate: vi.fn() });
+    const response = await handleRevalidate(post(body, sign(body)), {
+      secret: undefined,
+      revalidate: vi.fn(),
+    });
     expect(response.status).toBe(500);
   });
 });

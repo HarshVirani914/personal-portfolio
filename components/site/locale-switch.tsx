@@ -7,11 +7,20 @@ import { locales, switchLocale, type Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionary";
 
 /** EN / DE links that keep the visitor on the same page. */
-export function LocaleSwitch({ current, labels }: { current: Locale; labels: Dictionary["locale"] }) {
+export function LocaleSwitch({
+  current,
+  labels,
+}: {
+  current: Locale;
+  labels: Dictionary["locale"];
+}) {
   const pathname = usePathname();
 
   return (
-    <nav aria-label={labels.label} className="flex items-center gap-1.5 font-mono text-mono text-muted-ink">
+    <nav
+      aria-label={labels.label}
+      className="text-mono text-muted-ink flex items-center gap-1.5 font-mono"
+    >
       {locales.map((locale, i) => (
         <span key={locale} className="flex items-center gap-1.5">
           {i > 0 && <span aria-hidden="true">/</span>}
@@ -20,8 +29,8 @@ export function LocaleSwitch({ current, labels }: { current: Locale; labels: Dic
             hrefLang={locale}
             aria-current={locale === current ? "true" : undefined}
             className={cn(
-              "inline-flex min-h-11 items-center transition-colors duration-200 hover:text-ink",
-              locale === current && "text-ink",
+              "hover:text-ink inline-flex min-h-11 items-center transition-colors duration-200",
+              locale === current && "text-ink"
             )}
           >
             {labels[locale]}

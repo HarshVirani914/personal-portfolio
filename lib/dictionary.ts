@@ -7,9 +7,19 @@ import type { Locale } from "@/lib/i18n";
 const dictionaries = {
   en: {
     skipToContent: "Skip to content",
-    nav: { work: "Work", research: "Research", about: "About", contact: "Contact" },
+    nav: {
+      work: "Work",
+      research: "Research",
+      about: "About",
+      contact: "Contact",
+    },
     menu: { open: "Menu", close: "Close", title: "Navigation" },
-    theme: { toLight: "Switch to light theme", toDark: "Switch to dark theme", light: "Light", dark: "Dark" },
+    theme: {
+      toLight: "Switch to light theme",
+      toDark: "Switch to dark theme",
+      light: "Light",
+      dark: "Dark",
+    },
     locale: { label: "Language", en: "EN", de: "DE" },
     statements: "Statements",
     terminal: { label: "Terminal", run: "run:" },
@@ -115,9 +125,19 @@ const dictionaries = {
   },
   de: {
     skipToContent: "Zum Inhalt springen",
-    nav: { work: "Arbeiten", research: "Forschung", about: "Über mich", contact: "Kontakt" },
+    nav: {
+      work: "Arbeiten",
+      research: "Forschung",
+      about: "Über mich",
+      contact: "Kontakt",
+    },
     menu: { open: "Menü", close: "Schließen", title: "Navigation" },
-    theme: { toLight: "Zum hellen Design wechseln", toDark: "Zum dunklen Design wechseln", light: "Hell", dark: "Dunkel" },
+    theme: {
+      toLight: "Zum hellen Design wechseln",
+      toDark: "Zum dunklen Design wechseln",
+      light: "Hell",
+      dark: "Dunkel",
+    },
     locale: { label: "Sprache", en: "EN", de: "DE" },
     statements: "Aussagen",
     terminal: { label: "Terminal", run: "ausführen:" },
@@ -185,7 +205,8 @@ const dictionaries = {
       headingBefore: "Werkzeuge, nach denen ich greife,",
       headingEmphasis: "und wo",
       headingAfter: ".",
-      hintHover: "Fähigkeit anzeigen oder fokussieren, um zu sehen, wo ich sie eingesetzt habe.",
+      hintHover:
+        "Fähigkeit anzeigen oder fokussieren, um zu sehen, wo ich sie eingesetzt habe.",
       hintTap: "Fähigkeit antippen, um zu sehen, wo ich sie eingesetzt habe.",
     },
     experience: {

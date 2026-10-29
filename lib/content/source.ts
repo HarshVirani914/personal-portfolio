@@ -54,5 +54,7 @@ const tagByDocumentType: Record<string, string> = {
 
 /** The cache tag a published document of this type invalidates, if the site reads it. */
 export function tagForDocumentType(type: string): string | undefined {
-  return Object.hasOwn(tagByDocumentType, type) ? tagByDocumentType[type] : undefined;
+  return Object.hasOwn(tagByDocumentType, type)
+    ? tagByDocumentType[type]
+    : undefined;
 }

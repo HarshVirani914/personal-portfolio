@@ -8,9 +8,14 @@ test.describe("site shell", () => {
     test(`home renders in ${lang}`, async ({ page, isMobile }) => {
       await page.goto(path);
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
-      await expect(page.getByRole("heading", { level: 1, name: "Harsh Virani" })).toBeVisible();
-      if (isMobile) await page.getByRole("button", { name: /Menu|Menü/ }).click();
-      await expect(page.getByRole("link", { name: new RegExp(`^${work}`) }).first()).toBeVisible();
+      await expect(
+        page.getByRole("heading", { level: 1, name: "Harsh Virani" })
+      ).toBeVisible();
+      if (isMobile)
+        await page.getByRole("button", { name: /Menu|Menü/ }).click();
+      await expect(
+        page.getByRole("link", { name: new RegExp(`^${work}`) }).first()
+      ).toBeVisible();
     });
   }
 
@@ -27,7 +32,10 @@ test.describe("site shell", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
   });
 
-  test("theme follows the system and can be toggled", async ({ page, isMobile }) => {
+  test("theme follows the system and can be toggled", async ({
+    page,
+    isMobile,
+  }) => {
     await page.emulateMedia({ colorScheme: "dark" });
     await page.goto("/");
     await expect(page.locator("html")).toHaveClass(/dark/);

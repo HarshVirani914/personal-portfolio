@@ -5,8 +5,16 @@ export const siteSettings = defineType({
   title: "Site settings",
   type: "document",
   fields: [
-    defineField({ name: "firstName", type: "string", validation: (rule) => rule.required() }),
-    defineField({ name: "lastName", type: "string", validation: (rule) => rule.required() }),
+    defineField({
+      name: "firstName",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "lastName",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
     defineField({
       name: "coordinates",
       type: "string",
@@ -18,7 +26,11 @@ export const siteSettings = defineType({
       type: "localizedString",
       description: "Revealed on hover (tap on mobile) next to the coordinates",
     }),
-    defineField({ name: "description", title: "SEO description", type: "localizedString" }),
+    defineField({
+      name: "description",
+      title: "SEO description",
+      type: "localizedString",
+    }),
     defineField({
       name: "email",
       type: "string",
@@ -28,10 +40,26 @@ export const siteSettings = defineType({
     defineField({
       name: "availability",
       type: "localizedString",
-      description: "One line with a pulsing dot, for example “Open to working-student and full-time AI roles”",
+      description:
+        "One line with a pulsing dot, for example “Open to working-student and full-time AI roles”",
     }),
-    defineField({ name: "linkedinUrl", title: "LinkedIn URL", type: "url", validation: (rule) => rule.uri({ scheme: ["https"] }) }),
-    defineField({ name: "githubUrl", title: "GitHub URL", type: "url", validation: (rule) => rule.uri({ scheme: ["https"] }) }),
-    defineField({ name: "cv", title: "CV (PDF)", type: "file", options: { accept: "application/pdf" } }),
+    defineField({
+      name: "linkedinUrl",
+      title: "LinkedIn URL",
+      type: "url",
+      validation: (rule) => rule.uri({ scheme: ["https"] }),
+    }),
+    defineField({
+      name: "githubUrl",
+      title: "GitHub URL",
+      type: "url",
+      validation: (rule) => rule.uri({ scheme: ["https"] }),
+    }),
+    defineField({
+      name: "cv",
+      title: "CV (PDF)",
+      type: "file",
+      options: { accept: "application/pdf" },
+    }),
   ],
 });

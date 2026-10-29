@@ -16,12 +16,32 @@ export function SmoothScroll() {
      * never fires; links to other pages are left alone.
      */
     const onClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
       const link = (event.target as Element | null)?.closest?.("a[href]");
-      if (!(link instanceof HTMLAnchorElement) || link.target === "_blank" || link.hasAttribute("download")) return;
+      if (
+        !(link instanceof HTMLAnchorElement) ||
+        link.target === "_blank" ||
+        link.hasAttribute("download")
+      )
+        return;
       const url = new URL(link.href, window.location.href);
-      if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || !url.hash) return;
-      const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+      if (
+        url.origin !== window.location.origin ||
+        url.pathname !== window.location.pathname ||
+        !url.hash
+      )
+        return;
+      const target = document.getElementById(
+        decodeURIComponent(url.hash.slice(1))
+      );
       if (!target) return;
       event.preventDefault();
       event.stopPropagation();
@@ -31,7 +51,8 @@ export function SmoothScroll() {
     document.addEventListener("click", onClick, true);
 
     /** Back or forward during a glide: stop where we are so scroll restoration is not fought. */
-    const onPop = () => lenis.scrollTo(window.scrollY, { immediate: true, force: true });
+    const onPop = () =>
+      lenis.scrollTo(window.scrollY, { immediate: true, force: true });
     window.addEventListener("popstate", onPop);
 
     return () => {

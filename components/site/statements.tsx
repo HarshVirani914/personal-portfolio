@@ -19,7 +19,10 @@ export function Statements({ statements, label }: Props) {
   const [active, setActive] = useState(0);
   const total = statements.length;
 
-  const { scrollYProgress } = useScroll({ target: track, offset: ["start start", "end end"] });
+  const { scrollYProgress } = useScroll({
+    target: track,
+    offset: ["start start", "end end"],
+  });
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     setActive(Math.min(total - 1, Math.max(0, Math.floor(progress * total))));
   });
@@ -33,8 +36,11 @@ export function Statements({ statements, label }: Props) {
       <div className="hidden px-5 py-18 motion-reduce:block md:px-10 lg:px-16">
         <ol className="flex list-none flex-col gap-10">
           {statements.map((item, i) => (
-            <li key={item.id} className="font-serif text-statement tracking-[-0.01em]">
-              <span className="mb-2 block font-mono text-mono text-muted-ink">
+            <li
+              key={item.id}
+              className="text-statement font-serif tracking-[-0.01em]"
+            >
+              <span className="text-mono text-muted-ink mb-2 block font-mono">
                 {pad(i + 1)} / {pad(total)}
               </span>
               {item.text}
@@ -43,19 +49,30 @@ export function Statements({ statements, label }: Props) {
         </ol>
       </div>
 
-      <div ref={track} className="motion-reduce:hidden" style={{ height: `${total * 100}svh` }}>
+      <div
+        ref={track}
+        className="motion-reduce:hidden"
+        style={{ height: `${total * 100}svh` }}
+      >
         <div className="sticky top-0 flex h-svh items-center px-5 md:px-10 lg:px-16">
-          <div aria-hidden="true" className="absolute inset-x-0 top-24 h-px bg-hairline lg:inset-x-auto lg:top-40 lg:bottom-40 lg:left-0 lg:h-auto lg:w-px">
+          <div
+            aria-hidden="true"
+            className="bg-hairline absolute inset-x-0 top-24 h-px lg:inset-x-auto lg:top-40 lg:bottom-40 lg:left-0 lg:h-auto lg:w-px"
+          >
             <div
               data-testid="statements-progress"
-              className="h-px bg-ink transition-[width,height] duration-800 ease-in-out-quart lg:h-(--fill) lg:w-px"
+              className="bg-ink ease-in-out-quart h-px transition-[width,height] duration-800 lg:h-(--fill) lg:w-px"
               style={{ width: fill, ["--fill" as string]: fill }}
             />
           </div>
 
           <div className="relative w-full lg:grid lg:grid-cols-12 lg:gap-x-6">
-            <div className="font-mono text-[11px] text-muted-ink lg:col-span-2 lg:pl-7 lg:pt-5 lg:text-mono">
-              <span key={active} className="animate-num-rise inline-block" data-testid="statements-counter">
+            <div className="text-muted-ink lg:text-mono font-mono text-[11px] lg:col-span-2 lg:pt-5 lg:pl-7">
+              <span
+                key={active}
+                className="animate-num-rise inline-block"
+                data-testid="statements-counter"
+              >
                 {pad(active + 1)}
               </span>{" "}
               / {pad(total)}
@@ -67,15 +84,20 @@ export function Statements({ statements, label }: Props) {
                   key={item.id}
                   data-active={i === active}
                   className={cn(
-                    "font-serif text-statement tracking-[-0.01em] transition-opacity duration-200",
-                    i === active ? "relative opacity-100" : "pointer-events-none absolute inset-x-0 top-0 opacity-0",
+                    "text-statement font-serif tracking-[-0.01em] transition-opacity duration-200",
+                    i === active
+                      ? "relative opacity-100"
+                      : "pointer-events-none absolute inset-x-0 top-0 opacity-0"
                   )}
                 >
                   {item.text.split(" ").map((word, w) => (
                     <Fragment key={`${i === active ? "on" : "off"}-${w}`}>
                       {w > 0 ? " " : null}
                       <span
-                        className={cn("inline-block", i === active && "animate-ink")}
+                        className={cn(
+                          "inline-block",
+                          i === active && "animate-ink"
+                        )}
                         style={{ animationDelay: `${w * 90}ms` }}
                       >
                         {word}

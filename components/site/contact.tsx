@@ -37,7 +37,8 @@ export function Contact({ contact, dict }: Props) {
     selection?.addRange(range);
   }, [state]);
 
-  if (!email && !availability && !linkedinUrl && !githubUrl && !cvUrl) return null;
+  if (!email && !availability && !linkedinUrl && !githubUrl && !cvUrl)
+    return null;
 
   const copy = async () => {
     if (!email) return;
@@ -55,18 +56,27 @@ export function Contact({ contact, dict }: Props) {
     { href: linkedinUrl, label: dict.linkedin, arrow: "↗", external: true },
     { href: githubUrl, label: dict.github, arrow: "↗", external: true },
     { href: cvUrl, label: dict.cv, arrow: "↓", external: false },
-  ].filter((link): link is typeof link & { href: string } => Boolean(link.href));
+  ].filter((link): link is typeof link & { href: string } =>
+    Boolean(link.href)
+  );
 
   return (
-    <section id="contact" aria-labelledby="contact-heading" className="scroll-mt-24 pt-24 pb-16 lg:pt-30 lg:pb-20">
+    <section
+      id="contact"
+      aria-labelledby="contact-heading"
+      className="scroll-mt-24 pt-24 pb-16 lg:pt-30 lg:pb-20"
+    >
       <h2 id="contact-heading" className="sr-only">
         {dict.kicker}
       </h2>
-      <div className="flex flex-col gap-2.5 border-t border-ink pt-3.5 lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-6 lg:pt-4.5">
+      <div className="border-ink flex flex-col gap-2.5 border-t pt-3.5 lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-6 lg:pt-4.5">
         <span className={cn(mono, "lg:col-span-2")}>07 — {dict.kicker}</span>
         {availability && (
-          <span className="flex items-center gap-2 font-mono text-mono text-ink lg:col-span-6">
-            <span aria-hidden="true" className="inline-block size-[7px] shrink-0 animate-pulse-dot rounded-full bg-agent" />
+          <span className="text-mono text-ink flex items-center gap-2 font-mono lg:col-span-6">
+            <span
+              aria-hidden="true"
+              className="animate-pulse-dot bg-agent inline-block size-[7px] shrink-0 rounded-full"
+            />
             {availability}
           </span>
         )}
@@ -79,10 +89,14 @@ export function Contact({ contact, dict }: Props) {
               type="button"
               onClick={copy}
               aria-label={dict.copyEmail}
-              className="flex w-fit cursor-pointer flex-wrap gap-x-[0.22em] text-left font-serif text-[clamp(7rem,15.3vw,13.75rem)] leading-[0.9] tracking-[-0.02em] outline-offset-8 focus-visible:outline focus-visible:outline-agent lg:[&:hover>*]:translate-x-4"
+              className="focus-visible:outline-agent flex w-fit cursor-pointer flex-wrap gap-x-[0.22em] text-left font-serif text-[clamp(7rem,15.3vw,13.75rem)] leading-[0.9] tracking-[-0.02em] outline-offset-8 focus-visible:outline lg:[&:hover>*]:translate-x-4"
             >
-              <span className="transition-transform duration-500 ease-out-expo">{dict.letsTalkBefore}</span>
-              <em className="text-agent transition-transform duration-500 ease-out-expo">{dict.letsTalkEmphasis}</em>
+              <span className="ease-out-expo transition-transform duration-500">
+                {dict.letsTalkBefore}
+              </span>
+              <em className="text-agent ease-out-expo transition-transform duration-500">
+                {dict.letsTalkEmphasis}
+              </em>
             </button>
           ) : (
             <p className="font-serif text-[clamp(7rem,15.3vw,13.75rem)] leading-[0.9] tracking-[-0.02em]">
@@ -90,14 +104,20 @@ export function Contact({ contact, dict }: Props) {
             </p>
           )}
           {email && (
-            <div role="status" className="min-h-5 overflow-hidden font-mono text-xs text-muted-ink lg:text-[13px]">
+            <div
+              role="status"
+              className="text-muted-ink min-h-5 overflow-hidden font-mono text-xs lg:text-[13px]"
+            >
               {state === "copied" && (
-                <span key="copied" className="inline-block animate-swap text-agent">
+                <span
+                  key="copied"
+                  className="animate-swap text-agent inline-block"
+                >
                   ✓ {dict.copied}
                 </span>
               )}
               {state === "failed" && (
-                <span key="failed" className="inline-block animate-swap">
+                <span key="failed" className="animate-swap inline-block">
                   {dict.copyFailed}{" "}
                   <span ref={address} className="text-ink select-all">
                     {email}
@@ -105,7 +125,7 @@ export function Contact({ contact, dict }: Props) {
                 </span>
               )}
               {state === "idle" && (
-                <span key="idle" className="inline-block animate-swap">
+                <span key="idle" className="animate-swap inline-block">
                   {email} · <span className="lg:hidden">{dict.tapToCopy}</span>
                   <span className="hidden lg:inline">{dict.clickToCopy}</span>
                 </span>
@@ -115,7 +135,10 @@ export function Contact({ contact, dict }: Props) {
         </div>
 
         {links.length > 0 && (
-          <nav aria-label={dict.kicker} className="mt-9 flex flex-col border-t border-hairline lg:col-span-3 lg:mt-0 lg:gap-2.5 lg:border-0 lg:pb-10">
+          <nav
+            aria-label={dict.kicker}
+            className="border-hairline mt-9 flex flex-col border-t lg:col-span-3 lg:mt-0 lg:gap-2.5 lg:border-0 lg:pb-10"
+          >
             {links.map((link) => (
               <a
                 key={link.label}
@@ -123,7 +146,10 @@ export function Contact({ contact, dict }: Props) {
                 className={linkClass}
                 {...(link.external
                   ? { target: "_blank", rel: "noopener noreferrer" }
-                  : { download: "", "aria-label": `${link.label}. ${dict.download}` })}
+                  : {
+                      download: "",
+                      "aria-label": `${link.label}. ${dict.download}`,
+                    })}
               >
                 <span>{link.label}</span>
                 <span aria-hidden="true">{link.arrow}</span>

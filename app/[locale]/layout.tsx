@@ -21,9 +21,15 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-heading",
 });
 
-const geist = Geist({ subsets: ["latin", "latin-ext"], variable: "--font-sans" });
+const geist = Geist({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-sans",
+});
 
-const geistMono = Geist_Mono({ subsets: ["latin", "latin-ext"], variable: "--font-mono" });
+const geistMono = Geist_Mono({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-mono",
+});
 
 export async function generateMetadata({
   params,
@@ -63,13 +69,22 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={cn(geist.variable, geistMono.variable, instrumentSerif.variable)}
+      className={cn(
+        geist.variable,
+        geistMono.variable,
+        instrumentSerif.variable
+      )}
     >
       <body className="min-h-svh">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <a
             href="#main"
-            className="sr-only z-50 bg-background px-4 py-2 text-ui focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
+            className="bg-background text-ui sr-only z-50 px-4 py-2 focus:not-sr-only focus:fixed focus:top-4 focus:left-4"
           >
             {dict.skipToContent}
           </a>
@@ -83,7 +98,11 @@ export default async function LocaleLayout({
             city={settings.city}
           />
           {children}
-          <SiteFooter name={settings.name} coordinates={settings.coordinates} dict={dict.footer} />
+          <SiteFooter
+            name={settings.name}
+            coordinates={settings.coordinates}
+            dict={dict.footer}
+          />
         </ThemeProvider>
         <Analytics />
       </body>

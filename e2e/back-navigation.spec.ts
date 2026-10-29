@@ -1,11 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-const scrollY = (page: import("@playwright/test").Page) => page.evaluate(() => Math.round(window.scrollY));
+const scrollY = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => Math.round(window.scrollY));
 
-test("browser back from a project returns to the same scroll position", async ({ page, isMobile }) => {
+test("browser back from a project returns to the same scroll position", async ({
+  page,
+  isMobile,
+}) => {
   test.skip(isMobile, "desktop rows are links; mobile rows expand first");
   await page.goto("/");
-  const row = page.getByRole("link", { name: /Support agent, open case study/i });
+  const row = page.getByRole("link", {
+    name: /Support agent, open case study/i,
+  });
   await row.scrollIntoViewIfNeeded();
   const before = await scrollY(page);
   await row.click();
@@ -16,7 +22,10 @@ test("browser back from a project returns to the same scroll position", async ({
   expect(Math.abs((await scrollY(page)) - before)).toBeLessThan(5);
 });
 
-test("back from a nav hash link returns to where the visitor was, not the section", async ({ page, isMobile }) => {
+test("back from a nav hash link returns to where the visitor was, not the section", async ({
+  page,
+  isMobile,
+}) => {
   test.skip(isMobile, "nav links sit behind the mobile menu");
   await page.goto("/");
   await page.getByRole("link", { name: "Work", exact: true }).first().click();

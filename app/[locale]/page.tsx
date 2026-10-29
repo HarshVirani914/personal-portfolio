@@ -11,18 +11,23 @@ import { content } from "@/lib/content";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale } from "@/lib/i18n";
 
-export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const [settings, home, projects, research, skills, experience, education] = await Promise.all([
-    content.getSiteSettings(locale),
-    content.getHome(locale),
-    content.getProjects(locale),
-    content.getResearch(locale),
-    content.getSkills(locale),
-    content.getExperience(locale),
-    content.getEducation(locale),
-  ]);
+  const [settings, home, projects, research, skills, experience, education] =
+    await Promise.all([
+      content.getSiteSettings(locale),
+      content.getHome(locale),
+      content.getProjects(locale),
+      content.getResearch(locale),
+      content.getSkills(locale),
+      content.getExperience(locale),
+      content.getEducation(locale),
+    ]);
   const dict = getDictionary(locale);
 
   return (
