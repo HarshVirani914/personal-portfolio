@@ -1,0 +1,39 @@
+import { AskAgentButton } from "@/components/site/ask-agent-button";
+import { HeroName } from "@/components/site/hero-name";
+import { HeroTerminal } from "@/components/site/hero-terminal";
+import type { Dictionary } from "@/lib/dictionary";
+import type { Hero as HeroContent, SiteSettings } from "@/lib/content/types";
+
+type Props = {
+  hero: HeroContent;
+  name: SiteSettings["name"];
+  dict: Dictionary;
+};
+
+export function Hero({ hero, name, dict }: Props) {
+  return (
+    <section className="flex min-h-svh flex-col gap-y-8 pt-32 pb-6 lg:pt-24 lg:pb-11">
+      <div className="my-auto grid gap-y-5.5 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-9">
+        <div className="lg:col-span-9">
+          <HeroName first={name.first} last={name.last} />
+        </div>
+        <ul className="animate-fade-in text-muted-ink lg:text-mono flex list-none flex-wrap gap-x-3.5 gap-y-1.5 font-mono text-[11px] [animation-delay:0.9s] lg:col-span-3 lg:flex-col lg:justify-end lg:gap-y-2.5 lg:pb-7">
+          {hero.annotations.map((item) => (
+            <li key={item.id}>
+              {item.marker} {item.text}
+            </li>
+          ))}
+        </ul>
+        <div className="animate-draw bg-ink h-px w-3/5 [animation-delay:0.4s] lg:col-span-5 lg:w-auto" />
+        <div className="lg:col-span-9 lg:col-start-1">
+          <HeroTerminal
+            scripts={hero.terminal}
+            label={dict.terminal.label}
+            runLabel={dict.terminal.run}
+          />
+        </div>
+      </div>
+      <AskAgentButton dict={dict.agent} />
+    </section>
+  );
+}

@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-30T17:00:21.779512+00:00",
+  "title": "Design System: Harsh Virani",
+  "extensions": {
+    "colorMeta": {
+      "agent": {
+        "role": "primary",
+        "displayName": "Agent",
+        "canonical": "#2b4cc8",
+        "tonalRamp": [
+          "#02003b",
+          "#08116d",
+          "#182fa2",
+          "#2f52ce",
+          "#4d77f6",
+          "#709dff",
+          "#9dc5ff",
+          "#cbedff"
+        ]
+      },
+      "agent-dark": {
+        "role": "primary",
+        "displayName": "Agent Dark",
+        "canonical": "#7c98ff",
+        "tonalRamp": [
+          "#030131",
+          "#121a5d",
+          "#27368d",
+          "#4257b7",
+          "#607ade",
+          "#839eff",
+          "#acc5ff",
+          "#d7ecff"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f2f2f0",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252524",
+          "#424241",
+          "#616160",
+          "#828281",
+          "#a5a5a3",
+          "#c9c9c8",
+          "#eeeeed"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#e9e9e6",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#424240",
+          "#61615f",
+          "#828280",
+          "#a5a5a2",
+          "#c9c9c7",
+          "#eeeeed"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#d6d6d2",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a2",
+          "#c9c9c6",
+          "#efefec"
+        ]
+      },
+      "muted-ink": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "#5e5e5b",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a2",
+          "#c9c9c7",
+          "#eeeeec"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#3e3e3b",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a2",
+          "#c9c9c6",
+          "#eeefec"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "canonical": "#0e0e0f",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252526",
+          "#424243",
+          "#616162",
+          "#828283",
+          "#a5a5a6",
+          "#c9c9ca",
+          "#eeeeef"
+        ]
+      },
+      "night-surface": {
+        "role": "neutral",
+        "displayName": "Night Surface",
+        "canonical": "#1a1a1c",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252526",
+          "#424244",
+          "#616163",
+          "#828285",
+          "#a5a5a7",
+          "#c9c9cb",
+          "#eeeef0"
+        ]
+      },
+      "night-hairline": {
+        "role": "neutral",
+        "displayName": "Night Hairline",
+        "canonical": "#2a2a2a",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "night-muted-ink": {
+        "role": "neutral",
+        "displayName": "Night Muted Ink",
+        "canonical": "#8e8c86",
+        "tonalRamp": [
+          "#0c0b09",
+          "#262521",
+          "#44423d",
+          "#63615b",
+          "#84827c",
+          "#a7a59f",
+          "#cbc9c4",
+          "#f0eeea"
+        ]
+      },
+      "night-ink-2": {
+        "role": "neutral",
+        "displayName": "Night Ink 2",
+        "canonical": "#c9c7c0",
+        "tonalRamp": [
+          "#0c0b08",
+          "#262521",
+          "#44423c",
+          "#63615b",
+          "#84827c",
+          "#a7a59f",
+          "#cbc9c4",
+          "#f0eeea"
+        ]
+      },
+      "night-ink": {
+        "role": "neutral",
+        "displayName": "Night Ink",
+        "canonical": "#eceae4",
+        "tonalRamp": [
+          "#0c0b09",
+          "#262522",
+          "#43423d",
+          "#63615c",
+          "#84827d",
+          "#a7a5a0",
+          "#cac9c4",
+          "#f0eeeb"
+        ]
+      },
+      "accent-grid": {
+        "role": "secondary",
+        "displayName": "Accent Grid",
+        "canonical": "#1f7a6a",
+        "tonalRamp": [
+          "#00110b",
+          "#002f25",
+          "#005042",
+          "#107161",
+          "#3e9382",
+          "#68b6a5",
+          "#9ad8c9",
+          "#cafbee"
+        ]
+      },
+      "accent-flag": {
+        "role": "secondary",
+        "displayName": "Accent Flag",
+        "canonical": "#a33a6b",
+        "tonalRamp": [
+          "#23000d",
+          "#4a0028",
+          "#751346",
+          "#9d3466",
+          "#c35887",
+          "#e77eaa",
+          "#ffaacd",
+          "#ffd7f2"
+        ]
+      },
+      "accent-pocket": {
+        "role": "secondary",
+        "displayName": "Accent Pocket",
+        "canonical": "#8a6100",
+        "tonalRamp": [
+          "#190600",
+          "#3a1e00",
+          "#5e3900",
+          "#815900",
+          "#a47a2a",
+          "#c79e56",
+          "#e6c48b",
+          "#ffeabe"
+        ]
+      },
+      "accent-support": {
+        "role": "secondary",
+        "displayName": "Accent Support",
+        "canonical": "#5b46c9",
+        "tonalRamp": [
+          "#0d0039",
+          "#240468",
+          "#3e229c",
+          "#5a45c8",
+          "#796af0",
+          "#9a91ff",
+          "#bebbff",
+          "#e5e4ff"
+        ]
+      },
+      "accent-ssri": {
+        "role": "secondary",
+        "displayName": "Accent Ssri",
+        "canonical": "#a3471f",
+        "tonalRamp": [
+          "#230000",
+          "#4a0800",
+          "#752200",
+          "#9d4118",
+          "#c3643d",
+          "#e68964",
+          "#ffb394",
+          "#ffdec5"
+        ]
+      },
+      "accent-grid-dark": {
+        "role": "secondary",
+        "displayName": "Accent Grid Dark",
+        "canonical": "#4fb39c",
+        "tonalRamp": [
+          "#00120a",
+          "#003023",
+          "#005140",
+          "#00735f",
+          "#2c9680",
+          "#5db9a3",
+          "#92dac7",
+          "#c5fced"
+        ]
+      },
+      "accent-flag-dark": {
+        "role": "secondary",
+        "displayName": "Accent Flag Dark",
+        "canonical": "#e07aa8",
+        "tonalRamp": [
+          "#21000e",
+          "#47022a",
+          "#711a48",
+          "#983a68",
+          "#be5c8a",
+          "#e281ac",
+          "#ffadcf",
+          "#ffd8f4"
+        ]
+      },
+      "accent-pocket-dark": {
+        "role": "secondary",
+        "displayName": "Accent Pocket Dark",
+        "canonical": "#d4a63a",
+        "tonalRamp": [
+          "#1a0500",
+          "#3b1d00",
+          "#603900",
+          "#835800",
+          "#a77a00",
+          "#c99e3b",
+          "#e8c479",
+          "#ffebb1"
+        ]
+      },
+      "accent-support-dark": {
+        "role": "secondary",
+        "displayName": "Accent Support Dark",
+        "canonical": "#9a88f0",
+        "tonalRamp": [
+          "#0e002d",
+          "#271358",
+          "#442d86",
+          "#624daf",
+          "#826fd5",
+          "#a494f7",
+          "#c8bcff",
+          "#ede5ff"
+        ]
+      },
+      "accent-ssri-dark": {
+        "role": "secondary",
+        "displayName": "Accent Ssri Dark",
+        "canonical": "#d9805a",
+        "tonalRamp": [
+          "#210000",
+          "#470e00",
+          "#712700",
+          "#98461f",
+          "#be6742",
+          "#e18c68",
+          "#feb697",
+          "#ffe0c7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display-xl": {
+        "displayName": "Display XL",
+        "purpose": "The name in the hero."
+      },
+      "statement": {
+        "displayName": "Statement",
+        "purpose": "Pinned home page statements."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Every mono detail."
+      }
+    },
+    "shadows": [
+      {
+        "name": "hover-card",
+        "value": "0 30px 60px -20px rgba(20,20,20,.45), 0 2px 6px rgba(20,20,20,.12)",
+        "purpose": "The cursor-following project card."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Arrivals and hover shifts."
+      },
+      {
+        "name": "ease-in-out-quart",
+        "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "purpose": "Lines drawing and progress."
+      },
+      {
+        "name": "ease-wipe",
+        "value": "cubic-bezier(0.77, 0, 0.18, 1)",
+        "purpose": "Wipe reveals."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Terminal Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Runs a hero terminal command.",
+      "html": "<button class=\"ds-chip\">whoami</button> <button class=\"ds-chip ds-chip-on\">mission</button>",
+      "css": ".ds-chip{min-height:44px;padding:0 12px;border:1px solid var(--hairline,#d6d6d2);border-radius:9999px;background:none;color:var(--muted-ink,#5e5e5b);font:12px/1.6 'Geist Mono',monospace;transition:color .2s,border-color .2s;cursor:pointer}.ds-chip:hover{color:var(--ink,#141414)}.ds-chip:focus-visible{outline:2px solid var(--agent,#2b4cc8);outline-offset:3px}.ds-chip-on{color:var(--agent,#2b4cc8);border-color:var(--agent,#2b4cc8)}"
+    },
+    {
+      "name": "Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Static or linked proof tag.",
+      "html": "<a class=\"ds-tag\" href=\"#\">Dean's List ↗</a>",
+      "css": ".ds-tag{display:inline-flex;gap:6px;padding:6px 14px;border:1px solid var(--hairline,#d6d6d2);border-radius:9999px;color:var(--ink,#141414);font:12px/1.6 'Geist Mono',monospace;text-decoration:none;transition:border-color .2s}.ds-tag:hover{border-color:var(--ink,#141414)}.ds-tag:focus-visible{outline:2px solid var(--agent,#2b4cc8);outline-offset:3px}"
+    },
+    {
+      "name": "Ask Bar",
+      "kind": "input",
+      "refersTo": "ask-bar",
+      "description": "Signature entry to the agent overlay.",
+      "html": "<button class=\"ds-ask\"><span>Ask me anything</span><i></i></button>",
+      "css": ".ds-ask{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:56px;padding:0 20px;border:1px solid var(--ink,#141414);border-radius:9999px;background:var(--bg,#f2f2f0);color:var(--ink,#141414);font:15px/1.5 Geist,sans-serif;cursor:pointer}.ds-ask i{width:8px;height:8px;border-radius:50%;background:var(--agent,#2b4cc8)}.ds-ask:focus-visible{outline:2px solid var(--agent,#2b4cc8);outline-offset:3px}"
+    },
+    {
+      "name": "Work Row",
+      "kind": "custom",
+      "description": "Hairline row whose title shifts on hover.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-n\">01</span><span class=\"ds-t\">Flag &amp; Fill</span><span class=\"ds-a\">→</span></a>",
+      "css": ".ds-row{display:flex;align-items:baseline;gap:24px;padding:30px 0;border-top:1px solid var(--hairline,#d6d6d2);color:var(--ink,#141414);text-decoration:none}.ds-n{font:12px/1.6 'Geist Mono',monospace;color:var(--muted-ink,#5e5e5b)}.ds-t{font:400 52px/1 'Instrument Serif',serif;transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-a{margin-left:auto;font-size:22px;transition:transform .4s cubic-bezier(.16,1,.3,1)}.ds-row:hover .ds-t,.ds-row:focus-visible .ds-t{transform:translateX(12px)}.ds-row:hover .ds-a,.ds-row:focus-visible .ds-a{transform:rotate(-45deg)}.ds-row:focus-visible{outline:2px solid var(--agent,#2b4cc8);outline-offset:4px}"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "project-card",
+      "description": "Cursor-following card on desktop rows.",
+      "html": "<div class=\"ds-card\"><b>Flag &amp; Fill</b><span>Customs declarations, filled by an agent.</span></div>",
+      "css": ".ds-card{display:flex;flex-direction:column;gap:6px;width:380px;max-width:100%;padding:16px 18px;border:1px solid #262626;border-radius:8px;background:var(--card-ink,#141414);color:#eceae4;font:15px/1.5 Geist,sans-serif;box-shadow:0 30px 60px -20px rgba(20,20,20,.45),0 2px 6px rgba(20,20,20,.12)}.ds-card b{font:400 22px/1.1 'Instrument Serif',serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Instrument",
+    "overview": "The site behaves like a precise tool at rest. Paper or night, one ink, hairlines, and very large serif type do the talking. Nothing competes with the name in the first viewport, and nothing moves without a reason. The agent is the single live signal on the page: its blue is the only color that belongs to the site as a whole.\n\nDensity is low and the pace is editorial. Large type carries claims, and small mono carries evidence such as dates, coordinates, kinds and counts. Components are quiet until touched: flat rows and pills at rest, with movement and color arriving only on hover, focus or use.\n\nMotion is measured. Type rises through a mask once on arrival, rows shift a few pixels, and statements ink in word by word. Reduced motion and script-free visits get the same content as plain, static text.",
+    "keyCharacteristics": [
+      "One serif voice for claims, one mono voice for evidence, one sans for reading.",
+      "Near-neutral paper and night, with a single agent blue.",
+      "Hairlines for structure, with almost no shadow.",
+      "Project color appears only inside that project's row and page.",
+      "Light and dark are equal themes, and both are built from the same tokens."
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "Agent blue means the agent or the keyboard focus. Never use it for decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contained Accent Rule",
+        "body": "A project's accent stays inside that project's row and page. It exists nowhere else.",
+        "section": "colors"
+      },
+      {
+        "name": "The Italic Turn Rule",
+        "body": "A heading gets one italic phrase at most, and it carries the point of the sentence.",
+        "section": "typography"
+      },
+      {
+        "name": "The Readout Rule",
+        "body": "Facts that could be measured or dated are set in mono. Claims are set in serif.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat At Rest Rule",
+        "body": "A shadow appears only on something that has been summoned.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep every interactive target at least 44px tall on touch, except inline references.",
+      "Do give every animation a static version under reduced motion and without scripts.",
+      "Do set dates, numbers, kinds and coordinates in Geist Mono.",
+      "Do use the token that resolves per theme, so light and dark stay in step.",
+      "Do keep hover movement to a few pixels."
+    ],
+    "donts": [
+      "Don't make this look like a generic developer template.",
+      "Don't use agent blue as decoration.",
+      "Don't let a project's accent leave its row or page.",
+      "Don't add shadows to surfaces at rest.",
+      "Don't add a second heavy idea to the first viewport."
+    ]
+  }
+}

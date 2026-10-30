@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test output
+/test-results
+/playwright-report
+
+.impeccable/*
+!.impeccable/design.json
+!.env.example
+
+# local agent tooling
+/.agents/
+/.claude/
+/.mcp.json
+/AGENTS.md
+/skills-lock.json
