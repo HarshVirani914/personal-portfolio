@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, ViewTransition } from "react";
 import { accentStyle } from "@/components/site/project-accent";
+import { cardFigureFor } from "@/components/figures/cards";
 import { ProjectFigure } from "@/components/site/project-figure";
 import type { Dictionary } from "@/lib/dictionary";
 import type { Project } from "@/lib/content/types";
@@ -237,7 +238,7 @@ function CardBody({
         </span>
         <span>{project.kind}</span>
       </span>
-      <ProjectFigure variant="card" />
+      <ProjectFigure variant="card" card={cardFigureFor(project)} />
       <span className="text-small mt-3.5 block border-t border-[#2a2a2a] pt-3.5 leading-relaxed font-light text-[#d9d7d1]">
         {project.summary}
       </span>

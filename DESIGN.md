@@ -233,7 +233,7 @@ The site's signature entry point. A pill with an ink border and a single agent-b
 
 ### Project Figure
 
-Isometric hairline drawings in the project's accent, set on a tinted band below the case study header.
+Isometric hairline drawings in the project's accent, set on a tinted band below the case study header. Each is built with the Anatomy kit (`components/iso`) in `components/figures/<slug>`: one pure model drives every part, the readout and the idle tour. The page figure is live; the hover card is a script-free dark still in `public/figures`, generated from the same geometry, so the home page carries no figure weight. Its `figure.test.ts` audits supports, clearance and paint order.
 
 ## Do's and Don'ts
 

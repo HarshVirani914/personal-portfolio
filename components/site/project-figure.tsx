@@ -8,10 +8,30 @@ import { cn } from "@/lib/utils";
 export function ProjectFigure({
   variant,
   className,
+  card,
 }: {
   variant: "card" | "page";
   className?: string;
+  /** A finished figure's dark still, for the hover card. */
+  card?: string | undefined;
 }) {
+  if (variant === "card" && card) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- an animated SVG, served as is
+      <img
+        src={card}
+        alt=""
+        width={344}
+        height={150}
+        loading="lazy"
+        decoding="async"
+        className={cn(
+          "mx-auto mt-1.5 block h-37.5 w-full max-w-86 object-contain",
+          className
+        )}
+      />
+    );
+  }
   if (variant === "card") {
     return (
       <svg
