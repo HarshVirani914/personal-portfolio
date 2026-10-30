@@ -1,0 +1,45 @@
+.ff-card .iso-shade {
+  fill: var(--ff-card);
+}
+
+.ff-mark,
+.ff-lamp[data-on="true"] {
+  fill: var(--project-accent);
+}
+
+.ff-lamp {
+  fill: var(--anatomy-paper);
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+  transition: fill 240ms ease;
+}
+
+.ff-needle {
+  stroke-width: 0.9px;
+}
+
+.ff-flag-plate {
+  fill: var(--anatomy-paper);
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+  transition: fill 240ms ease;
+}
+
+.ff-flag[data-up="true"] .ff-flag-plate {
+  fill: var(--project-accent);
+  stroke: var(--project-accent);
+}
+
+.ff-pivot {
+  fill: var(--anatomy-top);
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-flag-plate,
+  .ff-lamp {
+    transition: none;
+  }
+}
