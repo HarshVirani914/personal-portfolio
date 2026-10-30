@@ -1,36 +1,30 @@
-"use client";
-
-import { motion, useReducedMotion } from "motion/react";
-
-const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
 const LETTER_STAGGER = 0.04;
 const WORD_GAP = 0.08;
 
 type Props = { first: string; last: string };
 
-/** The name, revealed letter by letter rising out of a mask. */
+/**
+ * The name, revealed letter by letter rising out of a mask. Pure CSS, so the
+ * reveal starts with the first paint instead of waiting for JavaScript.
+ */
 export function HeroName({ first, last }: Props) {
-  const reduce = useReducedMotion();
-
   const word = (text: string, startDelay: number, italic: boolean) => (
     <span
       className="inline-block overflow-hidden pb-[0.08em] align-bottom"
       aria-hidden="true"
     >
       {Array.from(text).map((char, i) => (
-        <motion.span
+        <span
           key={`${char}-${i}`}
-          className={italic ? "inline-block italic" : "inline-block"}
-          initial={reduce ? false : { y: "105%" }}
-          animate={{ y: 0 }}
-          transition={{
-            duration: 0.9,
-            ease: EASE_OUT_EXPO,
-            delay: startDelay + i * LETTER_STAGGER,
-          }}
+          className={
+            italic
+              ? "animate-mask-rise inline-block italic"
+              : "animate-mask-rise inline-block"
+          }
+          style={{ animationDelay: `${startDelay + i * LETTER_STAGGER}s` }}
         >
           {char}
-        </motion.span>
+        </span>
       ))}
     </span>
   );
