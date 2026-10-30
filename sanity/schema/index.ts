@@ -1,3 +1,4 @@
+import { about } from "./about";
 import { certification } from "./certification";
 import { education } from "./education";
 import { experience } from "./experience";
@@ -21,4 +22,5 @@ export const schemaTypes = [
   experience,
   education,
   certification,
+  about,
 ];

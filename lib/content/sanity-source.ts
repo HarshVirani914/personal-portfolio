@@ -2,6 +2,7 @@ import { createClient } from "next-sanity";
 import { contentTags, type ContentSource } from "@/lib/content/source";
 import type { Localized } from "@/lib/content/localized";
 import type {
+  RawAbout,
   RawCertification,
   RawEducation,
   RawExperience,
@@ -126,6 +127,26 @@ const queries = {
   certifications: `*[_type == "certification"]{
     "id": _id, name, issuer, credentialUrl, order, hidden
   }`,
+  about: `*[_type == "about"][0]{
+    "headline": headline${localized},
+    "portrait": portrait{
+      "url": asset->url,
+      "alt": alt${localized},
+      "caption": caption${localized}
+    },
+    "story": story[]${localized},
+    "languages": languages[]{
+      "id": _key, "name": name${localized}, "detail": detail${localized}, hidden
+    },
+    "interests": interests[]{
+      "id": _key, "name": name${localized}, "detail": detail${localized}, hidden
+    },
+    "now": now[]{
+      "id": _key, "label": label${localized}, "text": text${localized},
+      highlight, hidden
+    },
+    nowUpdated
+  }`,
 };
 
 type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
@@ -188,6 +209,20 @@ type CertificationDoc = Omit<
   name: string | null;
   issuer: string | null;
   credentialUrl: string | null;
+};
+
+type AboutDoc = {
+  headline: Localized | null;
+  portrait: {
+    url: string | null;
+    alt: Localized | null;
+    caption: Localized | null;
+  } | null;
+  story: Localized[] | null;
+  languages: RawAbout["languages"] | null;
+  interests: RawAbout["interests"] | null;
+  now: RawAbout["now"] | null;
+  nowUpdated: string | null;
 };
 
 /** Reads published documents from Sanity, cached per document type and revalidated by webhook. */
@@ -342,6 +377,30 @@ export function createSanitySource(): ContentSource {
         issuer: doc.issuer ?? "",
         credentialUrl: doc.credentialUrl ?? "",
       }));
+    },
+
+    async getAbout(): Promise<RawAbout | null> {
+      const doc = await client.fetch<AboutDoc | null>(
+        queries.about,
+        {},
+        { next: { tags: [contentTags.about] } }
+      );
+      if (!doc) return null;
+      return {
+        headline: doc.headline ?? {},
+        portrait: doc.portrait?.url
+          ? {
+              url: doc.portrait.url,
+              alt: doc.portrait.alt ?? {},
+              caption: doc.portrait.caption ?? {},
+            }
+          : null,
+        story: doc.story ?? [],
+        languages: doc.languages ?? [],
+        interests: doc.interests ?? [],
+        now: doc.now ?? [],
+        nowUpdated: doc.nowUpdated ?? "",
+      };
     },
   };
 }

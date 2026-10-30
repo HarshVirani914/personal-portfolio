@@ -189,6 +189,41 @@ export type RawCertification = {
   hidden?: boolean | null;
 };
 
+/** A language or an outside-work interest: a name and a short note beside it. */
+export type RawAboutRow = {
+  id: string;
+  name: Localized;
+  detail: Localized;
+  hidden?: boolean | null;
+};
+
+export type RawNowItem = {
+  id: string;
+  /** "Researching", "Building", … */
+  label: Localized;
+  text: Localized;
+  /** Sets the label in the agent colour, as "Looking for" is. */
+  highlight?: boolean | null;
+  hidden?: boolean | null;
+};
+
+export type RawAbout = {
+  /** One word may be wrapped in *asterisks* to set it in italic. */
+  headline: Localized;
+  portrait?: {
+    /** URL of the uploaded image. */
+    url?: string | null;
+    alt: Localized;
+    caption: Localized;
+  } | null;
+  story: Localized[];
+  languages: RawAboutRow[];
+  interests: RawAboutRow[];
+  now: RawNowItem[];
+  /** ISO date the Now block was last updated, e.g. 2026-10-01. */
+  nowUpdated: string;
+};
+
 /* Resolved data: what pages, metadata and the agent receive. */
 
 export type SiteSettings = {
@@ -359,4 +394,27 @@ export type Certification = {
 export type EducationContent = {
   education: Education[];
   certifications: Certification[];
+};
+
+/** A run of headline text; `emphasis` runs are set in italic. */
+export type TextPart = { text: string; emphasis: boolean };
+
+export type AboutRow = { id: string; name: string; detail: string };
+
+export type NowItem = {
+  id: string;
+  label: string;
+  text: string;
+  highlight: boolean;
+};
+
+export type About = {
+  headline: TextPart[];
+  /** Null until an image is uploaded: the page shows an empty frame. */
+  portrait: { url: string; alt: string; caption: string } | null;
+  story: string[];
+  languages: AboutRow[];
+  interests: AboutRow[];
+  now: NowItem[];
+  nowUpdated: string;
 };

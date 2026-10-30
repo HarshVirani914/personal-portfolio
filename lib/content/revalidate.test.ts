@@ -81,6 +81,7 @@ describe("revalidation route", () => {
     ["experience", contentTags.experience],
     ["education", contentTags.education],
     ["certification", contentTags.certification],
+    ["about", contentTags.about],
   ])("revalidates %s when it is published", async (type, tag) => {
     const revalidate = vi.fn();
     const body = JSON.stringify({ _type: type });

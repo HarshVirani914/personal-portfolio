@@ -1,4 +1,5 @@
 import type { ContentSource } from "@/lib/content/source";
+import { fixtureAbout } from "@/lib/content/fixture-about";
 import { fixtureResearch } from "@/lib/content/fixture-research";
 import {
   fixtureCertifications,
@@ -7,6 +8,7 @@ import {
 } from "@/lib/content/fixture-career";
 import { buildSkillGroups } from "@/lib/content/fixture-skills";
 import type {
+  RawAbout,
   RawCertification,
   RawEducation,
   RawExperience,
@@ -28,13 +30,14 @@ export type FixtureData = {
   experience: RawExperience[];
   education: RawEducation[];
   certifications: RawCertification[];
+  about: RawAbout | null;
 };
 
 const line = (en: string, de?: string) => ({ en, de });
 
 const base: Omit<
   FixtureData,
-  "skillGroups" | "experience" | "education" | "certifications"
+  "skillGroups" | "experience" | "education" | "certifications" | "about"
 > = {
   siteSettings: {
     firstName: "Harsh",
@@ -466,6 +469,7 @@ export const fixtureData: FixtureData = {
   experience: fixtureExperience,
   education: fixtureEducation,
   certifications: fixtureCertifications,
+  about: fixtureAbout,
 };
 
 /** A content source backed by plain data. Pass your own data in tests. */
@@ -482,5 +486,6 @@ export function createFixtureSource(
     getExperience: async () => data.experience,
     getEducation: async () => data.education,
     getCertifications: async () => data.certifications,
+    getAbout: async () => data.about,
   };
 }
