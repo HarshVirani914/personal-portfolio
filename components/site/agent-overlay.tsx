@@ -10,6 +10,7 @@ import {
   useState,
   type FormEvent,
 } from "react";
+import { AgentHandoff } from "@/components/site/agent-handoff";
 import { accentStyle } from "@/components/site/project-accent";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -35,7 +36,11 @@ import {
 } from "@/lib/agent/answer";
 import { askAgent } from "@/lib/agent/client";
 import type { Dictionary } from "@/lib/dictionary";
-import type { SiteSettings, Suggestion } from "@/lib/content/types";
+import type {
+  ContactDetails,
+  SiteSettings,
+  Suggestion,
+} from "@/lib/content/types";
 import type { Locale } from "@/lib/i18n";
 import { useReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
@@ -51,9 +56,13 @@ type Props = {
   dict: Dictionary["agent"];
   suggestions: Suggestion[];
   name: SiteSettings["name"];
+  contact: Pick<ContactDetails, "email" | "linkedinUrl">;
   /** A question asked from outside the overlay. A new id asks it. */
   asked: { id: number; question: string } | null;
 };
+
+const sourceCount = (count: number, dict: Dictionary["agent"]) =>
+  `${count} ${count === 1 ? dict.source : dict.sources}`;
 
 function traceLabel(trace: TraceStage, dict: Dictionary["agent"]) {
   switch (trace.stage) {
@@ -64,7 +73,11 @@ function traceLabel(trace: TraceStage, dict: Dictionary["agent"]) {
     case "answered":
       return dict.answered;
     case "sources":
-      return `${trace.count} ${trace.count === 1 ? dict.source : dict.sources}`;
+      return sourceCount(trace.count, dict);
+    case "cached":
+      return trace.count > 0
+        ? `${dict.answeredBefore} · ${sourceCount(trace.count, dict)}`
+        : dict.answeredBefore;
   }
 }
 
@@ -105,6 +118,7 @@ export function AgentOverlay({
   dict,
   suggestions,
   name,
+  contact,
   asked,
 }: Props) {
   const [answer, dispatch] = useReducer(answerReducer, initialAnswer);
@@ -167,7 +181,7 @@ export function AgentOverlay({
     answer.status === "answering" ||
     (question !== null && answer.status === "idle");
   const stage =
-    answer.status === "done" && revealing
+    answer.status === "done" && revealing && !answer.cached
       ? ({ stage: "answering" } as const)
       : traceStage(answer);
   const message =
@@ -175,9 +189,15 @@ export function AgentOverlay({
       ? dict.unknown
       : answer.status === "refused"
         ? dict.refused
-        : answer.status === "error"
-          ? dict.unavailable
-          : null;
+        : answer.status === "limited"
+          ? dict.limited
+          : answer.status === "error"
+            ? dict.unavailable
+            : null;
+  const handoff =
+    answer.status === "unknown" ||
+    answer.status === "limited" ||
+    answer.status === "error";
 
   const dismissNotice = () => {
     setNoticeDismissed(true);
@@ -271,6 +291,16 @@ export function AgentOverlay({
                 )}
                 {message}
               </p>
+
+              {question !== null && (handoff || answer.status === "done") && (
+                <AgentHandoff
+                  question={question}
+                  contact={contact}
+                  dict={dict}
+                  quiet={!handoff}
+                  hidden={revealing}
+                />
+              )}
             </div>
           </div>
 

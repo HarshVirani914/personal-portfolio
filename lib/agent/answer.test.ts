@@ -112,3 +112,29 @@ describe("readAgentStream", () => {
     await expect(read(new Response("{}", { status: 503 }))).rejects.toThrow();
   });
 });
+
+describe("guarded states", () => {
+  const replay = (...events: Parameters<typeof answerReducer>[1][]) =>
+    events.reduce(answerReducer, initialAnswer);
+
+  it("marks a replayed answer in the trace", () => {
+    const state = replay(
+      { type: "cached" },
+      { type: "outcome", outcome: "answer" },
+      { type: "done" }
+    );
+    expect(traceStage(state)).toEqual({ stage: "cached", count: 0 });
+  });
+
+  it("shows the replay in the trace while it plays", () => {
+    const state = replay(
+      { type: "cached" },
+      { type: "outcome", outcome: "answer" }
+    );
+    expect(traceStage(state)).toEqual({ stage: "cached", count: 0 });
+  });
+
+  it("holds the limit as its own status", () => {
+    expect(replay({ type: "limited" }).status).toBe("limited");
+  });
+});
