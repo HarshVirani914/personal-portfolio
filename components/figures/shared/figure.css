@@ -70,3 +70,12 @@
 .fig-deck {
   fill: var(--anatomy-top);
 }
+
+.fig-pointer {
+  stroke: var(--project-accent);
+  stroke-width: 0.9px;
+}
+
+.fig-key {
+  stroke: var(--anatomy-hi);
+}

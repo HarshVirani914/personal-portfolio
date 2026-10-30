@@ -5,6 +5,8 @@ import { AGENTS_IN_THE_GRID } from "./agents-in-the-grid/meta";
 import { FLAG_AND_FILL } from "./flag-and-fill/meta";
 import { PocketPulseFigure } from "./pocketpulse/figure";
 import { POCKETPULSE } from "./pocketpulse/meta";
+import { SsriFigure } from "./ssri/figure";
+import { SSRI } from "./ssri/meta";
 import { SupportAgentFigure } from "./support-agent/figure";
 import { SUPPORT_AGENT } from "./support-agent/meta";
 import type { Locale } from "@/lib/i18n";
@@ -19,6 +21,7 @@ export interface ProjectFigureEntry {
 const FIGURES: Record<string, ProjectFigureEntry> = {
   "flag-and-fill": { Figure: FlagAndFillFigure, ...FLAG_AND_FILL },
   pocketpulse: { Figure: PocketPulseFigure, ...POCKETPULSE },
+  ssri: { Figure: SsriFigure, ...SSRI },
   "support-agent": { Figure: SupportAgentFigure, ...SUPPORT_AGENT },
   "agents-in-the-grid": {
     Figure: AgentsInTheGridFigure,

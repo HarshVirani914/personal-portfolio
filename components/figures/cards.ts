@@ -2,6 +2,7 @@
 const CARDS: Record<string, string> = {
   "flag-and-fill": "/figures/flag-and-fill.svg",
   pocketpulse: "/figures/pocketpulse.svg",
+  ssri: "/figures/ssri.svg",
   "support-agent": "/figures/support-agent.svg",
 };
 
