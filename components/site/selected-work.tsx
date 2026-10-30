@@ -119,7 +119,6 @@ export function SelectedWork({ projects, locale, dict }: Props) {
               {/* Desktop: the whole row is the link. */}
               <Link
                 href={href}
-                aria-label={`${project.title}, ${dict.openCaseFor}`}
                 onPointerEnter={(e) => followCursor(e, true)}
                 onPointerMove={(e) => followCursor(e, false)}
                 onFocus={parkCard}

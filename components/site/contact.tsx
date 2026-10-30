@@ -75,7 +75,7 @@ export function Contact({ contact, dict }: Props) {
           <span className="text-mono text-ink flex items-center gap-2 font-mono lg:col-span-6">
             <span
               aria-hidden="true"
-              className="animate-pulse-dot bg-agent inline-block size-[7px] shrink-0 rounded-full"
+              className="animate-pulse-dot bg-agent inline-block size-1.75 shrink-0 rounded-full"
             />
             {availability}
           </span>
@@ -88,12 +88,12 @@ export function Contact({ contact, dict }: Props) {
             <button
               type="button"
               onClick={copy}
-              aria-label={dict.copyEmail}
+              aria-label={`${dict.letsTalkBefore} ${dict.letsTalkEmphasis} ${dict.copyEmail}`}
               className="focus-visible:outline-agent flex w-fit cursor-pointer flex-wrap gap-x-[0.22em] text-left font-serif text-[clamp(7rem,15.3vw,13.75rem)] leading-[0.9] tracking-[-0.02em] outline-offset-8 focus-visible:outline lg:[&:hover>*]:translate-x-4"
             >
               <span className="ease-out-expo transition-transform duration-500">
                 {dict.letsTalkBefore}
-              </span>
+              </span>{" "}
               <em className="text-agent ease-out-expo transition-transform duration-500">
                 {dict.letsTalkEmphasis}
               </em>

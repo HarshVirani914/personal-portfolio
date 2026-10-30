@@ -28,8 +28,8 @@ const projects = [
 ] as const;
 
 const locales = [
-  { prefix: "", key: "en", open: /open case study/i },
-  { prefix: "/de", key: "de", open: /Fallstudie öffnen/ },
+  { prefix: "", key: "en" },
+  { prefix: "/de", key: "de" },
 ] as const;
 
 for (const locale of locales) {
@@ -98,7 +98,7 @@ test("a live project links out and a delivered one does not", async ({
 test("desktop hover reveals the project card", async ({ page, isMobile }) => {
   test.skip(isMobile, "hover card is desktop-only");
   await page.goto("/");
-  const row = page.getByRole("link", { name: /PocketPulse, open case study/i });
+  const row = page.getByRole("link", { name: /^\d+ PocketPulse/ });
   await row.scrollIntoViewIfNeeded();
   const card = row.getByTestId("hover-card");
   await expect(card).toHaveCSS("opacity", "0");
@@ -113,7 +113,7 @@ test("desktop hover card follows the cursor inside the row", async ({
 }) => {
   test.skip(isMobile, "hover card is desktop-only");
   await page.goto("/");
-  const row = page.getByRole("link", { name: /PocketPulse, open case study/i });
+  const row = page.getByRole("link", { name: /^\d+ PocketPulse/ });
   await row.scrollIntoViewIfNeeded();
   const box = (await row.boundingBox())!;
   const card = row.getByTestId("hover-card");

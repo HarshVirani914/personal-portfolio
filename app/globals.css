@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant no-script (@media (scripting: none));
 
 /*
  * Design tokens. Source of truth: the "Design tokens" board on the design canvas.

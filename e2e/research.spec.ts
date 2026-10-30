@@ -146,7 +146,7 @@ test("the mobile contents dropdown jumps to a section", async ({
   await expect(page.getByRole("navigation", { name: "Contents" })).toHaveCount(
     0
   );
-  await page.getByRole("button", { name: "Jump to section" }).click();
+  await page.getByRole("button", { name: /^Jump to section/ }).click();
   await page.getByRole("link", { name: /The planned harness/ }).click();
   await expect
     .poll(() =>
@@ -156,7 +156,7 @@ test("the mobile contents dropdown jumps to a section", async ({
     )
     .toBeLessThan(250);
   await expect(
-    page.getByRole("button", { name: "Jump to section" })
+    page.getByRole("button", { name: /^Jump to section/ })
   ).toContainText("The planned harness");
 });
 

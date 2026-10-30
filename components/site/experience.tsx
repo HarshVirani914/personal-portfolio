@@ -53,11 +53,6 @@ export function ExperienceList({ items, dict }: Props) {
                 type="button"
                 aria-expanded={hasDetails ? expanded : undefined}
                 aria-controls={hasDetails ? panelId : undefined}
-                aria-label={
-                  hasDetails
-                    ? `${item.company}, ${item.role}. ${expanded ? dict.collapse : dict.expand}`
-                    : undefined
-                }
                 disabled={!hasDetails}
                 onClick={() => setOpen(expanded ? null : item.id)}
                 className="focus-visible:outline-agent flex min-h-11 w-full cursor-pointer flex-col gap-2 py-6 text-left outline-offset-4 focus-visible:outline disabled:cursor-default lg:grid lg:grid-cols-12 lg:items-baseline lg:gap-x-6 lg:py-9"

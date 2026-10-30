@@ -10,7 +10,7 @@ test("browser back from a project returns to the same scroll position", async ({
   test.skip(isMobile, "desktop rows are links; mobile rows expand first");
   await page.goto("/");
   const row = page.getByRole("link", {
-    name: /Support agent, open case study/i,
+    name: /^\d+ Support agent/,
   });
   await row.scrollIntoViewIfNeeded();
   const before = await scrollY(page);

@@ -20,7 +20,11 @@ export function ThemeToggle({ labels }: { labels: Dictionary["theme"] }) {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? labels.toLight : labels.toDark}
+      aria-label={
+        isDark
+          ? `${labels.dark}. ${labels.toLight}`
+          : `${labels.light}. ${labels.toDark}`
+      }
       className="text-mono text-muted-ink hover:text-ink inline-flex min-h-11 cursor-pointer items-center gap-1.5 font-mono transition-colors duration-200"
     >
       <span aria-hidden="true">◐</span>
