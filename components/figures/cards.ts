@@ -1,6 +1,7 @@
 /** Hover-card stills by figure key. Kept apart from the figures: the home page is client code. */
 const CARDS: Record<string, string> = {
   "flag-and-fill": "/figures/flag-and-fill.svg",
+  pocketpulse: "/figures/pocketpulse.svg",
   "support-agent": "/figures/support-agent.svg",
 };
 

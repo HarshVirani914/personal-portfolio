@@ -66,3 +66,7 @@
   fill: var(--project-accent);
   stroke: var(--project-accent);
 }
+
+.fig-deck {
+  fill: var(--anatomy-top);
+}
