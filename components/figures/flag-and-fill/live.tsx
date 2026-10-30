@@ -279,7 +279,7 @@ export function FlagAndFillLive(props: Props) {
   return (
     <div
       ref={root}
-      className="ff-figure"
+      className="fig"
       role="slider"
       tabIndex={0}
       data-testid={props.testId}

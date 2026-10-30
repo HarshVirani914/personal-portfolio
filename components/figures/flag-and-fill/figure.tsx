@@ -1,6 +1,7 @@
 import "@/components/iso/iso.css";
+import "@/components/figures/shared/figure.css";
 import "./figure.css";
-import { Parts } from "./art";
+import { Parts } from "@/components/figures/shared/art";
 import {
   BENCH,
   BLOCK_ART,

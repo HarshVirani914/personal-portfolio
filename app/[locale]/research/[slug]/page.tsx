@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fragment, ViewTransition } from "react";
 import { accentStyle } from "@/components/site/project-accent";
+import { figureFor } from "@/components/figures";
 import { ProjectFigure } from "@/components/site/project-figure";
 import {
   AskButton,
@@ -74,9 +75,13 @@ function codeLineClass(line: string): string {
 function Block({
   block,
   dict,
+  slug,
+  locale,
 }: {
   block: ResearchBlock;
   dict: Dictionary["research"];
+  slug: string;
+  locale: Locale;
 }) {
   switch (block.kind) {
     case "paragraph":
@@ -115,24 +120,40 @@ function Block({
           )}
         </figure>
       );
-    case "figure":
+    case "figure": {
+      const figure = figureFor({ slug, figure: block.figure });
       return (
         <figure
           data-testid="research-figure"
           className={`${bleed} flex flex-col gap-2.5 lg:col-span-6 lg:gap-3`}
         >
           <div
-            role="img"
-            aria-label={dict.figureLabel}
-            className="lg:rounded-media flex h-65 items-center justify-center border-y border-(--project-accent)/25 bg-(--project-accent)/6 lg:h-95 lg:border"
+            {...(figure ? {} : { role: "img", "aria-label": dict.figureLabel })}
+            className="lg:rounded-media relative flex h-65 items-center justify-center border-y border-(--project-accent)/25 bg-(--project-accent)/6 lg:h-95 lg:border"
           >
-            <ProjectFigure variant="page" className="max-w-64 lg:max-w-110" />
+            {figure ? (
+              <>
+                <div className="w-full max-w-110 px-3 lg:max-w-140">
+                  <figure.Figure locale={locale} testId="project-figure" />
+                </div>
+                <p
+                  data-readout=""
+                  className="text-ink-2 absolute top-3 right-4 font-mono text-[11px] tabular-nums"
+                >
+                  {figure.readout[locale]}
+                </p>
+              </>
+            ) : (
+              <ProjectFigure variant="page" className="max-w-64 lg:max-w-110" />
+            )}
           </div>
           <figcaption className={`${mono} px-5 md:px-10 lg:px-0`}>
-            {dict.figure} {block.number} — {block.caption}
+            {dict.figure} {block.number} —{" "}
+            {figure ? figure.caption[locale] : block.caption}
           </figcaption>
         </figure>
       );
+    }
     case "quote":
       return (
         <blockquote className="m-0 border-l border-(--project-accent) py-1 pl-5 font-serif text-[28px] leading-[1.15] lg:col-span-6 lg:py-3 lg:pl-6.5 lg:text-[36px]">
@@ -288,7 +309,13 @@ export default async function ResearchPage({
                 {section.heading}
               </h2>
               {section.blocks.map((block) => (
-                <Block key={block.id} block={block} dict={dict} />
+                <Block
+                  key={block.id}
+                  block={block}
+                  dict={dict}
+                  slug={slug}
+                  locale={locale}
+                />
               ))}
             </Fragment>
           ))}
