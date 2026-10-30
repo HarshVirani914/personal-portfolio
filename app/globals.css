@@ -344,6 +344,17 @@ html.lenis body {
 @utility animate-pulse-dot {
   animation: pulse-dot 2.4s ease-in-out infinite;
 }
+@keyframes ride {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@utility animate-ride {
+  animation: ride 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
 @keyframes wipe {
   from {
     clip-path: inset(100% 0 0 0);
@@ -360,6 +371,7 @@ html.lenis body {
   .animate-word,
   .animate-swap,
   .animate-pulse-dot,
+  .animate-ride,
   .animate-wipe {
     animation: none;
   }
