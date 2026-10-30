@@ -1,24 +1,38 @@
 import { notFound } from "next/navigation";
 import { content } from "@/lib/content";
-import { isLocale } from "@/lib/i18n";
-import { ogAgentAccent, ogContentType, ogImage, ogSize } from "@/lib/og-image";
+import { isLocale, locales } from "@/lib/i18n";
+import { ogHomeImage, ogImageMetadata } from "@/lib/og-image";
 
-export const size = ogSize;
-export const contentType = ogContentType;
+type Params = { locale: string };
 
-export default async function Image({
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
+export async function generateImageMetadata({
   params,
 }: {
-  params: Promise<{ locale: string }>;
+  params: Promise<Params>;
 }) {
   const { locale } = await params;
-  if (!isLocale(locale)) notFound();
+  if (!isLocale(locale)) return [];
   const settings = await content.getSiteSettings(locale);
-  return ogImage({
-    kicker: settings.city,
-    title: settings.name.full,
-    subtitle: settings.description,
-    name: settings.contact.availability,
-    accent: ogAgentAccent,
+  return ogImageMetadata(`${settings.name.full}: ${settings.description}`);
+}
+
+export default async function Image({ params }: { params: Promise<Params> }) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const [settings, home] = await Promise.all([
+    content.getSiteSettings(locale),
+    content.getHome(locale),
+  ]);
+  const [role, focus] = home.hero.annotations;
+  return ogHomeImage({
+    first: settings.name.first,
+    last: settings.name.last,
+    role: role?.text ?? "",
+    coordinates: settings.coordinates,
+    focus: focus?.text ?? "",
   });
 }

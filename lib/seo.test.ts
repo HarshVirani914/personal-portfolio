@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { languageAlternates, pageMetadata } from "@/lib/seo";
+import { clipDescription, languageAlternates, pageMetadata } from "@/lib/seo";
 
 const base = { title: "T", description: "D", siteName: "Harsh Virani" };
 
@@ -10,6 +10,18 @@ describe("languageAlternates", () => {
       en: "/about",
       de: "/de/about",
     });
+  });
+});
+
+describe("clipDescription", () => {
+  it("leaves a short description alone", () => {
+    expect(clipDescription("Short.")).toBe("Short.");
+  });
+
+  it("cuts a long one at a word boundary", () => {
+    const clipped = clipDescription("word ".repeat(60).trim());
+    expect(clipped.length).toBeLessThanOrEqual(155);
+    expect(clipped.endsWith("word…")).toBe(true);
   });
 });
 

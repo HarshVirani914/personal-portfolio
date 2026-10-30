@@ -40,6 +40,16 @@ test.describe("languages and metadata", () => {
           /.+/
         );
 
+        await expect(
+          page.locator('meta[property="og:image:alt"]')
+        ).toHaveAttribute("content", /.+/);
+        await expect(
+          page.locator('meta[property="og:image:width"]')
+        ).toHaveAttribute("content", "1200");
+        await expect(
+          page.locator('meta[property="og:image:height"]')
+        ).toHaveAttribute("content", "630");
+
         const image = await page
           .locator('meta[property="og:image"]')
           .getAttribute("content");
@@ -97,6 +107,21 @@ test.describe("languages and metadata", () => {
     for (const path of paths) {
       expect(xml).toContain(`${path === "/" ? "" : path}</loc>`);
       expect(xml).toContain(`${de(path)}</loc>`);
+    }
+  });
+
+  test("icons and the manifest are in place", async ({ page, request }) => {
+    await page.goto("/");
+    await expect(
+      page.locator('link[rel="icon"][type="image/svg+xml"]')
+    ).toHaveCount(1);
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1);
+    await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
+
+    const manifest = await (await request.get("/manifest.webmanifest")).json();
+    expect(manifest.name).toBe("Harsh Virani");
+    for (const icon of manifest.icons) {
+      expect((await request.get(icon.src)).status()).toBe(200);
     }
   });
 
