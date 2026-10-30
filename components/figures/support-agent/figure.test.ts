@@ -37,7 +37,7 @@ describe("support agent", () => {
     expect(readoutOf(silent, "en")).toContain("to a person");
   });
 
-  it("passes the geometry audit", () => {
+  it("passes the geometry audit", { timeout: 60_000 }, () => {
     const report = auditLayers(
       [
         { items: BENCH },

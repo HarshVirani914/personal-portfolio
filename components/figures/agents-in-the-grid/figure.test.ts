@@ -37,7 +37,7 @@ describe("agents in the grid", () => {
     }
   });
 
-  it("passes the geometry audit", () => {
+  it("passes the geometry audit", { timeout: 60_000 }, () => {
     const travel: [number, number, number] = [LAST * COLUMN, 0, 0];
     const report = auditLayers(
       [

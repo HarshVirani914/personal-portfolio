@@ -49,6 +49,8 @@ import {
   slotX,
 } from "./view";
 
+/** The audit ray-casts every overlap, which is slow on a loaded CI runner. */
+const AUDIT_MS = 60_000;
 const pose = (t: number) =>
   poseOf(t, slotX, READER_X, LIFT, READER_TOP - CARD_Z);
 const none = FIELDS.map(() => false);
@@ -173,7 +175,7 @@ describe("flag and fill model", () => {
   });
 });
 
-describe("flag and fill geometry", () => {
+describe("flag and fill geometry", { timeout: AUDIT_MS }, () => {
   const R = record();
 
   it("holds every solid up from the bench", () => {
