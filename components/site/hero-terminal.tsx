@@ -96,7 +96,7 @@ export function HeroTerminal({ scripts, label, runLabel }: Props) {
             }}
             aria-current={i === active ? "true" : undefined}
             className={cn(
-              "border-hairline text-mono flex min-h-9 cursor-pointer items-center rounded-full border px-3 transition-colors duration-200 lg:min-h-0 lg:rounded-none lg:border-0 lg:px-0",
+              "border-hairline text-mono flex min-h-11 cursor-pointer items-center rounded-full border px-3 transition-colors duration-200 lg:min-h-0 lg:rounded-none lg:border-0 lg:px-0",
               i === active
                 ? "border-agent text-agent lg:underline lg:underline-offset-4"
                 : "text-muted-ink hover:text-ink focus-visible:text-ink"

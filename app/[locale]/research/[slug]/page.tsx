@@ -96,7 +96,10 @@ function Block({
     case "code":
       return (
         <figure className={`${bleed} lg:col-span-6`}>
-          <pre className="bg-card-ink lg:rounded-card m-0 overflow-x-auto px-5 py-4.5 font-mono text-[12px] leading-[1.7] text-[#eceae4] lg:px-6 lg:py-5.5 lg:text-[13px]">
+          <pre
+            tabIndex={0}
+            className="bg-card-ink lg:rounded-card focus-visible:outline-agent m-0 overflow-x-auto px-5 py-4.5 font-mono text-[12px] leading-[1.7] text-[#eceae4] outline-offset-2 focus-visible:outline lg:px-6 lg:py-5.5 lg:text-[13px]"
+          >
             <code>
               {block.code.split("\n").map((line, i) => (
                 <span key={i} className={`block ${codeLineClass(line)}`}>

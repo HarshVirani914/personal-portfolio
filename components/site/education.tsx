@@ -94,7 +94,6 @@ export function EducationAchievements({ data, dict }: Props) {
                   href={cert.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${cert.name}, ${cert.issuer}. ${dict.verify}`}
                   className="group focus-visible:outline-agent flex min-h-11 flex-col gap-1 py-4 outline-offset-4 focus-visible:outline lg:grid lg:grid-cols-10 lg:items-baseline lg:gap-x-6 lg:py-5"
                 >
                   <span className="ease-out-expo text-[19px] leading-snug transition-transform duration-350 group-hover:translate-x-1.5 group-focus-visible:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 lg:col-span-6 lg:text-[24px]">

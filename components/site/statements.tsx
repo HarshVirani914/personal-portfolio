@@ -10,8 +10,8 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 /**
  * Pinned statements. The section is tall and its content sticks, so scroll
- * progress steps through the statements one at a time. Reduced motion skips
- * the pin and shows every statement as plain text.
+ * progress steps through the statements one at a time. Reduced motion and
+ * running without scripts skip the pin and show every statement as plain text.
  */
 export function Statements({ statements, label }: Props) {
   const track = useRef<HTMLDivElement>(null);
@@ -48,8 +48,8 @@ export function Statements({ statements, label }: Props) {
 
   return (
     <section aria-label={label}>
-      {/* Reduced motion: everything readable at once, nothing pinned. */}
-      <div className="hidden px-5 py-18 motion-reduce:block md:px-10 lg:px-16">
+      {/* Everything readable at once, nothing pinned. */}
+      <div className="no-script:block hidden px-5 py-18 motion-reduce:block md:px-10 lg:px-16">
         <ol className="flex list-none flex-col gap-10">
           {statements.map((item, i) => (
             <li
@@ -67,7 +67,7 @@ export function Statements({ statements, label }: Props) {
 
       <div
         ref={track}
-        className="motion-reduce:hidden"
+        className="no-script:hidden motion-reduce:hidden"
         style={{ height: `${total * 100}svh` }}
       >
         <div className="sticky top-0 flex h-svh items-center px-5 md:px-10 lg:px-16">

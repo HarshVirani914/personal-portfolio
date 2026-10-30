@@ -70,7 +70,7 @@ export function Skills({ groups, dict }: Props) {
                         onFocus={show}
                         onClick={show}
                         className={cn(
-                          "border-hairline text-ink-2 focus-visible:outline-agent flex min-h-10 cursor-pointer items-center rounded-full border px-3.5 text-[14px] outline-offset-3 transition-colors duration-200 focus-visible:outline",
+                          "border-hairline text-ink-2 focus-visible:outline-agent flex min-h-11 cursor-pointer items-center rounded-full border px-3.5 text-[14px] outline-offset-3 transition-colors duration-200 focus-visible:outline",
                           "aria-pressed:border-ink aria-pressed:text-ink",
                           "lg:min-h-0 lg:w-fit lg:rounded-none lg:border-0 lg:px-0 lg:py-0 lg:text-[17px] lg:leading-[1.9]",
                           "lg:ease-out-expo lg:hover:text-ink lg:focus-visible:text-ink lg:transition-[color,translate] lg:duration-350 lg:hover:translate-x-1.5 lg:focus-visible:translate-x-1.5 lg:aria-pressed:translate-x-1.5",

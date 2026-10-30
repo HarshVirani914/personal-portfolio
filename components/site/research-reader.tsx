@@ -115,7 +115,7 @@ export function ContentsRail({
             href={`#${item.id}`}
             aria-current={current ? "location" : undefined}
             className={cn(
-              "-ml-[15px] flex gap-2.5 border-l py-1.5 pl-3.5 transition-colors duration-200",
+              "-ml-3.75 flex gap-2.5 border-l py-1.5 pl-3.5 transition-colors duration-200",
               current
                 ? "border-(--project-accent) text-(--project-accent)"
                 : "text-muted-ink hover:text-ink border-transparent"
@@ -156,7 +156,11 @@ export function ContentsBar({
           type="button"
           aria-expanded={open}
           aria-controls="contents-menu"
-          aria-label={jumpLabel}
+          aria-label={
+            current
+              ? `${jumpLabel}: ${current.number} ${current.label}`
+              : jumpLabel
+          }
           onClick={() => setOpen((v) => !v)}
           className="flex min-h-12 cursor-pointer items-center gap-2 text-(--project-accent)"
         >
