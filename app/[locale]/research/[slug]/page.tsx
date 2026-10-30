@@ -17,6 +17,7 @@ import { content } from "@/lib/content";
 import type { ResearchBlock } from "@/lib/content/types";
 import { getDictionary, type Dictionary } from "@/lib/dictionary";
 import { isLocale, localizedPath, locales, type Locale } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
 type Params = { locale: string; slug: string };
 
@@ -37,10 +38,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const page = await content.getResearchItem(locale, slug);
+  const [page, settings] = await Promise.all([
+    content.getResearchItem(locale, slug),
+    content.getSiteSettings(locale),
+  ]);
   if (!page) return {};
   const title = `${page.item.title} ${page.item.titleEmphasis}`.trim();
-  return { title, description: page.item.standfirst };
+  return pageMetadata({
+    locale,
+    path: `/research/${slug}`,
+    title: `${title} — ${settings.name.full}`,
+    description: page.item.standfirst,
+    siteName: settings.name.full,
+    type: "article",
+  });
 }
 
 function formatUpdated(iso: string, locale: Locale): string {

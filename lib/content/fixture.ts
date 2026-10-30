@@ -190,6 +190,7 @@ const base: Omit<
         "von einem Menschen geprüft"
       ),
       tags: ["LangGraph", "Extraction", "Evals"],
+      tagsDe: ["LangGraph", "Extraktion", "Evals"],
       status: line("delivered", "übergeben"),
       statusDetail: line("Delivered as source code", "Als Quellcode übergeben"),
       liveUrl: null,
@@ -400,6 +401,7 @@ const base: Omit<
       ),
       headlineEmphasis: line("by real couples", "von echten Paaren"),
       tags: ["Next.js", "Postgres", "Payments"],
+      tagsDe: ["Next.js", "Postgres", "Zahlungen"],
       status: line("live", "live"),
       statusDetail: line(
         "Live, and I still maintain it",

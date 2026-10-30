@@ -12,6 +12,8 @@ import { SmoothScroll } from "@/components/site/smooth-scroll";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, locales } from "@/lib/i18n";
 import { content } from "@/lib/content";
+import { pageMetadata } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -40,7 +42,16 @@ export async function generateMetadata({
   const { locale } = await params;
   if (!isLocale(locale)) return {};
   const settings = await content.getSiteSettings(locale);
-  return { title: settings.name.full, description: settings.description };
+  return {
+    metadataBase: new URL(getSiteUrl()),
+    ...pageMetadata({
+      locale,
+      path: "/",
+      title: settings.name.full,
+      description: settings.description,
+      siteName: settings.name.full,
+    }),
+  };
 }
 
 export const viewport: Viewport = {

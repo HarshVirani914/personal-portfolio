@@ -7,6 +7,7 @@ import { ProjectFigure } from "@/components/site/project-figure";
 import { content } from "@/lib/content";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localizedPath, locales } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 
 type Params = { locale: string; slug: string };
 
@@ -26,10 +27,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const page = await content.getProject(locale, slug);
-  return page
-    ? { title: page.project.title, description: page.project.summary }
-    : {};
+  const [page, settings] = await Promise.all([
+    content.getProject(locale, slug),
+    content.getSiteSettings(locale),
+  ]);
+  if (!page) return {};
+  return pageMetadata({
+    locale,
+    path: `/work/${slug}`,
+    title: `${page.project.title} — ${settings.name.full}`,
+    description: page.project.summary,
+    siteName: settings.name.full,
+    type: "article",
+  });
 }
 
 export default async function ProjectPage({

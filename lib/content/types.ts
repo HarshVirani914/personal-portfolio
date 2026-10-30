@@ -62,6 +62,8 @@ export type RawProject = {
   headline: Localized;
   headlineEmphasis: Localized;
   tags: string[];
+  /** German tags. English ones are used when empty. */
+  tagsDe?: string[] | null;
   /** Short label for cards: "live", "delivered". */
   status: Localized;
   /** Longer status for the project page meta row. */

@@ -72,7 +72,7 @@ export function createContent(source: ContentSource) {
     summary: resolveText(raw.summary, locale),
     headline: resolveText(raw.headline, locale),
     headlineEmphasis: resolveText(raw.headlineEmphasis, locale),
-    tags: raw.tags,
+    tags: (locale === "de" && raw.tagsDe?.length && raw.tagsDe) || raw.tags,
     status: resolveText(raw.status, locale),
     statusDetail: resolveText(raw.statusDetail, locale),
     liveUrl: raw.liveUrl || null,
