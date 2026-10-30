@@ -3,6 +3,8 @@ import { FlagAndFillFigure } from "./flag-and-fill/figure";
 import { AgentsInTheGridFigure } from "./agents-in-the-grid/figure";
 import { AGENTS_IN_THE_GRID } from "./agents-in-the-grid/meta";
 import { FLAG_AND_FILL } from "./flag-and-fill/meta";
+import { SupportAgentFigure } from "./support-agent/figure";
+import { SUPPORT_AGENT } from "./support-agent/meta";
 import type { Locale } from "@/lib/i18n";
 
 export interface ProjectFigureEntry {
@@ -14,6 +16,7 @@ export interface ProjectFigureEntry {
 
 const FIGURES: Record<string, ProjectFigureEntry> = {
   "flag-and-fill": { Figure: FlagAndFillFigure, ...FLAG_AND_FILL },
+  "support-agent": { Figure: SupportAgentFigure, ...SUPPORT_AGENT },
   "agents-in-the-grid": {
     Figure: AgentsInTheGridFigure,
     ...AGENTS_IN_THE_GRID,
