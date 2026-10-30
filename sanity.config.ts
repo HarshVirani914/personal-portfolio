@@ -10,5 +10,5 @@ export default defineConfig({
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
   plugins: [structureTool()],
   schema: { types: schemaTypes },
-  document: { singletons: ["siteSettings", "hero", "about"] },
+  document: { singletons: ["siteSettings", "hero", "about", "agent"] },
 });

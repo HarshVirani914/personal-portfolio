@@ -3,6 +3,7 @@ import { contentTags, type ContentSource } from "@/lib/content/source";
 import type { Localized } from "@/lib/content/localized";
 import type {
   RawAbout,
+  RawAgent,
   RawCertification,
   RawEducation,
   RawExperience,
@@ -147,6 +148,14 @@ const queries = {
     },
     nowUpdated
   }`,
+  agent: `*[_type == "agent"][0]{
+    "suggestions": suggestions[]{
+      "id": _key,
+      "question": question${localized},
+      "label": label${localized},
+      hidden
+    }
+  }`,
 };
 
 type SettingsDoc = Omit<RawSiteSettings, "city" | "description"> & {
@@ -209,6 +218,10 @@ type CertificationDoc = Omit<
   name: string | null;
   issuer: string | null;
   credentialUrl: string | null;
+};
+
+type AgentDoc = {
+  suggestions: RawAgent["suggestions"] | null;
 };
 
 type AboutDoc = {
@@ -401,6 +414,16 @@ export function createSanitySource(): ContentSource {
         now: doc.now ?? [],
         nowUpdated: doc.nowUpdated ?? "",
       };
+    },
+
+    async getAgent(): Promise<RawAgent | null> {
+      const doc = await client.fetch<AgentDoc | null>(
+        queries.agent,
+        {},
+        { next: { tags: [contentTags.agent] } }
+      );
+      if (!doc) return null;
+      return { suggestions: doc.suggestions ?? [] };
     },
   };
 }

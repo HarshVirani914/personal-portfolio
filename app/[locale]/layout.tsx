@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { notFound } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
+import { AgentLauncher } from "@/components/site/agent-launcher";
 import { ScrollRestoration } from "@/components/site/scroll-restoration";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -63,7 +64,10 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
-  const settings = await content.getSiteSettings(locale);
+  const [settings, agent] = await Promise.all([
+    content.getSiteSettings(locale),
+    content.getAgent(locale),
+  ]);
 
   return (
     <html
@@ -102,6 +106,12 @@ export default async function LocaleLayout({
             name={settings.name}
             coordinates={settings.coordinates}
             dict={dict.footer}
+          />
+          <AgentLauncher
+            locale={locale}
+            dict={dict.agent}
+            suggestions={agent.suggestions}
+            name={settings.name}
           />
         </ThemeProvider>
         <Analytics />

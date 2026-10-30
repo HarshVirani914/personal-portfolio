@@ -331,7 +331,7 @@ export function CiteButton({
   );
 }
 
-/** Asks the ⌘K agent about this page. The agent listens for the event once it exists. */
+/** Asks the ⌘K agent about this page. */
 export function AskButton({ label, topic }: { label: string; topic: string }) {
   return (
     <button

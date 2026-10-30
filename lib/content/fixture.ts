@@ -9,6 +9,7 @@ import {
 import { buildSkillGroups } from "@/lib/content/fixture-skills";
 import type {
   RawAbout,
+  RawAgent,
   RawCertification,
   RawEducation,
   RawExperience,
@@ -31,13 +32,19 @@ export type FixtureData = {
   education: RawEducation[];
   certifications: RawCertification[];
   about: RawAbout | null;
+  agent: RawAgent | null;
 };
 
 const line = (en: string, de?: string) => ({ en, de });
 
 const base: Omit<
   FixtureData,
-  "skillGroups" | "experience" | "education" | "certifications" | "about"
+  | "skillGroups"
+  | "experience"
+  | "education"
+  | "certifications"
+  | "about"
+  | "agent"
 > = {
   siteSettings: {
     firstName: "Harsh",
@@ -470,6 +477,34 @@ export const fixtureData: FixtureData = {
   education: fixtureEducation,
   certifications: fixtureCertifications,
   about: fixtureAbout,
+  agent: {
+    suggestions: [
+      {
+        id: "thesis",
+        question: {
+          en: "What is his thesis about?",
+          de: "Worum geht es in seiner Abschlussarbeit?",
+        },
+        label: { en: "His thesis?", de: "Seine Arbeit?" },
+      },
+      {
+        id: "users",
+        question: {
+          en: "Has he shipped to real users?",
+          de: "Hat er für echte Nutzer ausgeliefert?",
+        },
+        label: { en: "Real users?", de: "Echte Nutzer?" },
+      },
+      {
+        id: "munich",
+        question: {
+          en: "Is he open to roles in Munich?",
+          de: "Ist er offen für Stellen in München?",
+        },
+        label: { en: "Open to Munich?", de: "Offen für München?" },
+      },
+    ],
+  },
 };
 
 /** A content source backed by plain data. Pass your own data in tests. */
@@ -487,5 +522,6 @@ export function createFixtureSource(
     getEducation: async () => data.education,
     getCertifications: async () => data.certifications,
     getAbout: async () => data.about,
+    getAgent: async () => data.agent,
   };
 }

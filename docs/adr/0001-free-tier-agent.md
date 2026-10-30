@@ -2,6 +2,8 @@
 
 The Agent runs on Groq's free tier with no card on file. A visitor or attacker can therefore cause an outage but never a bill. That tier allows `openai/gpt-oss-20b` about 8K tokens a minute and 200K a day, and sending all published content costs about 5.5K tokens per question, or roughly one question a minute. So we deviate from the "full content, no retrieval" plan in issue #11: the Knowledge View drops research body sections, each question stands alone with no history, and Upstash Redis on its free plan holds the Answer Cache, per-IP limits and Quota Budget, which Vercel's WAF cannot provide because its counters are per region and its window stops at 10 minutes.
 
+Measured on the live API: a question costs about 3K tokens, so the free tier allows roughly 2 questions a minute and 65 a day before the Answer Cache. Prompt caching reported 0 cached tokens, so capacity must not depend on it.
+
 ## Considered Options
 
 - **Paid Groq plan with a spend limit:** rejected, because quota abuse would then cost money.

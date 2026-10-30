@@ -1,3 +1,4 @@
+import { AskAgentButton } from "@/components/site/ask-agent-button";
 import { HeroName } from "@/components/site/hero-name";
 import { HeroTerminal } from "@/components/site/hero-terminal";
 import type { Dictionary } from "@/lib/dictionary";
@@ -11,8 +12,8 @@ type Props = {
 
 export function Hero({ hero, name, dict }: Props) {
   return (
-    <section className="flex min-h-svh flex-col justify-center pt-32 pb-16 lg:pt-24">
-      <div className="grid gap-y-5.5 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-9">
+    <section className="flex min-h-svh flex-col gap-y-8 pt-32 pb-6 lg:pt-24 lg:pb-11">
+      <div className="my-auto grid gap-y-5.5 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-9">
         <div className="lg:col-span-9">
           <HeroName first={name.first} last={name.last} />
         </div>
@@ -32,6 +33,7 @@ export function Hero({ hero, name, dict }: Props) {
           />
         </div>
       </div>
+      <AskAgentButton dict={dict.agent} />
     </section>
   );
 }

@@ -234,7 +234,10 @@ export default async function ResearchPage({
                 doneLabel={dict.copied}
               />
             )}
-            <AskButton label={dict.ask} topic={item.slug} />
+            <AskButton
+              label={dict.ask}
+              topic={`${item.title} ${item.titleEmphasis}`.trim()}
+            />
           </span>
         </div>
       </header>
