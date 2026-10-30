@@ -30,7 +30,7 @@ export function localizedPath(path: string, locale: Locale): string {
   return clean === "/" ? `/${locale}` : `/${locale}${clean}`;
 }
 
-/** Same page in another language, keeping hash and query intact. */
+/** Same page in another language. */
 export function switchLocale(pathname: string, target: Locale): string {
   return localizedPath(parseLocalePath(pathname).path, target);
 }

@@ -15,6 +15,24 @@ const withData = (patch: Partial<FixtureData>) =>
   createContent(createFixtureSource({ ...fixtureData, ...patch }));
 
 describe("content module", () => {
+  describe("project tags", () => {
+    it("uses the German tags on the German site", async () => {
+      const content = createContent(createFixtureSource());
+      const [en, de] = await Promise.all([
+        content.getProject("en", "ssri"),
+        content.getProject("de", "ssri"),
+      ]);
+      expect(en?.project.tags).toContain("Payments");
+      expect(de?.project.tags).toContain("Zahlungen");
+    });
+
+    it("falls back to the English tags when there are no German ones", async () => {
+      const content = createContent(createFixtureSource());
+      const page = await content.getProject("de", "pocketpulse");
+      expect(page?.project.tags).toEqual(["PWA", "Next.js", "Offline"]);
+    });
+  });
+
   describe("knowledge view", () => {
     it("lists every visible project and research item as citable", async () => {
       const content = createContent(createFixtureSource());

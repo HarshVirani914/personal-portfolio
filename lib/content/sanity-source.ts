@@ -58,6 +58,7 @@ const queries = {
     "headline": headline${localized},
     "headlineEmphasis": headlineEmphasis${localized},
     tags,
+    tagsDe,
     "status": status${localized},
     "statusDetail": statusDetail${localized},
     liveUrl,

@@ -55,6 +55,15 @@ export const project = defineType({
       options: { layout: "tags" },
     }),
     defineField({
+      name: "tagsDe",
+      title: "Tags (German)",
+      description: "Same order as Tags. Leave empty to use the English tags.",
+      type: "array",
+      of: [{ type: "string" }],
+      group: "list",
+      options: { layout: "tags" },
+    }),
+    defineField({
       name: "status",
       type: "localizedString",
       group: "list",

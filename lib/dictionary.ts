@@ -133,6 +133,7 @@ const dictionaries = {
       seeWork: "See the work",
       downloadCv: "Download CV",
     },
+    notFound: { title: "Nothing here.", home: "Back to the start" },
     footer: { builtWith: "Built with Next.js · edited in Sanity" },
     agent: {
       entry: "Ask me anything about my work",
@@ -255,7 +256,7 @@ const dictionaries = {
       headingEmphasis: "und wo",
       headingAfter: ".",
       hintHover:
-        "Fähigkeit anzeigen oder fokussieren, um zu sehen, wo ich sie eingesetzt habe.",
+        "Fahre über eine Fähigkeit oder fokussiere sie, um zu sehen, wo ich sie eingesetzt habe.",
       hintTap: "Fähigkeit antippen, um zu sehen, wo ich sie eingesetzt habe.",
     },
     experience: {
@@ -301,6 +302,7 @@ const dictionaries = {
       seeWork: "Zu den Arbeiten",
       downloadCv: "Lebenslauf herunterladen",
     },
+    notFound: { title: "Hier ist nichts.", home: "Zurück zum Anfang" },
     footer: { builtWith: "Gebaut mit Next.js · bearbeitet in Sanity" },
     agent: {
       entry: "Frag mich alles zu meiner Arbeit",

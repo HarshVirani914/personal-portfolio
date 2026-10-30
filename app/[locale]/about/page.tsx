@@ -6,6 +6,7 @@ import { content } from "@/lib/content";
 import type { AboutRow } from "@/lib/content/types";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localizedPath, type Locale } from "@/lib/i18n";
+import { pageMetadata } from "@/lib/seo";
 import { cn } from "@/lib/utils";
 
 type Params = { locale: string };
@@ -25,10 +26,13 @@ export async function generateMetadata({
     content.getAbout(locale),
     content.getSiteSettings(locale),
   ]);
-  return {
+  return pageMetadata({
+    locale,
+    path: "/about",
     title: `${getDictionary(locale).about.kicker} — ${settings.name.full}`,
     description: about.story[0] ?? settings.description,
-  };
+    siteName: settings.name.full,
+  });
 }
 
 function formatMonth(iso: string, locale: Locale, month: "long" | "short") {
