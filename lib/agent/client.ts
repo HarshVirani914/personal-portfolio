@@ -35,5 +35,9 @@ export async function askAgent(
     body: JSON.stringify({ question, locale }),
     signal,
   });
+  if (response.status === 429) {
+    onEvent({ type: "limited" });
+    return;
+  }
   await readAgentStream(response, onEvent);
 }

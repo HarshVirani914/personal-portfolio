@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page, type Route } from "@playwright/test";
 
 const stream = (slug: string, label: string) =>
   [
@@ -132,6 +132,131 @@ test.describe("agent overlay", () => {
     await dialog.getByRole("textbox").fill("Hello?");
     await dialog.getByRole("textbox").press("Enter");
     await expect(dialog).toContainText("resting");
+  });
+
+  test.describe("outcomes", () => {
+    const events = (...lines: object[]) =>
+      `${lines.map((line) => JSON.stringify(line)).join("\n")}\n`;
+
+    const askWith = async (
+      page: Page,
+      reply: Parameters<Route["fulfill"]>[0],
+      path = "/"
+    ) => {
+      await page.route("**/api/agent", (route) => route.fulfill(reply));
+      await page.goto(path);
+      await page
+        .getByRole("button", { name: /^(Ask me anything|Frag mich alles)/ })
+        .click();
+      const dialog = page.getByRole("dialog");
+      await dialog.getByRole("textbox").fill("Is he free in May?");
+      await dialog.getByRole("textbox").press("Enter");
+      return dialog;
+    };
+
+    const ndjson = (...lines: object[]) => ({
+      contentType: "application/x-ndjson",
+      body: events(...lines),
+    });
+
+    test("Unknown offers a prewritten email to Harsh", async ({ page }) => {
+      const dialog = await askWith(
+        page,
+        ndjson(
+          { type: "start", projects: 4, research: 3 },
+          { type: "outcome", outcome: "unknown" },
+          { type: "done" }
+        )
+      );
+      const link = dialog.getByRole("link", { name: /Email Harsh/ });
+      await expect(link).toBeVisible();
+      const href = await link.getAttribute("href");
+      expect(href).toMatch(/^mailto:[^?]+@[^?]+\?subject=/);
+      expect(decodeURIComponent(href!)).toContain("Is he free in May?");
+      await expect(
+        dialog.getByRole("button", { name: "Copy email" })
+      ).toBeVisible();
+    });
+
+    test("Refused shows no email card", async ({ page }) => {
+      const dialog = await askWith(
+        page,
+        ndjson(
+          { type: "start", projects: 4, research: 3 },
+          { type: "outcome", outcome: "refused" },
+          { type: "done" }
+        )
+      );
+      await expect(dialog).toContainText("only answer questions");
+      await expect(
+        dialog.getByRole("link", { name: /Email Harsh/ })
+      ).toHaveCount(0);
+    });
+
+    test("Unavailable says the agent is resting and offers the email", async ({
+      page,
+    }) => {
+      const dialog = await askWith(page, {
+        status: 503,
+        json: { error: "unavailable" },
+      });
+      await expect(dialog).toContainText("resting");
+      await expect(
+        dialog.getByRole("link", { name: /Email Harsh/ })
+      ).toBeVisible();
+    });
+
+    test("over the limit says so and offers the email", async ({ page }) => {
+      const dialog = await askWith(page, {
+        status: 429,
+        json: { error: "limited" },
+      });
+      await expect(dialog).toContainText("a lot of questions");
+      await expect(
+        dialog.getByRole("link", { name: /Email Harsh/ })
+      ).toBeVisible();
+    });
+
+    test("an answer keeps the email to one quiet link", async ({ page }) => {
+      await mockAgent(page);
+      await page.goto("/");
+      await openFromHero(page);
+      const dialog = page.getByRole("dialog");
+      await dialog.getByRole("textbox").fill("What has he built?");
+      await dialog.getByRole("textbox").press("Enter");
+      await expect(
+        dialog.getByRole("link", { name: /Ask Harsh/ })
+      ).toBeVisible();
+      await expect(
+        dialog.getByRole("link", { name: /Email Harsh/ })
+      ).toHaveCount(0);
+    });
+
+    test("a replayed answer says it was answered before", async ({ page }) => {
+      const dialog = await askWith(
+        page,
+        ndjson(
+          { type: "cached" },
+          { type: "outcome", outcome: "answer" },
+          { type: "text", text: "From before." },
+          { type: "done" }
+        )
+      );
+      await expect(dialog).toContainText("answered before");
+      await expect(dialog).not.toContainText("reading");
+    });
+
+    test("the German draft is in German", async ({ page }) => {
+      const dialog = await askWith(
+        page,
+        ndjson({ type: "outcome", outcome: "unknown" }, { type: "done" }),
+        "/de"
+      );
+      const href = await dialog
+        .getByRole("link", { name: /E-Mail an Harsh/ })
+        .getAttribute("href");
+      expect(decodeURIComponent(href!)).toContain("Frage von deinem Portfolio");
+    });
   });
 
   test("German pages ask in German", async ({ page }) => {

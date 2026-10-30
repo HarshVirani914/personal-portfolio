@@ -112,6 +112,7 @@ export default async function LocaleLayout({
             dict={dict.agent}
             suggestions={agent.suggestions}
             name={settings.name}
+            contact={settings.contact}
           />
         </ThemeProvider>
         <Analytics />

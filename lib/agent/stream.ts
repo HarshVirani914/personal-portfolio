@@ -11,6 +11,9 @@ export type AgentEvent =
 export type AgentWireEvent =
   | AgentEvent
   | { type: "start"; projects: number; research: number }
+  /** The Answer Cache had it, so the events that follow are a replay. */
+  | { type: "cached" }
+  | { type: "limited" }
   | { type: "done" }
   | { type: "error" };
 

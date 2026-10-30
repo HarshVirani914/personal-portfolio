@@ -10,7 +10,15 @@ export type AnswerToken =
 
 export type AnswerState = {
   status:
-    "idle" | "reading" | "answering" | "done" | "unknown" | "refused" | "error";
+    | "idle"
+    | "reading"
+    | "answering"
+    | "done"
+    | "unknown"
+    | "refused"
+    | "limited"
+    | "error";
+  cached: boolean;
   reading: { projects: number; research: number } | null;
   parts: Part[];
   sources: string[];
@@ -18,6 +26,7 @@ export type AnswerState = {
 
 export const initialAnswer: AnswerState = {
   status: "idle",
+  cached: false,
   reading: null,
   parts: [],
   sources: [],
@@ -36,6 +45,10 @@ export function answerReducer(
         status: "reading",
         reading: { projects: event.projects, research: event.research },
       };
+    case "cached":
+      return { ...state, cached: true };
+    case "limited":
+      return { ...state, status: "limited" };
     case "outcome":
       return {
         ...state,
@@ -86,10 +99,14 @@ export type TraceStage =
   | { stage: "reading"; projects: number; research: number }
   | { stage: "answering" }
   | { stage: "sources"; count: number }
-  | { stage: "answered" };
+  | { stage: "answered" }
+  | { stage: "cached"; count: number };
 
 /** Only stages that really happen: the Agent reads, answers, and counts what it cited. */
 export function traceStage(state: AnswerState): TraceStage | null {
+  if (state.cached && ["answering", "done"].includes(state.status)) {
+    return { stage: "cached", count: state.sources.length };
+  }
   switch (state.status) {
     case "reading":
       return state.reading && { stage: "reading", ...state.reading };

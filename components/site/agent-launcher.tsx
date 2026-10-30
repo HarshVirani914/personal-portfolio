@@ -3,7 +3,11 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import type { Dictionary } from "@/lib/dictionary";
-import type { Suggestion, SiteSettings } from "@/lib/content/types";
+import type {
+  ContactDetails,
+  Suggestion,
+  SiteSettings,
+} from "@/lib/content/types";
 import type { Locale } from "@/lib/i18n";
 
 // Nothing of the overlay loads until a visitor asks for it.
@@ -18,10 +22,17 @@ type Props = {
   dict: Dictionary["agent"];
   suggestions: Suggestion[];
   name: SiteSettings["name"];
+  contact: Pick<ContactDetails, "email" | "linkedinUrl">;
 };
 
 /** Opens the overlay on ⌘K, Ctrl+K, and the `agent:open` and `agent:ask` events. */
-export function AgentLauncher({ locale, dict, suggestions, name }: Props) {
+export function AgentLauncher({
+  locale,
+  dict,
+  suggestions,
+  name,
+  contact,
+}: Props) {
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(false);
   const [asked, setAsked] = useState<{ id: number; question: string } | null>(
@@ -66,6 +77,7 @@ export function AgentLauncher({ locale, dict, suggestions, name }: Props) {
       dict={dict}
       suggestions={suggestions}
       name={name}
+      contact={contact}
       asked={asked}
     />
   );
