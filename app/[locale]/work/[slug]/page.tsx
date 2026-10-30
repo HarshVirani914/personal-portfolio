@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ViewTransition } from "react";
 import { accentStyle } from "@/components/site/project-accent";
+import { figureFor } from "@/components/figures";
 import { ProjectFigure } from "@/components/site/project-figure";
 import { content } from "@/lib/content";
 import { getDictionary } from "@/lib/dictionary";
@@ -54,6 +55,7 @@ export default async function ProjectPage({
 
   const { project, index, total, next } = page;
   const dict = getDictionary(locale).work;
+  const figure = figureFor(project);
   const pad = (n: number) => String(n).padStart(2, "0");
   const meta = [
     { label: dict.role, value: project.meta.role },
@@ -110,9 +112,27 @@ export default async function ProjectPage({
 
       <section className="-mx-5 mt-10 md:-mx-10 lg:mx-0 lg:mt-24 lg:grid lg:grid-cols-12 lg:gap-x-6">
         <figure className="lg:rounded-media relative flex h-90 items-center justify-center border-y border-(--project-accent)/25 bg-(--project-accent)/6 lg:col-span-9 lg:h-155 lg:border">
-          <ProjectFigure variant="page" className="max-w-80 lg:max-w-130" />
+          {figure ? (
+            <>
+              <div className="w-full max-w-110 px-3 lg:max-w-220 lg:px-6">
+                <figure.Figure locale={locale} testId="project-figure" />
+              </div>
+              <p className="lg:text-mono text-muted-ink absolute top-3.5 left-5 hidden font-mono text-[11px] sm:block lg:top-4 lg:left-4.5">
+                {figure.hint[locale]}
+              </p>
+              <p
+                data-readout=""
+                className="lg:text-mono absolute top-3.5 right-5 font-mono text-[11px] text-(--project-accent) tabular-nums lg:top-4 lg:right-4.5"
+              >
+                {figure.readout[locale]}
+              </p>
+            </>
+          ) : (
+            <ProjectFigure variant="page" className="max-w-80 lg:max-w-130" />
+          )}
           <figcaption className="lg:text-mono absolute right-5 bottom-3.5 left-5 font-mono text-[11px] text-(--project-accent) lg:right-auto lg:bottom-4 lg:left-4.5">
-            {dict.fig} {project.number} — {dict.figureCaption}
+            {dict.fig} {project.number} —{" "}
+            {figure ? figure.caption[locale] : dict.figureCaption}
           </figcaption>
         </figure>
         <aside className="text-muted-ink lg:text-mono mt-3.5 flex justify-between gap-3 px-5 font-mono text-[11px] md:px-10 lg:col-span-3 lg:mt-0 lg:flex-col lg:justify-start lg:gap-4.5 lg:px-0 lg:pt-2">

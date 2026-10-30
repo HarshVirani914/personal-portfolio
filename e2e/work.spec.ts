@@ -46,6 +46,27 @@ for (const locale of locales) {
     await expect(names).toHaveText(projects.map((p) => p[locale.key]));
   });
 
+  test(`Flag & Fill figure answers the keyboard (${locale.key})`, async ({
+    page,
+  }) => {
+    await page.goto(`${locale.prefix}/work/flag-and-fill`);
+    const figure = page.getByTestId("project-figure");
+    await figure.focus();
+    // Keys pressed before hydration do nothing, so retry the first one.
+    await expect(async () => {
+      await page.keyboard.press("Home");
+      await expect(figure).toHaveAttribute("aria-valuenow", "0", {
+        timeout: 200,
+      });
+    }).toPass();
+    await page.keyboard.press("ArrowRight");
+    await expect(figure).toHaveAttribute("aria-valuenow", "1");
+    await page.keyboard.press("End");
+    await expect(figure).toHaveAttribute("aria-valuetext", /8\/8 · 2 /);
+    await page.keyboard.press("Space");
+    await expect(figure).toHaveAttribute("aria-valuetext", /8\/8 · 1 /);
+  });
+
   for (const project of projects) {
     test(`project page ${project.slug} renders and links onward (${locale.key})`, async ({
       page,

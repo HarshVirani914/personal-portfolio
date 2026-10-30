@@ -1,0 +1,87 @@
+.ff-figure {
+  --anatomy-paper: color-mix(in srgb, var(--project-accent) 6%, var(--bg));
+  --anatomy-face: var(--anatomy-paper);
+  --anatomy-top: color-mix(in srgb, #fff 62%, var(--anatomy-paper));
+  --anatomy-shade-0: color-mix(in srgb, #000 12%, var(--anatomy-paper));
+  --anatomy-shade-1: color-mix(in srgb, #000 8%, var(--anatomy-paper));
+  --anatomy-shade-2: color-mix(in srgb, #000 5%, var(--anatomy-paper));
+  --anatomy-shade-3: color-mix(in srgb, #000 2%, var(--anatomy-paper));
+  --anatomy-hi: color-mix(in srgb, var(--ink) 86%, var(--anatomy-paper));
+  --anatomy-mid: color-mix(in srgb, var(--ink) 48%, var(--anatomy-paper));
+  --anatomy-lo: color-mix(in srgb, var(--ink) 30%, var(--anatomy-paper));
+  --anatomy-faint: color-mix(in srgb, var(--ink) 16%, var(--anatomy-paper));
+  --anatomy-lit: var(--project-accent);
+  --anatomy-dot: var(--ink);
+  --anatomy-halo: color-mix(in srgb, #000 40%, var(--anatomy-paper));
+  --anatomy-halo-opacity: 0.3;
+  --anatomy-weight: 0.6px;
+  --ff-card: color-mix(in srgb, #fff 70%, var(--anatomy-paper));
+  width: 100%;
+  border-radius: 8px;
+  cursor: crosshair;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.dark .ff-figure {
+  --anatomy-top: color-mix(in srgb, #fff 9%, var(--anatomy-paper));
+  --anatomy-shade-0: color-mix(in srgb, #000 14%, var(--anatomy-paper));
+  --anatomy-shade-1: color-mix(in srgb, #000 6%, var(--anatomy-paper));
+  --anatomy-shade-2: color-mix(in srgb, #fff 2%, var(--anatomy-paper));
+  --anatomy-shade-3: color-mix(in srgb, #fff 5%, var(--anatomy-paper));
+  --ff-card: color-mix(in srgb, #fff 14%, var(--anatomy-paper));
+  --anatomy-halo: #000;
+  --anatomy-halo-opacity: 0.7;
+}
+
+.ff-figure:focus-visible {
+  outline: 1px solid var(--project-accent);
+  outline-offset: 6px;
+}
+
+.ff-card .iso-shade {
+  fill: var(--ff-card);
+}
+
+.ff-mark,
+.ff-lamp[data-on="true"] {
+  fill: var(--project-accent);
+}
+
+.ff-lamp {
+  fill: var(--anatomy-paper);
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+  transition: fill 240ms ease;
+}
+
+.ff-needle {
+  stroke-width: 0.9px;
+}
+
+.ff-flag-plate {
+  fill: var(--anatomy-paper);
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+  transition: fill 240ms ease;
+}
+
+.ff-flag[data-up="true"] .ff-flag-plate {
+  fill: var(--project-accent);
+  stroke: var(--project-accent);
+}
+
+.ff-pivot {
+  fill: var(--anatomy-top);
+  stroke: var(--anatomy-mid);
+  stroke-width: 0.6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-flag-plate,
+  .ff-lamp {
+    transition: none;
+  }
+}
