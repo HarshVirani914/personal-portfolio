@@ -1,5 +1,5 @@
 import { Dots, Line, Solid } from "@/components/iso/react/draw";
-import type { Item } from "./geometry";
+import type { Item } from "./parts";
 
 /** Paints parts in the order given. Every root is keyed: see the kit's large-page note. */
 export function Parts({ items, id }: { items: Item[]; id: string }) {

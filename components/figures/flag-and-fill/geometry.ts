@@ -1,6 +1,5 @@
 import {
   corners,
-  cylinder,
   insetPlan,
   knurl,
   onTop,
@@ -15,13 +14,9 @@ import {
   sideTicks,
   slabOf,
   topTicks,
-  type Flat,
-  type LineTone,
   type Plan,
-  type Plane,
-  type SolidPaths,
-  type Tone,
 } from "@/components/iso/iso-kit";
+import { partsFor, type Item } from "@/components/figures/shared/parts";
 import { dialPoint } from "./frame";
 import { COUNT, THRESHOLD } from "./model";
 import {
@@ -63,125 +58,7 @@ import {
   slotX,
 } from "./view";
 
-/** What a part is in the world, kept so the audit test checks what is drawn. */
-export type Shape =
-  | { kind: "slab"; plan: Plan; z: number; h: number; steps: number }
-  | {
-      kind: "cylinder";
-      cx: number;
-      cy: number;
-      r: number;
-      z: number;
-      h: number;
-    };
-
-export type Item =
-  | {
-      kind: "solid";
-      name: string;
-      paths: SolidPaths;
-      shape: Shape;
-      tone: Tone;
-      crease: Tone | "none";
-      inner: string;
-    }
-  | { kind: "line"; d: string; tone: LineTone; free: boolean }
-  | { kind: "dots"; points: Flat[]; size: number; tone: Tone };
-
-interface Style {
-  tone?: Tone;
-  crease?: Tone | "none";
-  bevel?: number;
-  steps?: number;
-  inner?: string;
-}
-
-function slab(
-  name: string,
-  plan: Plan,
-  z: number,
-  h: number,
-  {
-    tone = "mid",
-    crease = "faint",
-    bevel = 0,
-    steps = 3,
-    inner = "",
-  }: Style = {}
-): Item {
-  return {
-    kind: "solid",
-    name,
-    paths: slabOf(plan, z, h, P, steps, bevel),
-    shape: { kind: "slab", plan, z, h, steps },
-    tone,
-    crease,
-    inner,
-  };
-}
-
-function post(
-  name: string,
-  cx: number,
-  cy: number,
-  r: number,
-  z: number,
-  h: number,
-  {
-    tone = "mid",
-    crease = "faint",
-    bevel = 0,
-    steps = 28,
-    inner = "",
-  }: Style = {}
-): Item {
-  return {
-    kind: "solid",
-    name,
-    paths: cylinder(cx, cy, r, z, h, P, steps, bevel),
-    shape: { kind: "cylinder", cx, cy, r, z, h },
-    tone,
-    crease,
-    inner,
-  };
-}
-
-const line = (d: string, tone: LineTone = "lo", free?: boolean): Item => ({
-  kind: "line",
-  d,
-  tone,
-  free: free ?? false,
-});
-const dots = (points: Flat[], size = 0.5, tone: Tone = "mid"): Item => ({
-  kind: "dots",
-  points,
-  size,
-  tone,
-});
-const seats = (points: Plane[], z: number) =>
-  pointsAt(
-    points.map(([x, y]) => [x, y, z]),
-    P
-  );
-const rules = (
-  x: number,
-  y: number,
-  widths: number[],
-  gap: number,
-  z: number
-) =>
-  widths
-    .map((width, row) =>
-      onTop(
-        [
-          [x, y + row * gap],
-          [x + width, y + row * gap],
-        ],
-        z,
-        P
-      )
-    )
-    .join("");
+const { slab, post, line, dots, seats, rules } = partsFor(P);
 
 /* Bench */
 const STRIP: Plan = {
@@ -679,5 +556,7 @@ export const SHUTTLE_ART: Item[] = [
     0.45
   ),
 ];
+
+export type { Item };
 
 export const HALO = slabOf(BASE, -BASE_H - FOOT_H, BASE_H, P).fill;

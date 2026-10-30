@@ -1,10 +1,4 @@
-import {
-  ISO_CSS,
-  dotsSvg,
-  lineSvg,
-  solidSvg,
-  translateAlong,
-} from "@/components/iso/iso-kit";
+import { ISO_CSS, translateAlong } from "@/components/iso/iso-kit";
 import {
   BENCH,
   BLOCK_ART,
@@ -23,8 +17,8 @@ import {
   TRAY_BACK,
   TRAY_FRONT,
   cardAt,
-  type Item,
 } from "./geometry";
+import { paint } from "@/components/figures/shared/card";
 import { turnAbout } from "./flag-turn";
 import { flagArt, needleAt, stemAt } from "./frame";
 import { COUNT, UNSURE } from "./model";
@@ -40,20 +34,6 @@ const ACCENT = "#e07aa8";
 const PAPER = "#141414";
 
 const TOKENS = `.iso{--anatomy-paper:${PAPER};--anatomy-face:${PAPER};--anatomy-top:#262626;--anatomy-shade-0:#101010;--anatomy-shade-1:#161616;--anatomy-shade-2:#1b1b1b;--anatomy-shade-3:#202020;--anatomy-hi:#d9d7d1;--anatomy-mid:#8e8c86;--anatomy-lo:#5c5b57;--anatomy-faint:#383836;--anatomy-lit:${ACCENT};--anatomy-dot:#eceae4;--anatomy-halo:#000;--anatomy-halo-opacity:.6;--anatomy-weight:.6px}`;
-
-const paint = (items: Item[]) =>
-  items
-    .map((item) => {
-      if (item.kind === "line") return lineSvg(item.d, { tone: item.tone });
-      if (item.kind === "dots")
-        return dotsSvg(item.points, { size: item.size, tone: item.tone });
-      return solidSvg(item.paths, {
-        tone: item.tone,
-        crease: item.crease,
-        inner: item.inner ? lineSvg(item.inner, { tone: "faint" }) : "",
-      });
-    })
-    .join("");
 
 export function cardSvg() {
   const to = slotX(FILED);
