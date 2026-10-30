@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createContent } from "@/lib/content";
+import { createContent, emphasisParts } from "@/lib/content";
 import {
   createFixtureSource,
   fixtureData,
@@ -577,6 +577,84 @@ describe("content module", () => {
       expect(
         (await content.getEducation("de")).certifications.map((cert) => cert.id)
       ).toEqual(["ok"]);
+    });
+  });
+
+  describe("about", () => {
+    const t = (en: string, de?: string) => ({ en, de });
+
+    it("splits the headline into plain and italic runs", () => {
+      expect(emphasisParts("Curious. *Precise* about it.")).toEqual([
+        { text: "Curious. ", emphasis: false },
+        { text: "Precise", emphasis: true },
+        { text: " about it.", emphasis: false },
+      ]);
+      expect(emphasisParts("*All* italic")).toEqual([
+        { text: "All", emphasis: true },
+        { text: " italic", emphasis: false },
+      ]);
+      expect(emphasisParts("No stars")).toEqual([
+        { text: "No stars", emphasis: false },
+      ]);
+    });
+
+    it("ships the four-paragraph story, languages, interests and a dated Now block", async () => {
+      const about = await createContent(createFixtureSource()).getAbout("en");
+      expect(about.headline.find((part) => part.emphasis)?.text).toBe(
+        "Precise"
+      );
+      expect(about.story).toHaveLength(4);
+      expect(about.story[1]).toContain("TechStaunch");
+      expect(about.interests.map((row) => row.name)).toEqual([
+        "Gaming",
+        "Movies",
+        "Cooking",
+      ]);
+      expect(about.now.map((item) => item.label)).toEqual([
+        "Researching",
+        "Building",
+        "Learning",
+        "Looking for",
+      ]);
+      expect(about.now.filter((item) => item.highlight)).toHaveLength(1);
+      expect(about.nowUpdated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(about.portrait?.alt).toBe("Portrait of Harsh Virani");
+    });
+
+    it("hides rows, drops blanks, falls back to English and has no portrait until one is uploaded", async () => {
+      const content = withData({
+        about: {
+          headline: t("Plain *word*", "Schlicht"),
+          portrait: { url: " ", alt: t("a"), caption: t("c") },
+          story: [t("One", "Eins"), t("")],
+          languages: [
+            { id: "en", name: t("English", "Englisch"), detail: t("working") },
+            { id: "x", name: t("Hidden"), detail: t(""), hidden: true },
+            { id: "blank", name: t(""), detail: t("no name") },
+          ],
+          interests: [],
+          now: [
+            { id: "a", label: t("Building"), text: t("A thing", "Ein Ding") },
+            { id: "b", label: t("Empty"), text: t("") },
+          ],
+          nowUpdated: "2026-10-01",
+        },
+      });
+      const de = await content.getAbout("de");
+      expect(de.headline).toEqual([{ text: "Schlicht", emphasis: false }]);
+      expect(de.portrait).toBeNull();
+      expect(de.story).toEqual(["Eins"]);
+      expect(de.languages).toEqual([
+        { id: "en", name: "Englisch", detail: "working" },
+      ]);
+      expect(de.now).toEqual([
+        { id: "a", label: "Building", text: "Ein Ding", highlight: false },
+      ]);
+    });
+
+    it("uses the fixture while the about document is not yet published", async () => {
+      const about = await withData({ about: null }).getAbout("de");
+      expect(about.story[0]).toContain("Gujarat");
     });
   });
 });

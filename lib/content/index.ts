@@ -6,6 +6,8 @@ import {
 } from "@/lib/content/sanity-source";
 import type { ContentSource } from "@/lib/content/source";
 import type {
+  About,
+  AboutRow,
   Education,
   EducationContent,
   Experience,
@@ -13,6 +15,8 @@ import type {
   Project,
   ProjectPage,
   RawHero,
+  RawAbout,
+  RawAboutRow,
   RawProject,
   RawResearch,
   RawSiteSettings,
@@ -21,8 +25,17 @@ import type {
   ResearchPage,
   SiteSettings,
   SkillGroup,
+  TextPart,
 } from "@/lib/content/types";
 import type { Locale } from "@/lib/i18n";
+
+/** Splits "a *word* b" into runs; the starred runs are set in italic. */
+export function emphasisParts(text: string): TextPart[] {
+  return text
+    .split(/\*([^*]+)\*/)
+    .map((part, i) => ({ text: part, emphasis: i % 2 === 1 }))
+    .filter((part) => part.text !== "");
+}
 
 /**
  * The only way pages, metadata and the agent read content. Every getter takes
@@ -35,6 +48,8 @@ export function createContent(source: ContentSource) {
     (fixtureData.siteSettings as RawSiteSettings);
   const hero = async (): Promise<RawHero> =>
     (await source.getHero()) ?? (fixtureData.hero as RawHero);
+  const about = async (): Promise<RawAbout> =>
+    (await source.getAbout()) ?? (fixtureData.about as RawAbout);
 
   const resolveProject = (
     raw: RawProject,
@@ -293,6 +308,45 @@ export function createContent(source: ContentSource) {
             issuer: cert.issuer,
             url: cert.credentialUrl,
           })),
+      };
+    },
+
+    /** The about page. Hidden rows and rows without a name are dropped, as are blank paragraphs. */
+    async getAbout(locale: Locale): Promise<About> {
+      const raw = await about();
+      const rows = (items: RawAboutRow[]): AboutRow[] =>
+        visibleInOrder(items)
+          .map((row) => ({
+            id: row.id,
+            name: resolveText(row.name, locale),
+            detail: resolveText(row.detail, locale),
+          }))
+          .filter((row) => row.name !== "");
+      const portraitUrl = raw.portrait?.url?.trim();
+      return {
+        headline: emphasisParts(resolveText(raw.headline, locale)),
+        portrait:
+          raw.portrait && portraitUrl
+            ? {
+                url: portraitUrl,
+                alt: resolveText(raw.portrait.alt, locale),
+                caption: resolveText(raw.portrait.caption, locale),
+              }
+            : null,
+        story: raw.story
+          .map((paragraph) => resolveText(paragraph, locale))
+          .filter(Boolean),
+        languages: rows(raw.languages),
+        interests: rows(raw.interests),
+        now: visibleInOrder(raw.now)
+          .map((item) => ({
+            id: item.id,
+            label: resolveText(item.label, locale),
+            text: resolveText(item.text, locale),
+            highlight: Boolean(item.highlight),
+          }))
+          .filter((item) => item.label !== "" && item.text !== ""),
+        nowUpdated: raw.nowUpdated,
       };
     },
 

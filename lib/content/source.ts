@@ -1,4 +1,5 @@
 import type {
+  RawAbout,
   RawCertification,
   RawEducation,
   RawExperience,
@@ -25,6 +26,7 @@ export interface ContentSource {
   getExperience(): Promise<RawExperience[]>;
   getEducation(): Promise<RawEducation[]>;
   getCertifications(): Promise<RawCertification[]>;
+  getAbout(): Promise<RawAbout | null>;
 }
 
 /** Cache tags, one per document type. Webhook revalidation targets these. */
@@ -38,6 +40,7 @@ export const contentTags = {
   experience: "content:experience",
   education: "content:education",
   certification: "content:certification",
+  about: "content:about",
 } as const;
 
 const tagByDocumentType: Record<string, string> = {
@@ -50,6 +53,7 @@ const tagByDocumentType: Record<string, string> = {
   experience: contentTags.experience,
   education: contentTags.education,
   certification: contentTags.certification,
+  about: contentTags.about,
 };
 
 /** The cache tag a published document of this type invalidates, if the site reads it. */
