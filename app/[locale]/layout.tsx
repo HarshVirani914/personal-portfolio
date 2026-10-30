@@ -17,21 +17,25 @@ import { getSiteUrl } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
+// Subsets decide what is preloaded, and German is covered by latin. Fonts share
+// the connection with the render-blocking stylesheet, so each one delays first
+// paint on slow mobile. Characters outside latin still load on demand.
 const instrumentSerif = Instrument_Serif({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   weight: "400",
   style: ["normal", "italic"],
   variable: "--font-heading",
 });
 
 const geist = Geist({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-sans",
 });
 
 const geistMono = Geist_Mono({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   variable: "--font-mono",
+  preload: false,
 });
 
 export async function generateMetadata({
