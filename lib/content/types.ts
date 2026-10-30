@@ -224,6 +224,16 @@ export type RawAbout = {
   nowUpdated: string;
 };
 
+/** A question offered in the overlay. The label is the shorter wording used on phones. */
+export type RawSuggestion = {
+  id: string;
+  question: Localized;
+  label: Localized;
+  hidden?: boolean | null;
+};
+
+export type RawAgent = { suggestions: RawSuggestion[] };
+
 /* Resolved data: what pages, metadata and the agent receive. */
 
 export type SiteSettings = {
@@ -417,4 +427,25 @@ export type About = {
   interests: AboutRow[];
   now: NowItem[];
   nowUpdated: string;
+};
+
+export type Suggestion = { id: string; question: string; label: string };
+
+export type AgentContent = { suggestions: Suggestion[] };
+
+/** A project or research item the Agent may cite. */
+export type CitableItem = {
+  slug: string;
+  kind: "project" | "research";
+  label: string;
+  href: string;
+  accent: { light: string; dark: string };
+};
+
+/** What the Agent may answer from: prompt text plus the items it may cite. */
+export type KnowledgeView = {
+  text: string;
+  items: CitableItem[];
+  projectCount: number;
+  researchCount: number;
 };

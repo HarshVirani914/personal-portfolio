@@ -15,6 +15,116 @@ const withData = (patch: Partial<FixtureData>) =>
   createContent(createFixtureSource({ ...fixtureData, ...patch }));
 
 describe("content module", () => {
+  describe("knowledge view", () => {
+    it("lists every visible project and research item as citable", async () => {
+      const content = createContent(createFixtureSource());
+      const { items } = await content.getKnowledgeView("en");
+      const visibleProjects = await content.getProjects("en");
+      const visibleResearch = await content.getResearch("en");
+      expect(items.map((item) => item.slug)).toEqual([
+        ...visibleProjects.map((project) => project.slug),
+        ...visibleResearch.map((research) => research.slug),
+      ]);
+      const first = visibleProjects[0]!;
+      expect(items[0]).toEqual({
+        slug: first.slug,
+        kind: "project",
+        label: `${first.number} ${first.title}`,
+        href: `/work/${first.slug}`,
+        accent: first.accent,
+      });
+    });
+
+    it("links citable items in the visitor's language", async () => {
+      const content = createContent(createFixtureSource());
+      const { items } = await content.getKnowledgeView("de");
+      expect(items[0]?.href).toMatch(/^\/de\/work\//);
+      expect(items.at(-1)?.href).toMatch(/^\/de\/research\//);
+    });
+
+    it("leaves out hidden items", async () => {
+      const [first, ...rest] = fixtureData.projects;
+      const content = withData({
+        projects: [{ ...first!, hidden: true }, ...rest],
+      });
+      const { text, items } = await content.getKnowledgeView("en");
+      expect(items.map((item) => item.slug)).not.toContain(first!.slug);
+      expect(text).not.toContain(first!.problem.en!);
+    });
+
+    it("keeps research abstracts but not body sections", async () => {
+      const item = fixtureData.research[0]!;
+      const block = item.sections[0]!.blocks.find((b) => b.text)!;
+      const content = createContent(createFixtureSource());
+      const { text } = await content.getKnowledgeView("en");
+      expect(text).toContain(item.abstract.en!);
+      expect(text).not.toContain(block.text!.en!);
+    });
+
+    it("is byte-stable between calls so the model can cache it", async () => {
+      const content = createContent(createFixtureSource());
+      const first = await content.getKnowledgeView("en");
+      const second = await content.getKnowledgeView("en");
+      expect(second.text).toBe(first.text);
+      expect(second.projectCount).toBe(first.projectCount);
+    });
+
+    it("names the contact details a visitor may ask for", async () => {
+      const content = createContent(createFixtureSource());
+      const { text } = await content.getKnowledgeView("en");
+      expect(text).toContain("harshvirani.91@gmail.com");
+    });
+  });
+
+  describe("agent content", () => {
+    it("resolves suggested questions and drops hidden or blank ones", async () => {
+      const content = withData({
+        agent: {
+          suggestions: [
+            {
+              id: "a",
+              question: {
+                en: "What is his thesis about?",
+                de: "Worum geht es?",
+              },
+              label: { en: "His thesis?", de: "Die Arbeit?" },
+            },
+            {
+              id: "b",
+              question: { en: "Hidden?" },
+              label: { en: "Hidden?" },
+              hidden: true,
+            },
+            { id: "c", question: { en: " " }, label: { en: "Blank" } },
+          ],
+        },
+      });
+      expect((await content.getAgent("de")).suggestions).toEqual([
+        { id: "a", question: "Worum geht es?", label: "Die Arbeit?" },
+      ]);
+    });
+
+    it("falls back to the question when a suggestion has no short label", async () => {
+      const content = withData({
+        agent: {
+          suggestions: [
+            { id: "a", question: { en: "Full question?" }, label: {} },
+          ],
+        },
+      });
+      expect((await content.getAgent("en")).suggestions[0]?.label).toBe(
+        "Full question?"
+      );
+    });
+
+    it("uses the built-in suggestions until the document is published", async () => {
+      const content = withData({ agent: null });
+      expect((await content.getAgent("en")).suggestions.length).toBeGreaterThan(
+        0
+      );
+    });
+  });
+
   it("returns site settings in the requested locale", async () => {
     const content = createContent(createFixtureSource());
     expect((await content.getSiteSettings("en")).city).toBe("Hof, Germany");

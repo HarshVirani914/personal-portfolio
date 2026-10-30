@@ -1,4 +1,5 @@
 import { fixtureData, createFixtureSource } from "@/lib/content/fixture";
+import { knowledgeText } from "@/lib/content/knowledge";
 import { resolveText, visibleInOrder } from "@/lib/content/localized";
 import {
   createSanitySource,
@@ -8,15 +9,19 @@ import type { ContentSource } from "@/lib/content/source";
 import type {
   About,
   AboutRow,
+  AgentContent,
+  CitableItem,
   Education,
   EducationContent,
   Experience,
   HomeContent,
+  KnowledgeView,
   Project,
   ProjectPage,
   RawHero,
   RawAbout,
   RawAboutRow,
+  RawAgent,
   RawProject,
   RawResearch,
   RawSiteSettings,
@@ -27,7 +32,7 @@ import type {
   SkillGroup,
   TextPart,
 } from "@/lib/content/types";
-import type { Locale } from "@/lib/i18n";
+import { localizedPath, type Locale } from "@/lib/i18n";
 
 /** Splits "a *word* b" into runs; the starred runs are set in italic. */
 export function emphasisParts(text: string): TextPart[] {
@@ -50,6 +55,8 @@ export function createContent(source: ContentSource) {
     (await source.getHero()) ?? (fixtureData.hero as RawHero);
   const about = async (): Promise<RawAbout> =>
     (await source.getAbout()) ?? (fixtureData.about as RawAbout);
+  const agent = async (): Promise<RawAgent> =>
+    (await source.getAgent()) ?? (fixtureData.agent as RawAgent);
 
   const resolveProject = (
     raw: RawProject,
@@ -347,6 +354,71 @@ export function createContent(source: ContentSource) {
           }))
           .filter((item) => item.label !== "" && item.text !== ""),
         nowUpdated: raw.nowUpdated,
+      };
+    },
+
+    /** Suggested Questions in CMS order. Hidden and blank ones are dropped. */
+    async getAgent(locale: Locale): Promise<AgentContent> {
+      const raw = await agent();
+      return {
+        suggestions: visibleInOrder(raw.suggestions)
+          .map((item) => {
+            const question = resolveText(item.question, locale).trim();
+            const label = resolveText(item.label, locale).trim();
+            return { id: item.id, question, label: label || question };
+          })
+          .filter((item) => item.question !== ""),
+      };
+    },
+
+    /** The Agent's only source. Body sections of research are left out to fit Groq's free limits. */
+    async getKnowledgeView(locale: Locale): Promise<KnowledgeView> {
+      const [
+        settings,
+        about,
+        projects,
+        research,
+        skills,
+        experience,
+        schooling,
+      ] = await Promise.all([
+        this.getSiteSettings(locale),
+        this.getAbout(locale),
+        getProjects(locale),
+        getResearch(locale),
+        this.getSkills(locale),
+        this.getExperience(locale),
+        this.getEducation(locale),
+      ]);
+      const items: CitableItem[] = [
+        ...projects.map((project) => ({
+          slug: project.slug,
+          kind: "project" as const,
+          label: `${project.number} ${project.title}`,
+          href: localizedPath(`/work/${project.slug}`, locale),
+          accent: project.accent,
+        })),
+        ...research.map((item) => ({
+          slug: item.slug,
+          kind: "research" as const,
+          label: `${item.title} ${item.titleEmphasis}`.trim(),
+          href: localizedPath(`/research/${item.slug}`, locale),
+          accent: item.accent,
+        })),
+      ];
+      return {
+        text: knowledgeText({
+          settings,
+          about,
+          projects,
+          research,
+          skills,
+          experience,
+          ...schooling,
+        }),
+        items,
+        projectCount: projects.length,
+        researchCount: research.length,
       };
     },
 
