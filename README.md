@@ -10,6 +10,7 @@ The bilingual portfolio of an AI engineer, with an agent that answers questions 
 ![Next.js 16](https://img.shields.io/badge/Next.js-16-black)
 ![React 19](https://img.shields.io/badge/React-19-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-black)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black)](LICENSE)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/home-dark.png">
@@ -143,7 +144,9 @@ docs/adr/             Architecture decision records
 
 ## License
 
-No license has been granted. The source is public to read and learn from, but all rights are reserved, including for the written content, CV, portrait photos and research PDFs.
+The code is released under the [MIT License](LICENSE).
+
+The license does not cover personal content, and all rights to it are reserved. That means the written copy (including the fixtures in `lib/content/`), the CV, portrait photos, project images and research PDFs. Logos belong to their owners. If you fork this project, replace that content with your own.
 
 ## Contact
 
