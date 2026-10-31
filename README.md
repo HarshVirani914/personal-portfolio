@@ -1,145 +1,150 @@
-# Harsh Virani — Portfolio
+<div align="center">
 
-Personal portfolio site for **Harsh Virani**, full-stack engineer and AI systems builder. Built with Next.js 16, a WebGL flow backdrop, and a calm black-and-white design system.
+# Harsh Virani
 
-**Live:** [https://harsh-virani.vercel.app](https://harsh-virani.vercel.app)
+The bilingual portfolio of an AI engineer, with an agent that answers questions about his work and cites its sources.
 
-## Highlights
+[**Live site**](https://harsh-virani.vercel.app) · [Deutsch](https://harsh-virani.vercel.app/de) · [Report a bug](https://github.com/HarshVirani914/personal-portfolio/issues)
 
-- **Home** — Hero with morphing portrait, project grid, and contact card
-- **Projects** — Six case-study cards with a detail sheet (mobile bottom sheet, centered modal on desktop)
-- **About** — Experience, education, skills, Matter.js stack, research PDFs, and academic work
-- **CV download** — AI/ML-focused resume PDF from the site
-- **SEO** — Metadata, dynamic Open Graph / Twitter images (1200×630), sitemap, `robots.txt`
-- **Analytics** — [Vercel Web Analytics](https://vercel.com/docs/analytics)
-- **Accessibility** — Skip link, focus rings, reduced-motion support, keyboard-friendly dialogs
+[![CI](https://github.com/HarshVirani914/personal-portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/HarshVirani914/personal-portfolio/actions/workflows/ci.yml)
+![Next.js 16](https://img.shields.io/badge/Next.js-16-black)
+![React 19](https://img.shields.io/badge/React-19-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-black)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/home-dark.png">
+  <img alt="Portfolio home page: the name Harsh Virani set in a large serif, above a small terminal and an 'Ask me anything' prompt" src="docs/screenshots/home-light.png">
+</picture>
+
+</div>
+
+## Features
+
+- **Ask me anything agent.** Press ⌘K and ask about the work. Answers stream in, cite the project or paper they came from, and fall back to a prewritten email when the agent does not know.
+- **Runs on free tiers by design.** Abuse can take the agent offline for the day but can never produce a bill. [ADR 0001](docs/adr/0001-free-tier-agent.md) has the reasoning.
+- **English and German.** English lives at `/`, German at `/de`, and untranslated fields fall back to English.
+- **CMS-driven.** Everything a visitor reads is edited in an embedded Sanity Studio and goes live without a redeploy.
+- **Interactive figures.** Each project has its own isometric SVG figure, built with a small in-house drawing kit and checked by geometry tests.
+- **Works with no setup.** With no environment variables the site runs on built-in fixture content, so a fresh clone starts immediately.
+- **Details.** Light and dark themes, reduced-motion support, generated Open Graph images, a sitemap, a web app manifest, and automated accessibility checks.
 
 ## Tech stack
 
-| Area       | Tools                                            |
-| ---------- | ------------------------------------------------ |
-| Framework  | Next.js 16 (App Router), React 19, TypeScript    |
-| Styling    | Tailwind CSS v4, CSS variables                   |
-| Motion     | motion/react, Lenis smooth scroll                |
-| Graphics   | OGL (WebGL flow shader), Matter.js (about stack) |
-| Deploy     | Vercel                                           |
-| OG capture | Playwright (`scripts/capture-og-image.mjs`)      |
+| Area      | Tools                                                    |
+| --------- | -------------------------------------------------------- |
+| Framework | Next.js 16 (App Router), React 19, TypeScript            |
+| Styling   | Tailwind CSS 4, Base UI, shadcn/ui, Lenis                |
+| Content   | Sanity                                                   |
+| Agent     | Groq (`openai/gpt-oss-20b`), Upstash Redis, Vercel BotID |
+| Testing   | Vitest, Playwright, axe-core                             |
+| Hosting   | Vercel, with Vercel Analytics and GitHub Actions for CI  |
 
 ## Getting started
 
-### Prerequisites
+You need Node.js 22.12 or newer (CI uses 24) and [pnpm](https://pnpm.io).
 
-- Node.js 20+
-- pnpm (recommended) or npm
+```bash
+git clone https://github.com/HarshVirani914/personal-portfolio.git
+```
 
-### Install and run
+```bash
+cd personal-portfolio
+```
 
 ```bash
 pnpm install
+```
+
+```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). The site runs on fixture content from `lib/content/`, the agent overlay reports that it is resting, and `/studio` asks for a Sanity project ID. Add the services below to turn each of those on.
 
-### Environment variables
+## Configuration
 
-Copy `.env.example` to `.env.local` and set your production URL:
+Copy `.env.example` to `.env.local`. Every variable is optional for local work.
 
-```bash
-NEXT_PUBLIC_SITE_URL=https://harsh-virani.vercel.app
-```
+| Variable                                             | Purpose                                                                                                   |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                               | Public URL for canonical links, social cards and the sitemap. Vercel previews fall back to their own URL. |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`                      | Reads content from Sanity and enables `/studio`. Unset means fixture content.                             |
+| `NEXT_PUBLIC_SANITY_DATASET`                         | Sanity dataset. Defaults to `production`.                                                                 |
+| `SANITY_API_READ_TOKEN`                              | Only needed for a private dataset.                                                                        |
+| `SANITY_REVALIDATE_SECRET`                           | Signing secret shared with the Sanity webhook.                                                            |
+| `GROQ_API_KEY`                                       | Model access for the agent.                                                                               |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Answer cache, limits and question log. The agent makes no model calls without them.                       |
 
-Used for `metadataBase`, canonical URLs, sitemap, and social preview links.
+Set `CONTENT_SOURCE=fixture` in your shell to force fixture content while Sanity is configured.
+
+To publish without a redeploy, add a Sanity webhook that sends `POST` requests to `/api/revalidate`, signed with `SANITY_REVALIDATE_SECRET`, with a projection that includes `_type`.
 
 ## Scripts
 
-| Command             | Description                                                |
-| ------------------- | ---------------------------------------------------------- |
-| `pnpm dev`          | Development server                                         |
-| `pnpm build`        | Production build                                           |
-| `pnpm start`        | Run production server locally                              |
-| `pnpm typecheck`    | TypeScript check                                           |
-| `pnpm lint`         | ESLint                                                     |
-| `pnpm lint:fix`     | ESLint with auto-fix                                       |
-| `pnpm format`       | Prettier write                                             |
-| `pnpm format:check` | Prettier check                                             |
-| `pnpm og:capture`   | Capture homepage OG image (1200×630) — requires dev server |
+| Command           | What it does                                     |
+| ----------------- | ------------------------------------------------ |
+| `pnpm dev`        | Start the development server                     |
+| `pnpm build`      | Create a production build                        |
+| `pnpm start`      | Serve the production build                       |
+| `pnpm lint`       | Run ESLint (`pnpm lint:fix` to fix)              |
+| `pnpm format`     | Run Prettier (`pnpm format:check` to only check) |
+| `pnpm typecheck`  | Check types                                      |
+| `pnpm test`       | Run unit tests with Vitest                       |
+| `pnpm test:e2e`   | Run Playwright tests on desktop and mobile       |
+| `pnpm eval:agent` | Run the agent evals against the real Groq API    |
 
-### Regenerate the Open Graph image
+`pnpm test:e2e` serves the production build, so run `pnpm build` first, and `pnpm exec playwright install chromium` once. CI runs lint, types, unit tests, the build and the end-to-end tests on every pull request. The evals spend real quota and never run in CI.
 
-With the site running locally:
+## How it works
 
-```bash
-pnpm dev
-pnpm og:capture -- --url http://127.0.0.1:3000
-```
+### Content
 
-Output: `public/og/homepage-desktop.png`, served via `app/opengraph-image.tsx` and `app/twitter-image.tsx`.
+Pages never talk to Sanity directly. They call `lib/content`, which reads from a `ContentSource` (Sanity or the fixture), applies the English fallback, drops hidden items and returns typed data. A signed webhook then revalidates only the cache tag for the document type that changed.
 
-For production-accurate previews:
+### Agent
 
-```bash
-pnpm og:capture -- --url https://harsh-virani.vercel.app
-```
+Each question stands alone, with no chat history. `POST /api/agent` runs the cheapest checks first:
+
+1. Reject bots and cross-origin requests.
+2. Validate the question, which is capped at 300 characters.
+3. Serve a cached answer if the same question, locale and content have been answered before. This costs no quota.
+4. Enforce 20 uncached questions a day per visitor, tracked by a salted hash of the IP address that changes daily.
+5. Reserve tokens from a daily budget of 160K, kept below Groq's free allowance of about 200K.
+6. Stream the model's answer as newline-delimited JSON.
+
+The model only sees the Knowledge View, a trimmed subset of published content, which keeps each question to about 3K tokens. Every question ends in one of four outcomes: Answered, Unknown, Refused or Unavailable. Unknown and Unavailable offer the visitor a prewritten email to Harsh.
+
+[`CONTEXT.md`](CONTEXT.md) defines these terms.
 
 ## Project structure
 
 ```
-├── app/
-│   ├── about/page.tsx
-│   ├── projects/page.tsx
-│   ├── page.tsx                    # Home
-│   ├── layout.tsx                  # Root layout, Analytics
-│   ├── globals.css                 # Tokens, frame, dialog, project cards
-│   ├── opengraph-image.tsx         # OG image route
-│   ├── twitter-image.tsx
-│   ├── robots.ts
-│   └── sitemap.ts
-├── components/
-│   ├── about/                      # Experience, education, skills, stack, research, academic work
-│   ├── contact/                    # Contact card, copy-email button, CTAs
-│   ├── hero/                       # Hero, portrait morph, CTAs
-│   ├── layout/                     # Nav, providers, Lenis, backdrop, skip link
-│   ├── projects/                   # Grid + project detail dialog
-│   ├── shaders/shader-flow.tsx
-│   └── ui/                         # Motion helpers, CV download, dotted pattern
-├── lib/
-│   ├── projects-data.ts            # Project cards + case-study copy
-│   ├── site-content.ts             # Links, research PDFs, academic work
-│   ├── metadata.ts                 # SEO defaults
-│   ├── site-url.ts                 # URL from env
-│   └── config.ts                   # Feature flags (smooth scroll)
-├── public/
-│   ├── harsh_normal.webp           # Hero portrait
-│   ├── harsh_waving.webp           # Hero hover portrait
-│   ├── projects/                   # Project card images
-│   ├── logos/                      # Education / employer logos
-│   ├── research/                   # Research PDFs
-│   ├── og/homepage-desktop.png     # Social preview screenshot
-│   └── harsh-virani-ai-ml-cv.pdf   # Downloadable CV
-└── scripts/capture-og-image.mjs
+app/                  Routes: [locale] pages, /api/agent, /api/revalidate, /studio
+components/
+  figures/            One folder per project figure, plus shared parts
+  iso/                Isometric drawing kit
+  site/               Page sections and the agent overlay
+  ui/                 Base components
+lib/
+  agent/              Guards, prompt, Groq client, Redis store, streaming
+  content/            Content layer, Sanity source and fixtures
+sanity/schema/        CMS document types
+e2e/                  Playwright tests
+evals/                Agent evals against the real model
+docs/adr/             Architecture decision records
 ```
 
-## Updating content
+## Documentation
 
-| What to change                               | Where                                                                                            |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| Site name, description, OG title             | `lib/metadata.ts`                                                                                |
-| Projects (copy, images, links, case studies) | `lib/projects-data.ts`                                                                           |
-| Email, LinkedIn, GitHub, CV path             | `lib/site-content.ts`                                                                            |
-| Hero headline and intro                      | `components/hero/hero.tsx`                                                                       |
-| Portraits                                    | `public/harsh_normal.webp`, `public/harsh_waving.webp`                                           |
-| About sections                               | `components/about/*.tsx` + `lib/site-content.ts` (research / academic)                           |
-| CV PDF                                       | Compile from `Resumes/applications/Portfolio_AI_ML/`, copy to `public/harsh-virani-ai-ml-cv.pdf` |
-| Production URL                               | `NEXT_PUBLIC_SITE_URL` in `.env.local` / Vercel env                                              |
-
-## Deployment (Vercel)
-
-1. Import the repository on [Vercel](https://vercel.com).
-2. Set `NEXT_PUBLIC_SITE_URL` to your production domain.
-3. Deploy. Enable **Analytics** in the project dashboard if you want traffic data.
-4. After visual changes, re-run `pnpm og:capture` against the live URL and redeploy so link previews stay current.
+- [`CONTEXT.md`](CONTEXT.md): domain language
+- [`PRODUCT.md`](PRODUCT.md): audience, positioning and principles
+- [`DESIGN.md`](DESIGN.md): design system
+- [`docs/adr/`](docs/adr/): architecture decisions
 
 ## License
 
-Private personal portfolio. All rights reserved unless otherwise noted for third-party assets (fonts, logos, etc.).
+No license has been granted. The source is public to read and learn from, but all rights are reserved, including for the written content, CV, portrait photos and research PDFs.
+
+## Contact
+
+Harsh Virani · [harsh-virani.vercel.app](https://harsh-virani.vercel.app) · [harshvirani.91@gmail.com](mailto:harshvirani.91@gmail.com)
