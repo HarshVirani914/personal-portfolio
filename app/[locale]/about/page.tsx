@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/site/json-ld";
 import { content } from "@/lib/content";
 import type { AboutRow } from "@/lib/content/types";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localizedPath, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/site-url";
+import { profileSchema } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 
 type Params = { locale: string };
@@ -117,6 +120,7 @@ export default async function AboutPage({
       id="main"
       className="px-5 pt-26 pb-18 md:px-10 lg:px-16 lg:pt-40 lg:pb-24"
     >
+      <JsonLd schemas={[profileSchema(getSiteUrl(), locale)]} />
       <div className="text-mono font-mono lg:grid lg:grid-cols-12 lg:gap-x-6">
         <Link
           href={localizedPath("/", locale)}

@@ -4,11 +4,14 @@ import { notFound } from "next/navigation";
 import { ViewTransition } from "react";
 import { accentStyle } from "@/components/site/project-accent";
 import { figureFor } from "@/components/figures";
+import { JsonLd } from "@/components/site/json-ld";
 import { ProjectFigure } from "@/components/site/project-figure";
 import { content } from "@/lib/content";
 import { getDictionary } from "@/lib/dictionary";
 import { isLocale, localizedPath, locales } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/site-url";
+import { projectSchema } from "@/lib/structured-data";
 
 type Params = { locale: string; slug: string };
 
@@ -70,6 +73,7 @@ export default async function ProjectPage({
       className="project-accent px-5 pt-32 pb-18 md:px-10 lg:px-16 lg:pt-44 lg:pb-24"
       style={accentStyle(project.accent)}
     >
+      <JsonLd schemas={[projectSchema(project, getSiteUrl(), locale)]} />
       <div className="text-mono text-muted-ink flex items-center justify-between font-mono lg:grid lg:grid-cols-12 lg:gap-x-6">
         <Link
           href={localizedPath("/#work", locale)}

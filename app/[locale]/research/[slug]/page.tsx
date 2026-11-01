@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Fragment, ViewTransition } from "react";
 import { accentStyle } from "@/components/site/project-accent";
 import { figureFor } from "@/components/figures";
+import { JsonLd } from "@/components/site/json-ld";
 import { ProjectFigure } from "@/components/site/project-figure";
 import {
   AskButton,
@@ -19,6 +20,8 @@ import type { ResearchBlock } from "@/lib/content/types";
 import { getDictionary, type Dictionary } from "@/lib/dictionary";
 import { isLocale, localizedPath, locales, type Locale } from "@/lib/i18n";
 import { pageMetadata } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/site-url";
+import { researchSchema } from "@/lib/structured-data";
 
 type Params = { locale: string; slug: string };
 
@@ -200,6 +203,7 @@ export default async function ResearchPage({
       className="project-accent px-5 pt-26 pb-18 md:px-10 lg:px-16 lg:pt-40 lg:pb-24"
       style={accentStyle(item.accent)}
     >
+      <JsonLd schemas={[researchSchema(item, getSiteUrl(), locale)]} />
       <ReadingProgress targetId="article" label={dict.progress} />
       <ContentsBar
         items={contents}
