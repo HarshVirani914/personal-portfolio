@@ -26,6 +26,7 @@ The bilingual portfolio of an AI engineer, with an agent that answers questions 
 - **English and German.** English lives at `/`, German at `/de`, and untranslated fields fall back to English.
 - **CMS-driven.** Everything a visitor reads is edited in an embedded Sanity Studio and goes live without a redeploy.
 - **Interactive figures.** Each project has its own isometric SVG figure, built with a small in-house drawing kit and checked by geometry tests.
+- **Readable by machines.** Pages carry schema.org structured data, and `/llms.txt` and `/llms-full.txt` give AI tools a plain-text guide built from the same CMS content.
 - **Works with no setup.** With no environment variables the site runs on built-in fixture content, so a fresh clone starts immediately.
 - **Details.** Light and dark themes, reduced-motion support, generated Open Graph images, a sitemap, a web app manifest, and automated accessibility checks.
 

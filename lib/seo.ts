@@ -50,6 +50,7 @@ export function pageMetadata({
         ...languageAlternates(path),
         "x-default": localizedPath(path, defaultLocale),
       },
+      types: { "text/markdown": "/llms.txt" },
     },
     openGraph: {
       type,

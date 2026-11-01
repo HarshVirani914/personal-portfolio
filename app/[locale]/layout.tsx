@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import { AgentLauncher } from "@/components/site/agent-launcher";
+import { JsonLd } from "@/components/site/json-ld";
 import { ScrollRestoration } from "@/components/site/scroll-restoration";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -14,6 +15,7 @@ import { isLocale, locales } from "@/lib/i18n";
 import { content } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
+import { siteSchemas } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -79,9 +81,12 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
-  const [settings, agent] = await Promise.all([
+  const [settings, agent, about, schooling, skills] = await Promise.all([
     content.getSiteSettings(locale),
     content.getAgent(locale),
+    content.getAbout(locale),
+    content.getEducation(locale),
+    content.getSkills(locale),
   ]);
 
   return (
@@ -95,6 +100,16 @@ export default async function LocaleLayout({
       )}
     >
       <body className="min-h-svh">
+        <JsonLd
+          schemas={siteSchemas({
+            settings,
+            about,
+            education: schooling.education,
+            skills,
+            site: getSiteUrl(),
+            locale,
+          })}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
