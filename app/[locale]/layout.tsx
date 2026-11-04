@@ -53,7 +53,7 @@ export async function generateMetadata({
     ...pageMetadata({
       locale,
       path: "/",
-      title: settings.name.full,
+      title: `${settings.name.full} — ${getDictionary(locale).siteRole}`,
       description: settings.description,
       siteName: settings.name.full,
     }),

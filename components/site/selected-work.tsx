@@ -238,7 +238,11 @@ function CardBody({
         </span>
         <span>{project.kind}</span>
       </span>
-      <ProjectFigure variant="card" card={cardFigureFor(project)} />
+      <ProjectFigure
+        variant="card"
+        card={cardFigureFor(project)}
+        alt={`${dict.figureOf} ${project.title}`}
+      />
       <span className="text-small mt-3.5 block border-t border-[#2a2a2a] pt-3.5 leading-relaxed font-light text-[#d9d7d1]">
         {project.summary}
       </span>

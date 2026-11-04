@@ -7,6 +7,8 @@ import type { Locale } from "@/lib/i18n";
 const dictionaries = {
   en: {
     skipToContent: "Skip to content",
+    /** Follows the name in the home page title, so the title says what the site is about. */
+    siteRole: "AI Engineer",
     nav: {
       work: "Work",
       research: "Research",
@@ -44,6 +46,7 @@ const dictionaries = {
       year: "Year",
       figureCaption: "interactive figure in progress",
       figureLabel: "Placeholder for the interactive figure",
+      figureOf: "Interactive figure for",
       visitLive: "Visit live",
       nextProject: "Next project",
     },
@@ -174,6 +177,7 @@ const dictionaries = {
   },
   de: {
     skipToContent: "Zum Inhalt springen",
+    siteRole: "KI-Ingenieur",
     nav: {
       work: "Arbeiten",
       research: "Forschung",
@@ -211,6 +215,7 @@ const dictionaries = {
       year: "Jahr",
       figureCaption: "interaktive Grafik in Arbeit",
       figureLabel: "Platzhalter für die interaktive Grafik",
+      figureOf: "Interaktive Grafik zu",
       visitLive: "Live ansehen",
       nextProject: "Nächstes Projekt",
     },

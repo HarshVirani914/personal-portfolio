@@ -9,18 +9,21 @@ export function ProjectFigure({
   variant,
   className,
   card,
+  alt = "",
 }: {
   variant: "card" | "page";
   className?: string;
   /** A finished figure's dark still, for the hover card. */
   card?: string | undefined;
+  /** Describes the card still for search engines and screen readers. */
+  alt?: string;
 }) {
   if (variant === "card" && card) {
     return (
       // eslint-disable-next-line @next/next/no-img-element -- an animated SVG, served as is
       <img
         src={card}
-        alt=""
+        alt={alt}
         width={344}
         height={150}
         loading="lazy"
