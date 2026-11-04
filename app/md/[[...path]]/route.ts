@@ -30,7 +30,7 @@ export async function generateStaticParams() {
 
 export async function GET(
   _request: Request,
-  ctx: RouteContext<"/md/[[...path]]">
+  ctx: { params: Promise<{ path?: string[] }> }
 ) {
   const { path = [] } = await ctx.params;
   const body = await pageMarkdown(content, `/${path.join("/")}`, getSiteUrl());
