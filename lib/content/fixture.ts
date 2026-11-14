@@ -55,7 +55,7 @@ const base: Omit<
       en: "AI engineer who builds agents that actually work, and ships them as products.",
       de: "KI-Ingenieur, der Agenten baut, die wirklich funktionieren, und sie als Produkte ausliefert.",
     },
-    email: "harshvirani.91@gmail.com",
+    email: "hello@harshvirani.dev",
     availability: line(
       "Open to working-student and full-time AI roles",
       "Offen für Werkstudenten- und Vollzeitstellen im Bereich KI"

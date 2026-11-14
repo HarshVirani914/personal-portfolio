@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const EMAIL = "harshvirani.91@gmail.com";
+const EMAIL = "hello@harshvirani.dev";
 
 test.describe("contact", () => {
   test("clicking Let's talk copies the email and confirms with copied", async ({
