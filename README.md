@@ -151,4 +151,4 @@ The license does not cover personal content, and all rights to it are reserved. 
 
 ## Contact
 
-Harsh Virani · [harsh-virani.vercel.app](https://harsh-virani.vercel.app) · [harshvirani.91@gmail.com](mailto:harshvirani.91@gmail.com)
+Harsh Virani · [harsh-virani.vercel.app](https://harsh-virani.vercel.app) · [hello@harshvirani.dev](mailto:hello@harshvirani.dev)

@@ -90,7 +90,7 @@ describe("content module", () => {
     it("names the contact details a visitor may ask for", async () => {
       const content = createContent(createFixtureSource());
       const { text } = await content.getKnowledgeView("en");
-      expect(text).toContain("harshvirani.91@gmail.com");
+      expect(text).toContain("hello@harshvirani.dev");
     });
   });
 
@@ -155,7 +155,7 @@ describe("content module", () => {
   it("resolves contact details and nulls out blank ones", async () => {
     const full = createContent(createFixtureSource());
     const { contact } = await full.getSiteSettings("de");
-    expect(contact.email).toBe("harshvirani.91@gmail.com");
+    expect(contact.email).toBe("hello@harshvirani.dev");
     expect(contact.availability).toContain("Offen");
     expect(contact.cvUrl).toBe("/harsh-virani-ai-ml-cv-de.pdf");
     expect((await full.getSiteSettings("en")).contact.cvUrl).toBe(
